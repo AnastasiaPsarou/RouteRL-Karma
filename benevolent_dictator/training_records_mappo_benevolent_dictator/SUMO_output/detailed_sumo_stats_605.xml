@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-16 14:49:54 by Eclipse SUMO sumo Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Users\Anastasia\anaconda3\Lib\site-packages\routerl\environment\../networks/two_route_yield/two_route_yield.net.xml"/>
+        <route-files value="C:\Users\Anastasia\anaconda3\Lib\site-packages\routerl\environment\../networks/two_route_yield/route.rou.xml"/>
+        <additional-files value="C:\Users\Anastasia\anaconda3\Lib\site-packages\routerl\environment\../networks/two_route_yield/det.add.xml"/>
+    </input>
+
+    <output>
+        <fcd-output value="C:\Users\Anastasia\anaconda3\Lib\site-packages\routerl\environment\../networks/two_route_yield/fcd.xml"/>
+        <summary-output value="C:\Users\Anastasia\anaconda3\Lib\site-packages\routerl\environment\../networks/two_route_yield/summary.xml"/>
+        <tripinfo-output value="training_records_mappo_benevolent_dictator\SUMO_output\detailed_sumo_stats_605.xml"/>
+        <statistic-output value="training_records_mappo_benevolent_dictator\SUMO_output\sumo_stats_605.xml"/>
+    </output>
+
+    <processing>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>
