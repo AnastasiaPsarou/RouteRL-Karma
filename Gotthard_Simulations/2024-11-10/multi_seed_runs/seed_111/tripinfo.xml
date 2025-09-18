@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-18 13:23:01 by Eclipse SUMO GUI Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="network_v1.net.xml"/>
+        <route-files value="defined_routes.rou.xml, vehicle_types_new.xml, agent_flows.rou.xml, 2024-11-10_w1.5_noProhib_opt_penalty50_untracked_test.xml"/>
+        <additional-files value="network_v1.add.xml"/>
+        <junction-taz value="true"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="multi_seed_runs\seed_111\tripinfo.xml"/>
+    </output>
+
+    <report>
+        <no-warnings value="true"/>
+    </report>
+
+    <tripinfo_device>
+        <device.tripinfo.probability value="0"/>
+    </tripinfo_device>
+
+    <random_number>
+        <seed value="111"/>
+    </random_number>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>

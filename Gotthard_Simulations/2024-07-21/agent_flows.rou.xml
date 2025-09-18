@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-06-05 17:31:22 by Eclipse SUMO netedit Version 1.20.0
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+       <!-- Vehicles, persons and containers (sorted by depart) -->
+    <flow id="a_hospental_altdorf___" begin="21600.00" departSpeed="max" color="145,145,145" from="hospental_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_andermatt_altdorf___" begin="21600.00" departSpeed="max" color="145,145,145" from="andermatt_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_goeschenen_altdorf__" begin="21600.00" departSpeed="max" color="145,145,145" from="goeschenen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_wassen_altdorf______" begin="21600.00" departSpeed="max" color="145,145,145" from="wassen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_gurtenellen_altdorf_" begin="21600.00" departSpeed="max" color="145,145,145" from="gurtenellen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_amsteg_altdorf______" begin="21600.00" departSpeed="max" color="145,145,145" from="amsteg_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_silenen_altdorf_____" begin="21600.00" departSpeed="max" color="145,145,145" from="silenen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_erstfeld_altdorf____" begin="21600.00" departSpeed="max" color="145,145,145" from="erstfeld_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_schattdorf_altdorf__" begin="21600.00" departSpeed="max" color="145,145,145" from="schattdorf_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_burglen_altdorf_____" begin="21600.00" departSpeed="max" color="145,145,145" from="burglen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_seefeld_altdorf_____" begin="21600.00" departSpeed="max" color="145,145,145" from="seefeld_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	<flow id="a_fluelen_altdorf_____" begin="21600.00" departSpeed="max" color="145,145,145" from="fluelen_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	
+	<flow id="a_schwyz_hospental____" begin="21600.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="hospental_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_hospental____" begin="21600.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="hospental_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_altdorf_hospental___" begin="21600.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="hospental_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	
+	<flow id="a_schwyz_andermatt____" begin="21610.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="andermatt_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_andermatt____" begin="21610.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="andermatt_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_altdorf_andermatt___" begin="21610.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="andermatt_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_goeschenen___" begin="21620.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="goeschenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_goeschenen___" begin="21620.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="goeschenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_altdorf_goeschenen__" begin="21620.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="goeschenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>
+	
+	<flow id="a_schwyz_wassen_______" begin="21630.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="wassen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_wassen_______" begin="21630.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="wassen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_wassen______" begin="21630.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="wassen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_gurtenellen__" begin="21640.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="gurtenellen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_gurtenellen__" begin="21640.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="gurtenellen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_gurtenellen_" begin="21640.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="gurtenellen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_amsteg_______" begin="21650.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="amsteg_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_amsteg_______" begin="21650.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="amsteg_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_amsteg______" begin="21650.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="amsteg_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_silenen______" begin="21660.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="silenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_silenen______" begin="21660.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="silenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_silenen_____" begin="21660.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="silenen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_erstfeld_____" begin="21670.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="erstfeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_erstfeld_____" begin="21670.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="erstfeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_erstfeld____" begin="21670.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="erstfeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_schattdorf___" begin="21680.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="schattdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_schattdorf___" begin="21680.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="schattdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_schattdorf__" begin="21680.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="schattdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+
+	<flow id="a_schwyz_burglen______" begin="21690.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="burglen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_burglen______" begin="21690.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="burglen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_burglen_____" begin="21690.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="burglen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_seefeld______" begin="21700.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="seefeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_seefeld______" begin="21700.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="seefeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_seefeld_____" begin="21700.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="seefeld_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_hospental_luzern____" begin="21700.00" departSpeed="max" color="145,145,145" from="hospental_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_andermatt_luzern____" begin="21700.00" departSpeed="max" color="145,145,145" from="andermatt_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_goeschenen_luzern___" begin="21700.00" departSpeed="max" color="145,145,145" from="goeschenen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_wassen_luzern_______" begin="21700.00" departSpeed="max" color="145,145,145" from="wassen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_gurtenellen_luzern__" begin="21700.00" departSpeed="max" color="145,145,145" from="gurtenellen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_amsteg_luzern_______" begin="21700.00" departSpeed="max" color="145,145,145" from="amsteg_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_silenen_luzern______" begin="21700.00" departSpeed="max" color="145,145,145" from="silenen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_erstfeld_luzern_____" begin="21700.00" departSpeed="max" color="145,145,145" from="erstfeld_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_schattdorf_luzern___" begin="21700.00" departSpeed="max" color="145,145,145" from="schattdorf_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_burglen_luzern______" begin="21700.00" departSpeed="max" color="145,145,145" from="burglen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_seefeld_luzern______" begin="21700.00" departSpeed="max" color="145,145,145" from="seefeld_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_fluelen_luzern______" begin="21700.00" departSpeed="max" color="145,145,145" from="fluelen_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_altdorf_luzern______" begin="21700.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="luzern_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	
+	<flow id="a_schwyz_fluelen______" begin="21710.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="fluelen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_fluelen______" begin="21710.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="fluelen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>	
+	<flow id="a_altdorf_fluelen_____" begin="21710.00" departSpeed="max" color="145,145,145" from="altdorf_entry" to="fluelen_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="5"/>	
+	
+	<flow id="a_schwyz_altdorf______" begin="21720.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_luzern_altdorf______" begin="21720.00" departSpeed="max" color="145,145,145" from="luzern_entry" to="altdorf_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	
+	<flow id="a_hospental_schwyz____" begin="21800.00" departSpeed="max" color="145,145,145" from="hospental_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_andermatt_schwyz____" begin="21800.00" departSpeed="max" color="145,145,145" from="andermatt_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_goeschenen_schwyz___" begin="21800.00" departSpeed="max" color="145,145,145" from="goeschenen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_wassen_schwyz_______" begin="21800.00" departSpeed="max" color="145,145,145" from="wassen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_gurtenellen_schwyz__" begin="21800.00" departSpeed="max" color="145,145,145" from="gurtenellen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_amsteg_schwyz_______" begin="21800.00" departSpeed="max" color="145,145,145" from="amsteg_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_silenen_schwyz______" begin="21800.00" departSpeed="max" color="145,145,145" from="silenen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_erstfeld_schwyz_____" begin="21800.00" departSpeed="max" color="145,145,145" from="erstfeld_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_schattdorf_schwyz___" begin="21800.00" departSpeed="max" color="145,145,145" from="schattdorf_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_burglen_schwyz______" begin="21800.00" departSpeed="max" color="145,145,145" from="burglen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_seefeld_schwyz______" begin="21800.00" departSpeed="max" color="145,145,145" from="seefeld_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_fluelen_schwyz______" begin="21800.00" departSpeed="max" color="145,145,145" from="fluelen_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+	<flow id="a_altdorf_schwyz______" begin="21800.00" departSpeed="max" color="145,145,145" from="axenstrasse_entry" to="axenstrasse_exit" type="agent" departLane="best" end="82800.00" vehsPerHour="2"/>
+
+</routes>
