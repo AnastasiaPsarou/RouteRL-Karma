@@ -16,6 +16,8 @@ from torchrl.objectives import ClipPPOLoss, ValueEstimators
 
 import os
 import sys
+import ast
+import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 #from extended_mutation import MyExtendedMutation
@@ -61,11 +63,46 @@ new_machines_after_mutation = 10
 
 # number of episodes the AV training will take
 training_episodes = (frames_per_batch / new_machines_after_mutation) * n_iters
-print("training episodes are: ", training_episodes, "\n\n")
+network = "network_v1"
+
+exp_id = "trial"
+
+custom_network_folder = f"../Gotthard_Simulations/2024-11-10-new-version"
+records_folder = "training_records_mappo_benevolent_dictator"
+plots_folder = "plots_mappo_benevolent_dictator_two_paths"
+
+
+# Read origin-destinations
+od_file_path = os.path.join(custom_network_folder, f"od_{network}.txt")
+with open(od_file_path, 'r', encoding='utf-8') as f:
+    content = f.read()
+data = ast.literal_eval(content)
+origins = data['origins']
+destinations = data['destinations']
+
+
+# Copy agents.csv from custom_network_folder to records_folder
+agents_csv_path = os.path.join(custom_network_folder, "agents.csv")
+num_agents = len(pd.read_csv(agents_csv_path))
+if os.path.exists(agents_csv_path):
+    os.makedirs(records_folder, exist_ok=True)
+    new_agents_csv_path = os.path.join(records_folder, "agents.csv")
+    with open(agents_csv_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    with open(new_agents_csv_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        
+ratio_machines = 20        
+
+num_machines = int(num_agents * ratio_machines)
+print("num_machines is: ", num_machines, "\n\n")
+frames_per_batch = num_machines * frames_per_batch
+total_frames = frames_per_batch * n_iters
+phases = [1, human_learning_episodes, int(training_episodes) + human_learning_episodes]
+phase_names = ["Human stabilization", "Mutation and AV learning", "Testing phase"]
 
 env_params = {
     "agent_parameters" : {
-        "num_agents" : 10,
         "new_machines_after_mutation": new_machines_after_mutation,
 
         "human_parameters" :
@@ -97,34 +134,34 @@ env_params = {
         }
     },
     "simulator_parameters" : {
-        "network_name" : "two_route_yield",
+        "network_name" : my_simple_three_route_network,
+        "custom_network_folder" : "../simple_network",
         "sumo_type" : "sumo",
     },  
     "plotter_parameters" : {
-        "phases" : [0, human_learning_episodes, int(training_episodes) + human_learning_episodes],
+        "phases" : phases,
         "smooth_by" : 50,
-        "phase_names" : [
-            "Human learning", 
-            "Mutation - Machine learning",
-            "Testing phase"
-        ],
-        "records_folder": "training_records_mappo_benevolent_dictator",
-        "plots_folder": "plots_mappo_benevolent_dictator",
+        "phase_names" : phase_names,
+        "records_folder": records_folder,
+        "plots_folder": plots_folder,
     },
-    "path_generation_parameters":
-    {
+    "path_generation_parameters" : {
+        "origins" : origins,
+        "destinations" : destinations,
         "number_of_paths" : 2,
-        "beta" : -1,
-        "visualize_paths" : True
+        "beta" : -3,
+        "visualize_paths" : True,
+        "all_origins_to_all_destinations": False
     }
 }
+
 
 env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, **env_params)
 
 env.start()
 env.reset()
 
-
+print("agents are: ", env.all_agents, "\n\n")
 for human in env.human_agents:
 
     human.default_action = 0
@@ -133,8 +170,10 @@ for human in env.human_agents:
 for episode in range(human_learning_episodes):
     env.step()
 
-
+print("before mutation\n")
 env.mutation(mutation_start_percentile = 0)
+print("after mutation", env.all_agents, "\n\n")
+
 
 group = {'agents': [str(machine.id) for machine in env.machine_agents]}
 
