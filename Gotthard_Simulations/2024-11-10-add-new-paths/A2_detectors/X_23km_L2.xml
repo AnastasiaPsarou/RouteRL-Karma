@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-24 09:49:13 by Eclipse SUMO sumo Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.net.xml"/>
+        <route-files value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.rou.xml"/>
+        <additional-files value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.add.xml"/>
+        <junction-taz value="true"/>
+    </input>
+
+    <output>
+        <fcd-output value="../Gotthard_Simulations/2024-11-10-new-version\fcd.xml"/>
+        <tripinfo-output value="training_records_mappo_benevolent_dictator\SUMO_output\detailed_sumo_stats_4.xml"/>
+        <statistic-output value="training_records_mappo_benevolent_dictator\SUMO_output\sumo_stats_4.xml"/>
+    </output>
+
+    <tripinfo_device>
+        <device.tripinfo.probability value="0"/>
+    </tripinfo_device>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
+</detector>

@@ -8,7 +8,7 @@ CONFIG_FILE = "sumo_sim_2024_11_10_agents.sumocfg"
 BASE_OUTPUT_DIR = Path("multi_seed_runs")
 print(BASE_OUTPUT_DIR)
 #SUMO_BINARY = r"C:/Users/mbertola/AppData/Local/sumo-1.22.0/bin/sumo.exe"
-SUMO_BINARY = r"C:\Program Files (x86)\Eclipse\Sumo\bin\sumo-gui.exe"
+SUMO_BINARY = r"C:\Program Files (x86)\Eclipse\Sumo\bin\sumo.exe"
 #SUMO_BINARY = "sumo"
 SEEDS = [111, 222, 333, 444, 555, 666, 777, 888]
 

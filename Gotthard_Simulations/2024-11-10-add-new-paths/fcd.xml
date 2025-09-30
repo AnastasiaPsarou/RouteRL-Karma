@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-09-24 09:49:13 by Eclipse SUMO sumo Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.net.xml"/>
+        <route-files value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.rou.xml"/>
+        <additional-files value="../Gotthard_Simulations/2024-11-10-new-version\network_v1.add.xml"/>
+        <junction-taz value="true"/>
+    </input>
+
+    <output>
+        <fcd-output value="../Gotthard_Simulations/2024-11-10-new-version\fcd.xml"/>
+        <tripinfo-output value="training_records_mappo_benevolent_dictator\SUMO_output\detailed_sumo_stats_4.xml"/>
+        <statistic-output value="training_records_mappo_benevolent_dictator\SUMO_output\sumo_stats_4.xml"/>
+    </output>
+
+    <tripinfo_device>
+        <device.tripinfo.probability value="0"/>
+    </tripinfo_device>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<fcd-export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/fcd_file.xsd">
+    <timestep time="0.00"/>
+    <timestep time="1.00"/>
+    <timestep time="2.00"/>
+    <timestep time="3.00"/>
+    <timestep time="4.00"/>
+    <timestep time="5.00"/>
+    <timestep time="6.00"/>
+    <timestep time="7.00"/>
+    <timestep time="8.00"/>
+    <timestep time="9.00"/>
+    <timestep time="10.00"/>
+    <timestep time="11.00"/>
+    <timestep time="12.00"/>
+    <timestep time="13.00"/>
+    <timestep time="14.00"/>
+    <timestep time="15.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="749.88" y="52680.55" angle="77.80" type="car_aggr1" speed="25.28" pos="5.10" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="16.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="774.51" y="52685.87" angle="77.59" type="car_aggr1" speed="25.20" pos="30.30" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="17.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="798.26" y="52692.51" angle="74.37" type="car_aggr1" speed="24.66" pos="54.96" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="18.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="821.75" y="52699.13" angle="74.26" type="car_aggr1" speed="24.41" pos="79.37" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="19.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="845.05" y="52706.35" angle="72.52" type="car_aggr1" speed="24.40" pos="103.77" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="20.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="868.74" y="52713.84" angle="72.45" type="car_aggr1" speed="24.85" pos="128.62" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="21.00">
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="892.60" y="52721.47" angle="72.26" type="car_aggr1" speed="25.06" pos="153.68" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="22.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15646.79" y="49945.23" angle="188.62" type="tracked_car" speed="21.60" pos="5.10" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="916.48" y="52729.08" angle="72.33" type="car_aggr1" speed="25.07" pos="178.75" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="23.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15643.29" y="49924.10" angle="189.39" type="tracked_car" speed="21.42" pos="26.52" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="939.75" y="52736.43" angle="72.80" type="car_aggr1" speed="24.40" pos="203.15" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="24.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15640.09" y="49902.89" angle="188.58" type="tracked_car" speed="21.44" pos="47.96" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="963.49" y="52743.61" angle="73.16" type="car_aggr1" speed="24.81" pos="227.95" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="25.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15636.47" y="49881.88" angle="189.79" type="tracked_car" speed="21.31" pos="69.27" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="987.04" y="52750.83" angle="72.97" type="car_aggr1" speed="24.63" pos="252.59" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="26.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15633.38" y="49861.49" angle="188.60" type="tracked_car" speed="20.62" pos="89.90" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="1011.14" y="52757.56" angle="74.70" type="car_aggr1" speed="25.03" pos="277.61" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="27.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15630.31" y="49841.14" angle="188.59" type="tracked_car" speed="20.59" pos="110.49" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="1035.10" y="52763.98" angle="74.99" type="car_aggr1" speed="24.81" pos="302.42" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="28.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15626.89" y="49820.35" angle="189.34" type="tracked_car" speed="21.06" pos="131.55" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="1058.91" y="52769.74" angle="78.10" type="car_aggr1" speed="24.51" pos="326.93" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="29.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15623.96" y="49799.32" angle="187.93" type="tracked_car" speed="21.23" pos="152.78" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="1083.39" y="52774.83" angle="78.26" type="car_aggr1" speed="25.00" pos="351.93" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+    <timestep time="30.00">
+        <vehicle id="r_axs_alt_1_0_tracked_car.0" x="15621.05" y="49778.42" angle="187.91" type="tracked_car" speed="21.11" pos="173.88" lane="axenstrasse_entry_0" slope="0.00"/>
+        <vehicle id="r_luz_tun_A______0_car_aggr1.0" x="1108.18" y="52779.59" angle="80.38" type="car_aggr1" speed="25.25" pos="377.18" lane="luzern_entry_0" slope="0.00"/>
+    </timestep>
+</fcd-export>
