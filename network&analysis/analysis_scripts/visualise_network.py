@@ -235,6 +235,42 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
         location="bottom", fraction=0.045, pad=0.06
     ).set_label(label)
 
-    fig.savefig(out_path, dpi=220)
+    fig.savefig(out_path, dpi=220, bbox_inches="tight", pad_inches=0.05)
     plt.close(fig)
     print(f"[OK] Saved: {out_path.resolve()}")
+
+def main():
+    net_path = Path(NET_FILE)
+    if not net_path.exists():
+        print(f"[ERROR] NET_FILE not found: {net_path.resolve()}")
+        return
+
+    print(f"[INFO] Reading network: {net_path.resolve()}")
+    lanes = read_lanes_with_speed_and_length(str(net_path), include_internal=INCLUDE_INTERNAL)
+    if not lanes:
+        print("[WARN] No drawable lanes found. Nothing to plot.")
+        return
+
+    out_speed = OUT_DIR / "network_by_speed.png"
+    out_length = OUT_DIR / "network_by_length.png"
+
+    # Plot colored by speed
+    plot_attribute(
+        lanes=lanes,
+        attr_name="speed",
+        cmap_name=SPEED_CMAP,
+        out_path=out_speed,
+        title_prefix="Network by speed"
+    )
+
+    # Plot colored by length
+    plot_attribute(
+        lanes=lanes,
+        attr_name="length",
+        cmap_name=LENGTH_CMAP,
+        out_path=out_length,
+        title_prefix="Network by length"
+    )
+
+if __name__ == "__main__":
+    main()
