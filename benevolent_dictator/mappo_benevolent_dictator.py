@@ -4,6 +4,7 @@ from tqdm import tqdm
 from tensordict.nn import TensorDictModule
 from torchrl.collectors import SyncDataCollector
 from torch.distributions import Categorical
+from tensordict.nn.distributions import NormalParamExtractor
 from torchrl.envs.libs.pettingzoo import PettingZooWrapper
 from torchrl.envs.transforms import TransformedEnv, RewardSum
 from torchrl.envs.utils import check_env_specs
@@ -13,15 +14,18 @@ from torchrl.data.replay_buffers.storages import LazyTensorStorage
 from torchrl.modules import MultiAgentMLP, ProbabilisticActor
 from torchrl.objectives.value import GAE
 from torchrl.objectives import ClipPPOLoss, ValueEstimators
+from pettingzoo.test import parallel_api_test
+
 
 import os
 import sys
 import ast
 import pandas as pd
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 #from extended_mutation import MyExtendedMutation
-from routerl import TrafficEnvironment
+from routerl_karma import TrafficEnvironment
+from routerl_karma import UCB, MAPPO
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -33,6 +37,34 @@ device = (
     else torch.device("cpu")
 )
 print("device is: ", device)
+
+exp_id = "trial"
+
+"""custom_network_folder = f"../Gotthard_Simulations/2024-11-10-new-version"
+records_folder = "training_records_mappo_benevolent_dictator"
+plots_folder = "plots_mappo_benevolent_dictator_two_paths"
+
+
+# Read origin-destinations
+od_file_path = os.path.join(custom_network_folder, f"od_{network}.txt")
+with open(od_file_path, 'r', encoding='utf-8') as f:
+    content = f.read()
+data = ast.literal_eval(content)
+origins = data['origins']
+destinations = data['destinations']
+
+
+# Copy agents.csv from custom_network_folder to records_folder
+agents_csv_path = os.path.join(custom_network_folder, "agents.csv")
+num_agents = len(pd.read_csv(agents_csv_path))
+if os.path.exists(agents_csv_path):
+    os.makedirs(records_folder, exist_ok=True)
+    new_agents_csv_path = os.path.join(records_folder, "agents.csv")
+    with open(agents_csv_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    with open(new_agents_csv_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+"""     
 
 # Sampling
 frames_per_batch = 40  # Number of team frames collected per training iteration
@@ -59,51 +91,26 @@ critic_network_num_cells = 64
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 10
+new_machines_after_mutation = 1000
 
 # number of episodes the AV training will take
-training_episodes = (frames_per_batch / new_machines_after_mutation) * n_iters
-network = "network_v1"
-
-exp_id = "trial"
-
-custom_network_folder = f"../Gotthard_Simulations/2024-11-10-new-version"
-records_folder = "training_records_mappo_benevolent_dictator"
-plots_folder = "plots_mappo_benevolent_dictator_two_paths"
+training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)
 
 
-# Read origin-destinations
-od_file_path = os.path.join(custom_network_folder, f"od_{network}.txt")
-with open(od_file_path, 'r', encoding='utf-8') as f:
-    content = f.read()
-data = ast.literal_eval(content)
-origins = data['origins']
-destinations = data['destinations']
+origins = ["E0"]
+destinations = ["E2"]
+num_agents = 2000
 
+records_folder = "training_records_simple_network_mappo_benevolent_dictator"
+plots_folder = "plots_simple_network_mappo_benevolent_dictator_two_paths"
 
-# Copy agents.csv from custom_network_folder to records_folder
-agents_csv_path = os.path.join(custom_network_folder, "agents.csv")
-num_agents = len(pd.read_csv(agents_csv_path))
-if os.path.exists(agents_csv_path):
-    os.makedirs(records_folder, exist_ok=True)
-    new_agents_csv_path = os.path.join(records_folder, "agents.csv")
-    with open(agents_csv_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    with open(new_agents_csv_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-        
-ratio_machines = 20        
-
-num_machines = int(num_agents * ratio_machines)
-print("num_machines is: ", num_machines, "\n\n")
-frames_per_batch = num_machines * frames_per_batch
-total_frames = frames_per_batch * n_iters
 phases = [1, human_learning_episodes, int(training_episodes) + human_learning_episodes]
 phase_names = ["Human stabilization", "Mutation and AV learning", "Testing phase"]
 
 env_params = {
     "agent_parameters" : {
         "new_machines_after_mutation": new_machines_after_mutation,
+        "num_agents": num_agents,
 
         "human_parameters" :
         {
@@ -129,14 +136,15 @@ env_params = {
         },
         "machine_parameters" :
         {
-            "behavior" : "altruistic",
+            "behavior" : "selfish",
             "observation_type" : "previous_agents_plus_start_time",
         }
     },
     "simulator_parameters" : {
-        "network_name" : my_simple_three_route_network,
-        "custom_network_folder" : "../simple_network",
-        "sumo_type" : "sumo",
+        "network_name" : "simple_network4",
+        "custom_network_folder" : "../simple_network4",
+        "sumo_type" : "sumo-gui",
+        "simulation_timesteps": 100,
     },  
     "plotter_parameters" : {
         "phases" : phases,
@@ -148,7 +156,7 @@ env_params = {
     "path_generation_parameters" : {
         "origins" : origins,
         "destinations" : destinations,
-        "number_of_paths" : 2,
+        "number_of_paths" : 1,
         "beta" : -3,
         "visualize_paths" : True,
         "all_origins_to_all_destinations": False
@@ -156,23 +164,23 @@ env_params = {
 }
 
 
-env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, **env_params)
+env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing= True, **env_params)
 
 env.start()
 env.reset()
 
-print("agents are: ", env.all_agents, "\n\n")
-for human in env.human_agents:
-
-    human.default_action = 0
-
-
 for episode in range(human_learning_episodes):
     env.step()
 
-print("before mutation\n")
-env.mutation(mutation_start_percentile = 0)
-print("after mutation", env.all_agents, "\n\n")
+print("After human learning\n\n")
+
+env.mutation(mutation_start_percentile=0)
+
+print("Number of total agents is: ", len(env.all_agents), "\n")
+print("Number of human agents is: ", len(env.human_agents), "\n")
+print("Number of machine agents (autonomous vehicles) is: ", len(env.machine_agents), "\n")
+
+parallel_api_test(env, num_cycles=1000)
 
 
 group = {'agents': [str(machine.id) for machine in env.machine_agents]}
@@ -196,10 +204,15 @@ check_env_specs(env)
 
 share_parameters_policy = False 
 
+print("action space is: ", env.action_spec, "\n\n")
+print("observation space is: ", env.observation_spec["agents", "observation"].shape[-1])
+
+print("observation spec is: ", env.observation_spec)
+
 policy_net = torch.nn.Sequential(
     MultiAgentMLP(
         n_agent_inputs = env.observation_spec["agents", "observation"].shape[-1],
-        n_agent_outputs = env.action_spec.space.n,
+        n_agent_outputs = [10, (3, 180)],
         n_agents = env.n_agents,
         centralised=True,
         share_params=share_parameters_policy,
@@ -208,6 +221,7 @@ policy_net = torch.nn.Sequential(
         num_cells=policy_network_num_cells,
         activation_class=torch.nn.Tanh,
     ),
+    torch.nn.Identity(),
 )
 
 
@@ -217,6 +231,8 @@ policy_module = TensorDictModule(
     out_keys=[("agents", "logits")],
 ) 
 
+
+print("env action spec is: ", env.action_spec, "\n\n")
 
 policy = ProbabilisticActor(
     module=policy_module,
@@ -383,3 +399,5 @@ for episode in range(num_episodes):
 env.plot_results()
 
 env.stop_simulation()
+
+

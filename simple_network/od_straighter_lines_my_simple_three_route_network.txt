@@ -1,4 +1,0 @@
-"two_route_yield": {
-        "origins" : ["E10"],
-        "destinations" : ["E17"]
-}
