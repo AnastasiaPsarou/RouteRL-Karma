@@ -25,8 +25,8 @@
 
     <time>
         <begin value="0"/> 
-        <end value="1500"/> <!-- Vehicles will stop departing at timestep 1500. 
-                                The vehicles that have already departed will complete their trip.-->
+        <end value="1500"/> 
+        
     </time>
 
 </configuration>
