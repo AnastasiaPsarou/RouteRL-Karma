@@ -1,0 +1,9 @@
+target=200
+route_key=route1
+route_edges=E0 E2 E18 E19 E17 E17.200 E17.400 E17.600
+spawned_total=217  (tripinfo incl. unfinished)
+loaded_total=217      (summary.xml)
+steps=3000
+duration_s=2.17
+per_run_sumocfg=C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network&analysis\runs_out\veh200_route1\simulation_200_route1.sumocfg
+base_sumocfg_copy=C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network&analysis\runs_out\veh200_route1\simulation_base.sumocfg
