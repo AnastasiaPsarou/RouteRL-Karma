@@ -15,13 +15,24 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
     └── ...
 ```
 
+`benevolent_dictator` contains the implementation of the **benevolent dictator**, a centralized multi-agent reinforcement learning (MARL) scenario.
 
 
+`network&analyses` directory contains the selected network, along with analyses of its key characteristics, as well as scripts and plots that illustrate the reasoning behind its selection. The network was chosen because it effectively demonstrates the trade-off between route length and capacity: **Route 0** is the shortest but becomes congested quickly, **Route 1** is slightly longer yet offers greater capacity with two lanes, and **Route 2** is significantly longer, however provides the highest capacity with five lanes.
+
+
+
+The `routerl_karma` directory contains an updated version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, in which each agent’s actions involve selecting both a **route** and a **departure time**. To accommodate this MultiDiscrete action space, this version employs the **Parallel API** from the PettingZoo library instead of the **AEC API** used in the original RouteRL implementation. Furthermore, it introduces **monetary pricing** and **karma-based mechanisms** within the route choice context.
+
+
+
+
+<!--
 ## Installation
 
 ```pip3 install git+https://github.com/COeXISTENCE-PROJECT/RouteRL.git@dev ``` 
 
-```pip3 install git+https://github.com/COeXISTENCE-PROJECT/Janux.git@dev ``` 
+```pip3 install git+https://github.com/COeXISTENCE-PROJECT/Janux.git@dev ``` -->
 
 ## Path generation
 
@@ -36,4 +47,5 @@ Riehl, K., Kouvelas, A. & Makridis, M.A. Karma economies for sustainable urban m
 ```
 Akman*, A. O., Psarou*, A., Gorczyca, Ł., Varga, Z. G., Jamróz, G., & Kucharski, R. (2025). RouteRL: Multi-agent reinforcement learning framework for urban route choice with autonomous vehicles. SoftwareX, 31, 102279. https://doi.org/10.1016/j.softx.2025.102279
 ```
+
 
