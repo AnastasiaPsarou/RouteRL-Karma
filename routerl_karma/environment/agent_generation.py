@@ -86,7 +86,7 @@ def generate_agents(params, free_flow_times, generate_data, seed=23423) -> list:
         origin, destination = row_dict[kc.AGENT_ORIGIN], row_dict[kc.AGENT_DESTINATION]
 
         income = income_normal[index]
-        print("income is: ", income, "\n")
+        #print("income is: ", income, "\n")
 
         if row_dict[kc.AGENT_KIND] == kc.TYPE_MACHINE:
             agent_params = params[kc.MACHINE_PARAMETERS]

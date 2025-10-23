@@ -497,66 +497,12 @@ class TrafficEnvironment(ParallelEnv):
             self.agents = []
             return {}, {}, {}, {}, {}
 
-        print("machine actions are: ", machine_actions, "\n\n")
+        #print("machine actions are: ", machine_actions, "\n\n")
         self.simulation_loop(machine_actions)
 
         self._assign_rewards()
 
-        # If there are machines in the system
-        """if self.possible_agents:
-            if (self.terminations[self.agent_selection]
-                    or self.truncations[self.agent_selection]):
-                # handles stepping an agent which is already dead
-                # accepts a None action for the one agent, and moves the agent_selection to
-                # the next dead agent,  or if there are no more dead agents, to the next live agent
-                self._was_dead_step(machine_action)
-                return
-
-            agent = self.agent_selection
-            
-            for machine in self.machine_agents:
-                if machine.id == int(agent):
-                    machine.last_action = machine_action
-                    break
-
-            # The cumulative reward of the last agent must be 0
-            self._cumulative_rewards[agent] = 0
-            self.simulation_loop(machine_action, agent)
-
-            # Collect rewards if it is the last agent to act
-            if self._agent_selector.is_last():
-                # Increase day number
-                self.day += 1
-
-                # Calculate marginal cost matrix
-                self.marginal_cost()
-
-                # Calculate the rewards
-                self._assign_rewards()
-
-                # The episode ends when we complete episode_length days
-                self.truncations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
-                self.terminations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
-                self.infos = {agent: {} for agent in self.agents}
-                self.observations = self.observation_obj(self.all_agents)
-                self._reset_episode()
-            else:
-                # no rewards are allocated until all players give an action
-                self._clear_rewards()
-                self.agent_selection = self._agent_selector.next()
-
-            # Adds .rewards to ._cumulative_rewards
-            self._accumulate_rewards()
-
-        # If there are only humans in the system
-        else:
-            self.simulation_loop(machine_action=0, machine_id=0)
-            self.day = self.day + 1
-            self._assign_rewards()
-            if self.second_sumo == False:
-                self._reset_episode()"""
-
-        print("self.agents is: ", self.agents, "\n\n")
+        #print("self.agents is: ", self.agents, "\n\n")
 
         env_truncation = True
         truncations = {agent: True for agent in self.agents}
@@ -903,15 +849,14 @@ class TrafficEnvironment(ParallelEnv):
         Returns:
             None
         """
-        """for key, arr in machine_actions.items():
-            arr[0] = 1"""
+
         human_actions = {}
         for human in self.human_agents:
             action = human.act(0)                
             human_actions[str(human.id)] = [action, human.start_time]
 
         # Sort the agents based on their start time
-        print("machine actions are: ", machine_actions, "\n\n")
+        #print("machine actions are: ", machine_actions, "\n\n")
         sorted_machines = sorted(machine_actions.items(), key=lambda kv: kv[1][1])
         sorted_machines = {k: v for k, v in sorted_machines}
 
