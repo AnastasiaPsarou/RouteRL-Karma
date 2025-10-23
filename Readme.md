@@ -7,24 +7,25 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
 
 ```
 ./
-├── benevolent_dictator/
-│   └── ...
-├── network&analysis/ 
+├── network_analysis/ 
 │   └── ...
 ├── routerl_karma/
-    └── ...
+│    └── ...
+├── scenarios/
+│   └── ...
 ```
 
-`benevolent_dictator` contains the implementation of the **benevolent dictator**, a centralized multi-agent reinforcement learning (MARL) scenario.
 
-
-`network&analyses` directory contains the selected network, along with analyses of its key characteristics, as well as scripts and plots that illustrate the reasoning behind its selection. The network was chosen because it effectively demonstrates the trade-off between route length and capacity: **Route 0** is the shortest but becomes congested quickly, **Route 1** is slightly longer yet offers greater capacity with two lanes, and **Route 2** is significantly longer, however provides the highest capacity with five lanes.
+`network_analysis` directory contains the selected network, along with analyses of its key characteristics, as well as scripts and plots that illustrate the reasoning behind its selection. The network was chosen because it effectively demonstrates the trade-off between route length and capacity: **Route 0** is the shortest but becomes congested quickly, **Route 1** is slightly longer yet offers greater capacity with two lanes, and **Route 2** is significantly longer, however provides the highest capacity with five lanes.
 
 
 
 The `routerl_karma` directory contains an updated version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, in which each agent’s actions involve selecting both a **route** and a **departure time**. To accommodate this MultiDiscrete action space, this version employs the **Parallel API** from the PettingZoo library instead of the **AEC API** used in the original RouteRL implementation. Furthermore, it introduces **monetary pricing** and **karma-based mechanisms** within the route choice context.
 
+`scenarios` folder the different scenarios that are going to be tested during the work. Specifically, 
 
+- [`google maps`](URL) models AV agents that independently learn optimal routes and departure times. Each agent acts selfishly, aiming to minimize its own travel time.
+- [`benevolent_dictator`](URL) contains the implementation of the **benevolent dictator**, a centralized multi-agent reinforcement learning (MARL) scenario where the agents aim to minimize the system travel time.
 
 
 <!--
@@ -37,7 +38,7 @@ The `routerl_karma` directory contains an updated version of the [RouteRL](https
 ## Path generation
 
 
-Check the paths generated [here](benevolent_dictator/plots_mappo_benevolent_dictator).
+Check the paths generated [here](benevolent_dictator/plots_simple_network_mappo_benevolent_dictator_10_agents).
 
 ## References
 ```

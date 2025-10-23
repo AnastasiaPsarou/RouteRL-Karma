@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-10-22 17:28:11 by Eclipse SUMO netconvert Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="network.net.xml"/>
+    </input>
+
+    <output>
+        <plain-output-prefix value="network"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="0"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.50"/>
+        <rectangular-lane-cut value="0"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="0"/>
+    </pedestrian>
+
+</configuration>
+-->
+
+<nodes version="1.16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
+    <location netOffset="0.00,0.00" convBoundary="-800.00,-1200.00,4400.00,1.54" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
+
+    <node id="J0" x="-800.00" y="-200.00" type="dead_end"/>
+    <node id="J1" x="1199.69" y="-200.51" type="priority" shape="1206.68,-198.49 1209.35,-204.37 1202.68,-219.86 1200.53,-218.74 1197.53,-217.25 1194.33,-216.58 1191.93,-216.51 1191.94,-200.51 1198.35,-200.31 1203.06,-199.70 1206.87,-198.13"/>
+    <node id="J10" x="1800.00" y="-1200.00" type="priority"/>
+    <node id="J11" x="2000.00" y="-1100.00" type="priority"/>
+    <node id="J12" x="2100.00" y="-900.00" type="priority"/>
+    <node id="J13" x="2100.00" y="-500.00" type="priority"/>
+    <node id="J14" x="2200.00" y="-300.00" type="priority"/>
+    <node id="J15" x="2396.66" y="-201.27" type="unregulated" shape="2398.48,-201.77 2400.75,-215.39 2392.43,-216.04 2405.88,-226.42 2398.70,-227.37 2394.55,-225.75 2393.37,-221.61 2392.47,-216.06 2408.04,-227.59 2400.64,-215.31 2398.94,-207.04 2398.68,-204.42 2398.59,-201.83 2398.87,-204.43 2398.93,-207.08 2400.79,-215.33 2392.46,-216.07 2387.60,-206.46 2389.59,-199.25 2392.81,-200.58 2396.52,-201.70"/>
+    <node id="J16" x="4400.00" y="-200.00" type="dead_end"/>
+    <node id="J18" x="2070.43" y="1.54" type="priority"/>
+    <node id="J19" x="2600.00" y="-200.00" type="priority"/>
+    <node id="J20" x="2800.00" y="-200.00" type="priority"/>
+    <node id="J21" x="3000.00" y="-200.00" type="priority"/>
+    <node id="J3" x="1513.63" y="-2.05" type="priority"/>
+    <node id="J6" x="1400.00" y="-300.00" type="priority"/>
+    <node id="J7" x="1500.00" y="-500.00" type="priority"/>
+    <node id="J8" x="1500.00" y="-900.00" type="priority"/>
+    <node id="J9" x="1600.00" y="-1100.00" type="priority"/>
+</nodes>

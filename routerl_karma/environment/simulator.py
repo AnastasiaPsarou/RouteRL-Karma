@@ -347,7 +347,9 @@ class SumoSimulator():
                         combined_sumo_stats_file,
                         "--tripinfo-output",
                         individual_sumo_stats_file,
-                        "--no-warnings"
+                        "--no-step-log", "true", 
+                        "--no-warnings",
+                        "--duration-log.disable"
                         ]
             traci.start(sumo_cmd, label=self.sumo_id)
             self.sumo_connection = traci.getConnection(self.sumo_id)

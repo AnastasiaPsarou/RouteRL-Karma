@@ -504,7 +504,7 @@ class MachineAgent(BaseAgent):
             hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
             travel_times_hrs = agent_reward / 60
 
-            print(route_fee, hourly_income, travel_times_hrs)
+            #print(route_fee, hourly_income, travel_times_hrs)
 
             agent_reward = route_fee + hourly_income * travel_times_hrs
 
