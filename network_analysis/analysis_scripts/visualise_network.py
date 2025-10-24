@@ -27,7 +27,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 INCLUDE_INTERNAL = True
 
 # Visual styling
-LINE_WIDTH = 2.0
+LINE_WIDTH = 4
 
 SHOW_END_CIRCLES = True
 END_CIRCLE_EDGE = "black"
@@ -162,10 +162,12 @@ def add_horizontal_colorbar(fig, ax, mappable, label: str):
         ax=ax,
         orientation="horizontal",
         location="bottom" if COLORBAR_POSITION.lower() == "bottom" else "top",
-        fraction=0.045,
-        pad=0.06,
+        fraction=0.05,
+        pad=0.04,
     )
-    cbar.set_label(label)
+    cbar.set_label(label, fontsize=50, fontweight="bold")
+
+    cbar.ax.tick_params(labelsize=50)
     return cbar
 
 def _all_bounds(lanes):
@@ -210,7 +212,7 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
     fig_height = max(6.0, base_width * data_aspect)
 
     # Use constrained_layout to avoid colorbar/tight_layout conflicts
-    fig, ax = plt.subplots(figsize=(base_width, fig_height), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(base_width, fig_height))
 
     # ----- draw lanes -----
     for ln, val in zip(lanes, vals):
@@ -230,10 +232,11 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
     ax.set_ylim(ymin - pad_y, ymax + pad_y)
     ax.set_aspect("equal", adjustable="box")
 
-    ax.set_xlabel("x")
+    """ax.set_xlabel("x")
     ax.set_ylabel("y")
-    ax.grid(True, linewidth=0.3)
-    ax.set_title(f"{title_prefix} — lanes colored by {attr_name}", pad=5)
+    ax.grid(True, linewidth=0.3)"""
+    ax.set_axis_off()
+    ax.set_title(f"{title_prefix} — lanes colored by {attr_name}", pad=25, fontsize=14, fontweight="bold")
 
     sm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
