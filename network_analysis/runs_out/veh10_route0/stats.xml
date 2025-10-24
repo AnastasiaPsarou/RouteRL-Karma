@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-10-21 15:08:55 by Eclipse SUMO sumo Version 1.19.0
+<!-- generated on 2025-10-24 10:55:58 by Eclipse SUMO sumo Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network&amp;analysis\network_base\Anastasianetwork.net.xml"/>
-        <route-files value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network&amp;analysis\runs_out\veh10_route0\routes.rou_10_route0.rou.xml"/>
+        <net-file value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\network_base\network.net.xml"/>
+        <route-files value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\runs_out\veh10_route0\handmade_routes.rou_10_route0.rou.xml"/>
+        <additional-files value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\network_base\det.add.xml"/>
     </input>
 
     <output>
-        <output-prefix value="C:/Users/Anastasia/Documents/ETH research visit/RouteRL-Karma/network&amp;analysis/runs_out/veh10_route0/"/>
+        <output-prefix value="C:/Users/Anastasia/Documents/ETH research visit/RouteRL-Karma/network_analysis/runs_out/veh10_route0/"/>
         <summary-output value="summary.xml"/>
         <tripinfo-output value="tripinfo.xml"/>
         <tripinfo-output.write-unfinished value="true"/>
@@ -38,20 +39,20 @@
     </tripinfo_device>
 
     <traci_server>
-        <remote-port value="49324"/>
+        <remote-port value="63963"/>
     </traci_server>
 
 </configuration>
 -->
 
 <statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
-    <performance clockBegin="17670.42" clockEnd="17671.80" clockDuration="1.38" traciDuration="0.00" realTimeFactor="1088.53" vehicleUpdatesPerSecond="0.00" personUpdatesPerSecond="0.00" begin="0.00" end="1500.00" duration="1500.00"/>
+    <performance clockBegin="224709.22" clockEnd="224713.64" clockDuration="4.43" traciDuration="0.00" realTimeFactor="338.91" vehicleUpdatesPerSecond="0.00" personUpdatesPerSecond="0.00" begin="0.00" end="1500.00" duration="1500.00"/>
     <vehicles loaded="7" inserted="7" running="1" waiting="0"/>
     <teleports total="0" jam="0" yield="0" wrongLane="0"/>
     <safety collisions="0" emergencyStops="0" emergencyBraking="0"/>
     <persons loaded="0" running="0" jammed="0"/>
     <personTeleports total="0" abortWait="0" wrongDest="0"/>
-    <vehicleTripStatistics count="7" routeLength="4931.66" speed="26.07" duration="189.36" waitingTime="0.00" timeLoss="1.09" departDelay="0.00" departDelayWaiting="0.00" totalTravelTime="1325.50" totalDepartDelay="0.00"/>
+    <vehicleTripStatistics count="7" routeLength="4989.64" speed="28.88" duration="173.00" waitingTime="0.00" timeLoss="0.77" departDelay="0.00" departDelayWaiting="0.00" totalTravelTime="1211.00" totalDepartDelay="0.00"/>
     <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
     <rideStatistics number="0"/>
     <transportStatistics number="0"/>

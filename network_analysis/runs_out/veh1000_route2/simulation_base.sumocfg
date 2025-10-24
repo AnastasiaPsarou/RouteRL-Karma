@@ -6,8 +6,9 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="Anastasianetwork.net.xml"/>
+        <net-file value="network.net.xml"/>
         <route-files value='routes.rou.xml'/>
+        <additional-files value="det.add.xml"/>
     </input>
 
    <output>
@@ -25,8 +26,8 @@
 
     <time>
         <begin value="0"/> 
-        <end value="1500"/> <!-- Vehicles will stop departing at timestep 1500. 
-                                The vehicles that have already departed will complete their trip.-->
+        <end value="1500"/> 
+        
     </time>
 
 </configuration>

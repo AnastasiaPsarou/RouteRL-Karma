@@ -183,7 +183,16 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
     print(f"[INFO] Lanes: {len(lanes)}  |  {attr_name} min={vals.min():.4f}, max={vals.max():.4f}")
 
     cmap = mpl.cm.get_cmap(cmap_name)
-    norm = mpl.colors.Normalize(vmin=float(vals.min()), vmax=float(vals.max()) if float(vals.max()) > float(vals.min()) else float(vals.min()) + 1e-9)
+
+    # Force color scale range (20–40 m/s)
+    if attr_name == "speed":
+        norm = mpl.colors.Normalize(vmin=20.0, vmax=40.0)
+    else:
+        # Keep automatic scaling for length
+        norm = mpl.colors.Normalize(
+            vmin=float(vals.min()),
+            vmax=float(vals.max()) if float(vals.max()) > float(vals.min()) else float(vals.min()) + 1e-9
+        )
     size_map = map_length_to_size(all_lengths)
 
     # ---- Compute data bounds and figure aspect ----
