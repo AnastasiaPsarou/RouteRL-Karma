@@ -285,16 +285,26 @@ def plot_series_subplots(series: OrderedDict, plot_path: Path):
             if not steps:
                 continue
             xs, ys = zip(*sorted(zip(steps, vals)))
-            ax.plot(xs, ys, label=label, color=colors[i])
+            ax.plot(xs, ys, label=label, color=colors[i], linewidth=2.5)
 
         title = f"{int(key)} veh" if key is not None else "Unknown veh"
-        ax.set_title(title)
+        ax.set_title(title, fontsize=14)
         ax.set_xlabel("Simulation timestep (s)")
         ax.set_ylabel("Mean travel time (s)")
         ax.grid(True, linewidth=0.3)
         if labels_in_group:
-            ax.legend(title="Run", loc="best", fontsize=8)
+            # Get current legend entries (handles + full labels like "25 veh – route2")
+            handles, labels0 = ax.get_legend_handles_labels()
 
+            # Extract only the "route X" part for each label
+            route_labels = []
+            for s in labels0:
+                m = re.search(r"(route\s*\d+)", s, flags=re.IGNORECASE)
+                route_labels.append(m.group(1).strip() if m else s)
+
+            # Create legend with cleaned labels
+            ax.legend(handles, route_labels, loc="best", fontsize=12)
+        
         if ALIGN_STEPS and x_min is not None and x_max is not None:
             ax.set_xlim(x_min, x_max)
 
