@@ -411,10 +411,7 @@ class PreviousAgentStartPlusStartTimeDetectorData(Observations):
 
 
 
-################ Under work below ################
-##################################################
-
-class PreviousAgentStartPlusStartTimeMarginalCost(Observations):
+class KarmaUrgency(Observations):
     """Observes the number of agents with the same origin-destination and start time within a threshold
     and includes the start of the specific agent as well.
     """
@@ -443,6 +440,10 @@ class PreviousAgentStartPlusStartTimeMarginalCost(Observations):
         self.observations = self.reset_observation()
         self.agent_vectors = {}
 
+        self.dist = {"kind": "normal", "mean": 5, "std": 3, "clip": (0, 10)}
+        self.sampler = lambda: np.array([np.clip(np.random.normal(self.dist["mean"], self.dist["std"]), *self.dist["clip"])], dtype=np.float32)
+
+
     def __call__(self, all_agents: List[Any]) -> Dict[str, Any]:
         """Generate observations for all agents.
 
@@ -459,149 +460,16 @@ class PreviousAgentStartPlusStartTimeMarginalCost(Observations):
         Returns:
             obs (Dict[str, np.ndarray]): A dictionary of initial observations for all machine agents.
         """
-
-        # Initialize agent vectors as zero arrays
-        self.agent_vectors = {
-            agent: np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
-            for agent in self.machine_agents_list
-        }
         
         # Gather observations in a consistent format
         obs = {
-            str(agent.id): np.concatenate(  # Combine start_time and vector into a single array
-                [
-                    np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
-                    self.agent_vectors[agent]  # Vector as array
-                ]
-            )
+            str(agent.id): self.sampler() 
             for agent in self.machine_agents_list
         }
 
         self.observations = obs
 
         return obs
-    
-    def compute_marginal_cost(self, agent_id, all_agents, travel_times_list):
-        from .environment import TrafficEnvironment ## added here because there was circular import problem
-
-        #print(all_agents, "\n\n\n", all_agents[0].start_time, "\n\n\n")
-        #print("I am agent ", agent_id, "\n\n\n")
-
-        
-        """for agent in all_agents:
-            print("all_agents are: ", agent, "\n\n\n")
-        print("Travel time list is: ", travel_times_list, "\n\n\n")"""
-
-        for machine in self.machine_agents_list:
-            if machine.id == int(agent_id):
-                break
-        
-        agents_to_calculate_marginal_cost = []
-
-        for agent in all_agents:
-            if agent.kind == kc.TYPE_MACHINE and agent.start_time < machine.start_time:
-                agents_to_calculate_marginal_cost.append(agent)
-
-        print("agents to calculate marginal cost", agents_to_calculate_marginal_cost, "\n\n\n")
-        
-        ## Delete each agent from the environment
-        for machine_agent in agents_to_calculate_marginal_cost:
-            df = pd.read_csv(os.path.join(self.agent_params[kc.RECORDS_FOLDER], self.agent_params[kc.AGENTS_CSV_FILE_NAME]))
-
-            df["id"] = df["id"].astype(int)
-            df = df[df["id"] != int(machine_agent.id)]
-
-            df.to_csv(os.path.join(self.agent_params[kc.RECORDS_FOLDER], "agents2.csv"), index=False)
-
-            actions = []
-            for index, row in df.iterrows():
-                for agent in all_agents: ## all_agents doesn't have the correct actions of the agents
-                    #if agent.start_time < machine.start_time and row['id'] == agent.id:
-                    if row['id'] == agent.id:
-                        #print("Append action ", agent.last_action, "for agent", agent.id)
-                        actions.append(agent.last_action)
-                    
-            print("actions are: ", actions, "\n\n\n")
-
-            env_params = {
-                "agent_parameters" : {
-                    "new_machines_after_mutation": 10,
-                    "agents_csv_file_name": "agents2.csv",
-
-                    "human_parameters" :
-                    {
-                        "model" : "general_model",
-
-                        "noise_weight_agent" : 0,
-                        "noise_weight_path" : 0.8,
-                        "noise_weight_day" : 0.2,
-
-                        "beta" : -1,
-                        "beta_k_i_variability" : 0.1,
-                        "epsilon_i_variability" : 0.1,
-                        "epsilon_k_i_variability" : 0.1,
-                        "epsilon_k_i_t_variability" : 0.1,
-
-                        "greedy" : 0.9,
-                        "gamma_c" : 0.0,
-                        "gamma_u" : 0.0,
-                        "remember" : 1,
-
-                        "alpha_zero" : 0.8,
-                        "alphas" : [0.2]  
-                    },
-                    "machine_parameters" :
-                    {
-                        "behavior" : "cooperative",
-                        "observation_type" : "previous_agents_plus_start_time_marginal_cost",
-                    }
-                },
-                "simulator_parameters" : {
-                    "network_name" : "two_route_yield",
-                    "sumo_type" : "sumo-gui",
-                },  
-                "plotter_parameters" : {
-                    "smooth_by" : 50,
-                    "phase_names" : [
-                        "Human learning", 
-                        "Mutation - Machine learning",
-                        "Testing phase"
-                    ]
-                },
-                "path_generation_parameters":
-                {
-                    "number_of_paths" : 4,
-                    "beta" : -.5,
-                    "visualize_paths" : True
-                }
-            }
-
-            env = TrafficEnvironment(seed=42, create_agents=False, create_paths=True, marginal_cost=True, **env_params)
-            env.start(use_subprocess=True)
-
-            for agent, action in zip(env.all_agents, actions):
-                agent.default_action = action
-                print("agent action that was just used: ", action, agent.kind)
-            print("Step inside observations\n\n")
-            env.step()
-
-            original_travel_times = {entry['id']: entry for entry in travel_times_list}
-            simulated_travel_times = {entry['id']: entry for entry in env.travel_times_list}
-
-            """for entry in travel_times_list:
-                if entry['id'] == agent_id:
-                    return entry['travel_time']"""
-            ## Does not take the correct action
-            print("\nafter one step\n", env.travel_times_list, "\n\n\n")
-            print("Initial travel_time_list is: ", travel_times_list, "\n\n\n")
-            #print("after env.step\n")"""   
-
-            ##
-
-            env.stop_simulation() 
-            print("Simulation is over\n\n")
-
-        return 
 
     def observation_space(self) -> Dict[str, Box]:
         """
@@ -611,19 +479,12 @@ class PreviousAgentStartPlusStartTimeMarginalCost(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 1 + self.simulation_params[kc.NUMBER_OF_PATHS]
-
         return {
-            str(agent.id): Box(
-                low=0,
-                high=np.inf,
-                shape=(total_size,),  # Combined size for start_time and vector
-                dtype=np.float32
-            )
+            str(agent.id): Box(low=0, high=10, shape=(1,), dtype=np.int32)
             for agent in self.machine_agents_list
         }
     
-    def agent_observations(self, agent_id: str, all_agents: List[Any], travel_times_list: List[Any]) -> np.ndarray:
+    def agent_observations(self, agent_id: str, all_agents: List[Any]) -> np.ndarray:
         """Retrieve the observation for a specific agent.
 
         Args:
@@ -631,26 +492,9 @@ class PreviousAgentStartPlusStartTimeMarginalCost(Observations):
         Returns:
             np.ndarray: The observation array for the specified agent.
         """
-        self.compute_marginal_cost(agent_id, all_agents, travel_times_list)
 
-        for machine in self.machine_agents_list:
-            if machine.id == int(agent_id):
-                break
-
-        
-        observation = np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
-
-        for agent in all_agents:
-            if (machine.id != agent.id and
-                machine.origin == agent.origin and
-                machine.destination == agent.destination and
-                machine.start_time > agent.start_time):
-                
-                observation[agent.last_action] += 1
-
-        observation = np.concatenate(([machine.start_time], observation))
-
-        self.observations[str(machine.id)] = observation
+        self.observations[str(machine.id)] = self.sampler() 
         
         return observation
     
+

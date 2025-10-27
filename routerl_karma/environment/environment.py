@@ -8,7 +8,7 @@ import os
 
 from copy import copy
 from copy import deepcopy as dc
-from gymnasium.spaces import Discrete, MultiDiscrete
+from gymnasium.spaces import Discrete, MultiDiscrete, Box
 
 import functools
 import logging
@@ -21,7 +21,7 @@ from routerl_karma.environment import generate_agents
 from routerl_karma.environment import SumoSimulator
 from routerl_karma.environment import MachineAgent
 from routerl_karma.environment import PreviousAgentStart, PreviousAgentStartPlusStartTime 
-from routerl_karma.environment import PreviousAgentStartPlusStartTimeDetectorData, PreviousAgentStartPlusStartTimeMarginalCost, Observations
+from routerl_karma.environment import PreviousAgentStartPlusStartTimeDetectorData, Observations, KarmaUrgency
 from routerl_karma.keychain import Keychain as kc
 from routerl_karma.services import plotter
 from routerl_karma.services import Recorder
@@ -329,6 +329,7 @@ class TrafficEnvironment(ParallelEnv):
                  marginal_cost_calculation: bool = False,
                  marginal_cost_calculation_machine_to_all: bool = False,
                  monetary_pricing: bool = False, 
+                 karma_pricing:bool = False,
                  randomize_sumo_seed: bool = False,
                  **kwargs) -> None:
 
@@ -357,6 +358,7 @@ class TrafficEnvironment(ParallelEnv):
         self.marginal_cost_calculation = marginal_cost_calculation
         self.marginal_cost_calculation_machine_to_all = marginal_cost_calculation_machine_to_all
         self.monetary_pricing = monetary_pricing
+        self.karma_pricing = karma_pricing
 
         self.number_of_days = self.environment_params[kc.NUMBER_OF_DAYS]
         self.save_every = self.environment_params[kc.SAVE_EVERY]
@@ -417,14 +419,18 @@ class TrafficEnvironment(ParallelEnv):
             self.simulation_params[kc.SIMULATION_TIMESTEPS]       # M discrete time choices
         ], dtype=np.int64)
 
-        print("nvec is: ", nvec, "\n\n")
-        self._action_spaces = {
-            agent: MultiDiscrete(nvec) for agent in self.possible_agents
-        }
-        self.action_spaces = {
-            agent: MultiDiscrete(nvec) for agent in self.possible_agents
-        }
-        print("self.action_spaces are: ", self.action_spaces, "\n\n")
+        if self.karma_pricing: 
+            self.action_spaces = {
+                agent: Box(low=0, high=self.simulation_params[kc.SIMULATION_TIMESTEPS], shape=(self.simulation_params[kc.NUMBER_OF_PATHS], self.simulation_params[kc.SIMULATION_TIMESTEPS]), dtype=np.int32)
+                for agent in self.possible_agents
+            }
+
+        else: 
+            self.action_spaces = {
+                agent: MultiDiscrete(nvec) for agent in self.possible_agents
+            }
+        self._action_spaces = self.action_spaces
+
 
         logging.info("\nMachine's observation space is: %s ", self._observation_spaces)
         logging.info("Machine's action space is: %s", self._action_spaces)
@@ -497,12 +503,13 @@ class TrafficEnvironment(ParallelEnv):
             self.agents = []
             return {}, {}, {}, {}, {}
 
-        #print("machine actions are: ", machine_actions, "\n\n")
+
+        if self.karma_pricing:
+            machine_actions = self.auction()
+
         self.simulation_loop(machine_actions)
 
         self._assign_rewards()
-
-        #print("self.agents is: ", self.agents, "\n\n")
 
         env_truncation = True
         truncations = {agent: True for agent in self.agents}
@@ -623,6 +630,7 @@ class TrafficEnvironment(ParallelEnv):
         self.all_agents = self.machine_agents + self.human_agents
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag()
+        self.karma_pricing_flag()
 
         if disable_human_learning:  self.human_learning = False
 
@@ -692,6 +700,13 @@ class TrafficEnvironment(ParallelEnv):
         logging.info(f"Now there are {len(self.human_agents)} human agents.")
 
         self._initialize_machine_agents()
+
+    ################################
+    #### Auction implementation ####
+    ################################
+
+    def auction(self) -> tuple:
+        pass
 
     #########################
     ##### Help functions ####
@@ -824,11 +839,18 @@ class TrafficEnvironment(ParallelEnv):
                 agent.marginal_calculation = True
 
     def monetary_pricing_flag(self) -> None:
-        """Enable marginal cost in agent's reward"""
-        print("self.monetary pricing is: ")
+        """Enable monetary cost in agent's reward"""
+
         if self.monetary_pricing == True:
             for agent in self.all_agents:
                 agent.monetary_pricing = True
+
+    def karma_pricing_flag(self) -> None:
+        """Enable karma cost in agent's reward"""
+
+        if self.karma_pricing == True:
+            for agent in self.all_agents:
+                agent.karma_pricing = True
 
     ###########################
     ##### Simulation loop #####
@@ -971,7 +993,7 @@ class TrafficEnvironment(ParallelEnv):
         Returns:
             self._action_spaces[agent] (Any): The action space of the agent.
         """
-
+        print("action spaces are: ", self._action_spaces[agent], "\n\n")
         return self._action_spaces[agent]
 
     #####################################################
@@ -1009,10 +1031,10 @@ class TrafficEnvironment(ParallelEnv):
                                       self.plotter_params,
                                       self.agent_params,
                                       self.simulator)
-        elif observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST:
-            return PreviousAgentStartPlusStartTimeMarginalCost(self.machine_agents,
+        elif observation_type == kc.KARMAURGENCY:
+            return KarmaUrgency(self.machine_agents,
                                       self.human_agents,
                                       self.simulation_params,
-                                      self.agent_params)
+                                      self.agent_params) 
         else:
             raise ValueError('[MODEL INVALID] Unrecognized observation type: ' + observation_type)
