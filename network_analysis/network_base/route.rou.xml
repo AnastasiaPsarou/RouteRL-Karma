@@ -2,10 +2,10 @@
 <vType id="Human" color="red" guiShape="passenger/sedan" carFollowModel="Krauss" accel="1.8" decel="4.5" tau="1.4" minGap="2.5" sigma="0.5" speedFactor="0.95" speedDev="0.05" impatience="0.2" lcStrategic="0.4" lcSpeedGain="0.3" lcCooperative="0.8" probability="0.6"/>
 <vType id="AV" color="yellow" carFollowModel="IDM" accel="2.0" decel="4.0" desiredTimeHeadway="1.4" minGap="2.0" speedFactor="0.98" speedDev="0.02" impatience="0.1" lcStrategic="0.4" lcSpeedGain="0.3" lcCooperative="0.9"/>
 <route id="0_0_0" edges="
-E0 E20 E17 E17.200 E17.400 E17.600
+E0 E20 E20.444 E17 E17.200 E17.400 E17.600
 " />
 <route id="0_0_1" edges="
-E0 E2 E18 E19 E17 E17.200 E17.400 E17.600
+E0 E2 E18 E18.118 E19 E17 E17.200 E17.400 E17.600
 " />
 <route id="0_0_2" edges="
 E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600

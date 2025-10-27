@@ -254,6 +254,7 @@ class MachineAgent(BaseAgent):
         self.rewards_coefs = self._get_reward_coefs()
         self.marginal_calculation = False
         self.monetary_pricing = None
+        self.karma_pricing = None
 
     def __repr__(self) -> str:
         machine_id = f"Machine {self.id}"
@@ -504,9 +505,10 @@ class MachineAgent(BaseAgent):
             hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
             travel_times_hrs = agent_reward / 60
 
-            #print(route_fee, hourly_income, travel_times_hrs)
-
             agent_reward = route_fee + hourly_income * travel_times_hrs
+
+        if self.karma_pricing:
+            pass
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()
