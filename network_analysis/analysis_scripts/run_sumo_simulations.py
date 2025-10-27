@@ -32,7 +32,7 @@ FLOW_ID = "flow_am_peak"
 COUNTS = [1, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000, 10000]
 
 # SUMO / execution settings
-RUNS = 15           # how many total runs
+RUNS = 15            # how many total runs
 PARALLEL = 15       # how many in parallel
 STEP_LIMIT = None  # optional cap on simulation steps (None = until finished)
 USE_GUI = False     # False = headless (recommended)
@@ -42,13 +42,13 @@ SIM_END = 1500
 
 # --- Route variants you want to test (label -> edges string) ---
 ROUTE_VARIANTS = {
-    "route0": "E0 E20 E17 E17.200 E17.400 E17.600",
-    "route1": "E0 E2 E18 E19 E17 E17.200 E17.400 E17.600",
+    "route0": "E0 E20 E20.444 E17 E17.200 E17.400 E17.600",
+    "route1": "E0 E2 E18 E18.118 E19 E17 E17.200 E17.400 E17.600",
     "route2": "E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600",
 }
 
 # Choose which route each run uses (cycled if fewer than RUNS)
-ROUTE_SEQUENCE = ["route2"]   # will cycle for RUNS > 3
+ROUTE_SEQUENCE = ["route1"]   # will cycle for RUNS > 3
 
 # ============================================================
 

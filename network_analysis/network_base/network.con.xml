@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-10-24 10:55:36 by Eclipse SUMO netconvert Version 1.19.0
+<!-- generated on 2025-10-27 15:10:42 by Eclipse SUMO netconvert Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -105,8 +105,11 @@
     <connection from="E17.400" to="E17.600" fromLane="4" toLane="3"/>
     <connection from="E17.400" to="E17.600" fromLane="5" toLane="4"/>
 
-    <connection from="E18" to="E19" fromLane="0" toLane="0"/>
-    <connection from="E18" to="E19" fromLane="1" toLane="1"/>
+    <connection from="E18" to="E18.118" fromLane="0" toLane="0"/>
+    <connection from="E18" to="E18.118" fromLane="1" toLane="1"/>
+
+    <connection from="E18.118" to="E19" fromLane="0" toLane="0"/>
+    <connection from="E18.118" to="E19" fromLane="1" toLane="1"/>
 
     <connection from="E19" to="E17" fromLane="0" toLane="6"/>
     <connection from="E19" to="E17" fromLane="1" toLane="7"/>
@@ -114,7 +117,9 @@
     <connection from="E2" to="E18" fromLane="0" toLane="0"/>
     <connection from="E2" to="E18" fromLane="1" toLane="1"/>
 
-    <connection from="E20" to="E17" fromLane="0" toLane="5"/>
+    <connection from="E20" to="E20.444" fromLane="0" toLane="0"/>
+
+    <connection from="E20.444" to="E17" fromLane="0" toLane="5"/>
 
     <connection from="E7" to="E8" fromLane="0" toLane="0"/>
     <connection from="E7" to="E8" fromLane="1" toLane="1"/>

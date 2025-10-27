@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-10-24 10:55:36 by Eclipse SUMO netconvert Version 1.19.0
+<!-- generated on 2025-10-27 15:10:42 by Eclipse SUMO netconvert Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -46,9 +46,11 @@
     <node id="J16" x="4400.00" y="-200.00" type="dead_end"/>
     <node id="J18" x="2074.89" y="-12.57" type="priority"/>
     <node id="J19" x="2600.00" y="-200.00" type="priority"/>
+    <node id="J2" x="1644.14" y="-203.39" type="allway_stop"/>
     <node id="J20" x="2800.00" y="-200.00" type="priority"/>
     <node id="J21" x="3000.00" y="-200.00" type="priority"/>
     <node id="J3" x="1513.63" y="-12.45" type="priority"/>
+    <node id="J4" x="1632.06" y="-12.48" type="allway_stop"/>
     <node id="J6" x="1400.00" y="-300.00" type="priority"/>
     <node id="J7" x="1500.00" y="-500.00" type="priority"/>
     <node id="J8" x="1500.00" y="-900.00" type="priority"/>
