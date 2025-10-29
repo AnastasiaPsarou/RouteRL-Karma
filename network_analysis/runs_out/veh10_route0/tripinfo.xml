@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-10-27 14:29:59 by Eclipse SUMO sumo Version 1.19.0
+<!-- generated on 2025-10-29 10:07:57 by Eclipse SUMO sumo Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -39,18 +39,18 @@
     </tripinfo_device>
 
     <traci_server>
-        <remote-port value="59395"/>
+        <remote-port value="60415"/>
     </traci_server>
 
 </configuration>
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
-    <tripinfo id="flow_am_peak.0" depart="76.50" departLane="E0_0" departPos="5.10" departSpeed="28.82" departDelay="0.00" arrival="272.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.83" duration="196.00" routeLength="5193.54" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.42" rerouteNo="0" devices="tripinfo_flow_am_peak.0" vType="AV_Aggressive" speedFactor="1.04" vaporized=""/>
-    <tripinfo id="flow_am_peak.1" depart="520.00" departLane="E0_0" departPos="5.10" departSpeed="28.27" departDelay="0.00" arrival="719.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.27" duration="199.00" routeLength="5193.54" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.15" rerouteNo="0" devices="tripinfo_flow_am_peak.1" vType="AV_Aggressive" speedFactor="1.02" vaporized=""/>
-    <tripinfo id="flow_am_peak.2" depart="534.50" departLane="E0_1" departPos="5.10" departSpeed="28.22" departDelay="0.00" arrival="734.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.23" duration="199.50" routeLength="5193.54" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.05" rerouteNo="0" devices="tripinfo_flow_am_peak.2" vType="AV_Aggressive" speedFactor="1.02" vaporized=""/>
-    <tripinfo id="flow_am_peak.3" depart="836.00" departLane="E0_0" departPos="5.10" departSpeed="29.13" departDelay="0.00" arrival="1030.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="29.14" duration="194.00" routeLength="5193.54" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.40" rerouteNo="0" devices="tripinfo_flow_am_peak.3" vType="AV_Aggressive" speedFactor="1.05" vaporized=""/>
-    <tripinfo id="flow_am_peak.4" depart="923.50" departLane="E0_0" departPos="5.10" departSpeed="28.53" departDelay="0.00" arrival="1121.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.54" duration="198.00" routeLength="5193.54" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.99" rerouteNo="0" devices="tripinfo_flow_am_peak.4" vType="AV_Aggressive" speedFactor="1.03" vaporized=""/>
-    <tripinfo id="flow_am_peak.5" depart="984.50" departLane="E0_0" departPos="5.10" departSpeed="30.85" departDelay="0.00" arrival="1169.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="30.18" duration="184.50" routeLength="5193.54" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="15.91" rerouteNo="0" devices="tripinfo_flow_am_peak.5" vType="Human_Aggressive" speedFactor="1.11" vaporized=""/>
+    <tripinfo id="flow_am_peak.0" depart="76.50" departLane="E0_0" departPos="5.10" departSpeed="28.82" departDelay="0.00" arrival="272.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.83" duration="196.00" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.42" rerouteNo="0" devices="tripinfo_flow_am_peak.0" vType="AV_Aggressive" speedFactor="1.04" vaporized=""/>
+    <tripinfo id="flow_am_peak.1" depart="520.00" departLane="E0_0" departPos="5.10" departSpeed="28.27" departDelay="0.00" arrival="719.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.27" duration="199.00" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.15" rerouteNo="0" devices="tripinfo_flow_am_peak.1" vType="AV_Aggressive" speedFactor="1.02" vaporized=""/>
+    <tripinfo id="flow_am_peak.2" depart="534.50" departLane="E0_1" departPos="5.10" departSpeed="28.22" departDelay="0.00" arrival="734.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.23" duration="199.50" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.05" rerouteNo="0" devices="tripinfo_flow_am_peak.2" vType="AV_Aggressive" speedFactor="1.02" vaporized=""/>
+    <tripinfo id="flow_am_peak.3" depart="836.00" departLane="E0_0" departPos="5.10" departSpeed="29.13" departDelay="0.00" arrival="1030.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="29.14" duration="194.00" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.40" rerouteNo="0" devices="tripinfo_flow_am_peak.3" vType="AV_Aggressive" speedFactor="1.05" vaporized=""/>
+    <tripinfo id="flow_am_peak.4" depart="923.50" departLane="E0_0" departPos="5.10" departSpeed="28.53" departDelay="0.00" arrival="1121.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="28.54" duration="198.00" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.99" rerouteNo="0" devices="tripinfo_flow_am_peak.4" vType="AV_Aggressive" speedFactor="1.03" vaporized=""/>
+    <tripinfo id="flow_am_peak.5" depart="984.50" departLane="E0_0" departPos="5.10" departSpeed="29.23" departDelay="0.00" arrival="1178.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="29.24" duration="193.50" routeLength="5193.55" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.70" rerouteNo="0" devices="tripinfo_flow_am_peak.5" vType="AV_Aggressive" speedFactor="1.05" vaporized=""/>
     <tripinfo id="flow_am_peak.6" depart="1372.00" departLane="E0_0" departPos="5.10" departSpeed="29.66" departDelay="0.00" arrival="-1.00" arrivalLane="" arrivalPos="-1.00" arrivalSpeed="-1.00" duration="128.00" routeLength="3323.35" waitingTime="1.00" waitingCount="2" stopTime="0.00" timeLoss="15.50" rerouteNo="0" devices="tripinfo_flow_am_peak.6" vType="AV_Aggressive" speedFactor="1.07" vaporized="end"/>
 </tripinfos>
