@@ -7,7 +7,7 @@
         
         
 
-        <vType id="Human_Aggressive" color="139,0,0" guiShape="passenger/sedan" carFollowModel="Krauss" accel="2.5" decel="4.0" tau="1.0" minGap="1.5" sigma="0.7" speedFactor="1.10" speedDev="0.08" impatience="0.6" lcStrategic="0.6" lcSpeedGain="0.5" lcCooperative="0.5" probability="0.10" />
+        
 
         
         
