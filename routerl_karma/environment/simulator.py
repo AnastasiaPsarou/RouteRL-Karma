@@ -291,7 +291,8 @@ class SumoSimulator():
             # TODO: Following two lines are hardcoded. Change them to be dynamic.
             print("<vType id=\"Human\" color=\"red\" guiShape=\"passenger/sedan\" carFollowModel=\"Krauss\" accel=\"1.8\" decel=\"4.5\" tau=\"1.4\" minGap=\"2.5\" sigma=\"0.5\" speedFactor=\"0.95\" speedDev=\"0.05\" impatience=\"0.2\" lcStrategic=\"0.4\" lcSpeedGain=\"0.3\" lcCooperative=\"0.8\" probability=\"0.6\"/>", file=rou)
             #print("<vType id=\"AV\" color=\"yellow\"/>", file=rou)
-            print("<vType id=\"AV\" color=\"yellow\" carFollowModel=\"IDM\" accel=\"2.0\" decel=\"4.0\" desiredTimeHeadway=\"1.4\" minGap=\"2.0\" speedFactor=\"0.98\" speedDev=\"0.02\" impatience=\"0.1\" lcStrategic=\"0.4\" lcSpeedGain=\"0.3\" lcCooperative=\"0.9\"/>", file=rou)
+            #print("<vType id=\"AV\" color=\"yellow\" carFollowModel=\"IDM\" accel=\"2.0\" decel=\"4.0\" desiredTimeHeadway=\"1.4\" minGap=\"2.0\" speedFactor=\"0.98\" speedDev=\"0.02\" impatience=\"0.1\" lcStrategic=\"0.4\" lcSpeedGain=\"0.3\" lcCooperative=\"0.9\"/>", file=rou)
+            print("<vType id=\"AV\" color=\"255,165,0\" guiShape=\"passenger/sedan\" carFollowModel=\"IDM\" accel=\"2.8\" decel=\"3.5\" desiredTimeHeadway=\"1.0\" minGap=\"1.2\" speedFactor=\"1.05\" speedDev=\"0.02\" impatience=\"0.3\" lcStrategic=\"0.6\" lcSpeedGain=\"0.5\" lcCooperative=\"0.8\" probability=\"0.10\"/>", file=rou)
             for origin_idx in origins.values():
                 for destination_idx in destinations.values():
                     paths = (routes_df[(routes_df["origins"] == origin_idx)
