@@ -41,6 +41,3 @@ vehicles,route_key,mean_travel_time_last_step_s
 5000,route0,787.190000
 5000,route1,768.350000
 5000,route2,600.360000
-10000,route0,792.470000
-10000,route1,674.590000
-10000,route2,517.220000
