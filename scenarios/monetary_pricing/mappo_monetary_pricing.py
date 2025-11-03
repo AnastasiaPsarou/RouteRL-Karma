@@ -4,6 +4,7 @@ import os
 import sys
 import ast
 import pandas as pd
+import numpy as np
 
 from tensordict.nn import TensorDictModule
 from torchrl.collectors import SyncDataCollector
@@ -32,7 +33,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 from utils import ensure_composite_action_on, ensure_tmp_and_logprob, rebuild_prev_logprob_root
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-from routerl_karma import TrafficEnvironment
+from routerl_aec_environment import TrafficEnvironment
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -47,8 +48,8 @@ device = (
 )
 
 # Sampling
-frames_per_batch = 5  # Number of team frames collected per training iteration
-n_iters = 100  # Number of sampling and training iterations - the episodes the plotter plots
+frames_per_batch = 600  # Number of team frames collected per training iteration
+n_iters = 50  # Number of sampling and training iterations - the episodes the plotter plots
 total_frames = frames_per_batch * n_iters
 
 # Training
@@ -72,11 +73,11 @@ critic_network_num_cells = 64
 """ Environment hyperparameters."""
 
 # Number of agents
-num_agents = 10
+num_agents = 300
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 10 # All the agents are AVs, no humans available in the system.
+new_machines_after_mutation = 300 # All the agents are AVs, no humans available in the system.
 
 # number of episodes the AV training will take
 training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)
@@ -86,8 +87,8 @@ origins = ["E0"]
 destinations = ["E17.600"]
 
 
-records_folder = "training_records_monetary_pricing_10_agents"
-plots_folder = "plots_monetary_pricing_10_agents"
+records_folder = "training_records_monetary_pricing_300_agents"
+plots_folder = "plots_monetary_pricing_300_agents"
 
 # Training phases - needed for the plotting
 phases = [1, int(training_episodes)]
@@ -166,28 +167,13 @@ check_env_specs(env)
 
 share_parameters_policy = False 
 
-class Splitter(nn.Module):
-    def __init__(self, n1=3, n2=100):
-        super().__init__()
-        self.n1, self.n2 = n1, n2
-    def forward(self, x):
-        logits1 = x[..., :self.n1]
-        logits2 = x[..., self.n1:self.n1+self.n2]
-        return logits1, logits2
-
-
-action_space_one = env.action_spec.space.boxes[0].boxes[0].n
-action_space_two = env.action_spec.space.boxes[1].boxes[0].n
-
-
-"""Actor network"""
+#print("value is: ", 2 * np.prod(env.action_spec["agents", "action"].shape))
 
 # Create the MLP for multiple agents
-# The output is the sum of the two action spaces
-policy_torch = nn.Sequential(
+policy_net = nn.Sequential(
     MultiAgentMLP(
         n_agent_inputs = env.observation_spec["agents", "observation"].shape[-1],
-        n_agent_outputs = action_space_one + action_space_two,
+        n_agent_outputs = env.action_spec.space.n,
         n_agents = env.n_agents,
         centralised=True,
         share_params=share_parameters_policy,
@@ -199,80 +185,23 @@ policy_torch = nn.Sequential(
     
 )
 
-# Wrap the MultiAgentMlp in a TensorDictModule.
-# This is simply a module that will read the in_keys from a tensordict, 
-# feed them to the neural networks, and write the outputs in-place at the out_keys.
-encoder = TensorDictModule(
-    policy_torch,
+
+policy_module = TensorDictModule(
+    policy_net,
     in_keys=[("agents", "observation")],
-    out_keys=[("agents", "flat_logits")],
+    out_keys=[("agents", "logits")],
+) 
+
+policy = ProbabilisticActor(
+    module=policy_module,
+    spec=env.action_spec,
+    in_keys=[("agents", "logits")],
+    out_keys=[env.action_key],
+    distribution_class=Categorical,
+    return_log_prob=True,
+    log_prob_key=("agents", "sample_log_prob"),
 )
 
-
-# We want the MultiAgentMLP to output separately each action. 
-# splitter: turns flat -> ("logit1","logit2") 
-splitter = TensorDictModule(
-    Splitter(action_space_one, action_space_two),
-    in_keys=[("agents", "flat_logits")],
-    out_keys=[("agents", "a1_logits"), ("agents", "a2_logits")],
-)
-
-# Creates the params tree expected by CompositeDistribution.
-def _pack_params_only_logits(logit1, logit2):
-    return TensorDict(
-        {
-            "agents": {
-                "params": {
-                    "a1": {"logits": logit1},   # ONLY 'logits' (no 'probs')
-                    "a2": {"logits": logit2},
-                }
-            }
-        },
-        batch_size=[],
-    )
-
-# The in_keys in the ProbabilisticActor should be 1D.
-packer = TensorDictModule(
-    _pack_params_only_logits,
-    in_keys=[("agents","a1_logits"), ("agents","a2_logits")],
-    out_keys=[("agents","params")],
-)
-
-# Combine all the components together.
-actor_backbone = TensorDictSequential(encoder, splitter, packer)
-
-
-tmp_action_key = ("agents","_tmp_action")
-
-
-# Include two categorical distributions (one for each multidiscrete action).
-policy_actor = ProbabilisticActor(
-    module=actor_backbone,
-    in_keys=[("agents","params")],
-    distribution_class=CompositeDistribution, # groups multiple distributions together
-    distribution_kwargs={
-        "distribution_map": {"a1": d.Categorical, "a2": d.Categorical},
-        "name_map": {
-            "a1": ("agents","_tmp_action","a1"), # where to save each output
-            "a2": ("agents","_tmp_action","a2"),
-        },
-    },
-    return_log_prob=False,   # actor does NOT write a summed logprob
-)
-
-
-# Take a1 & a2 as inputs and return the stacked MultiDiscrete vector.
-def _join_action(a1, a2):
-    return torch.stack((a1.to(torch.long), a2.to(torch.long)), dim=-1)  
-
-joiner = TensorDictModule(
-    _join_action,
-    in_keys=[(tmp_action_key, "a1"), (tmp_action_key, "a2")],
-    out_keys=[env.action_key], # write exactly where env expects
-)
-
-# Policy
-policy = TensorDictSequential(policy_actor, joiner)  # what the collector uses
 
 
 """Critic network"""
@@ -322,7 +251,7 @@ replay_buffer = ReplayBuffer(
 """Loss module"""
 
 loss_module = ClipPPOLoss(
-    actor_network=policy_actor,
+    actor_network=policy,
     critic_network=critic,
     clip_epsilon=clip_epsilon,
     entropy_coef=entropy_eps,
@@ -330,13 +259,13 @@ loss_module = ClipPPOLoss(
 )
 
 
-loss_module.set_keys(
-    reward=env.reward_key,
-    action=("agents","_tmp_action"),
-    sample_log_prob=("_prev_log_prob_struct",),  # root-level parent (NOT under "agents")
-    value=("agents","state_value"),
-    done=("agents","done"),
-    terminated=("agents","terminated"),
+loss_module.set_keys( 
+    reward=env.reward_key,  
+    action=env.action_key, 
+    sample_log_prob=("agents", "sample_log_prob"),
+    value=("agents", "state_value"),
+    done=("agents", "done"),
+    terminated=("agents", "terminated"),
 )
 
 loss_module.make_value_estimator(
@@ -351,7 +280,6 @@ pbar = tqdm(total=n_iters, desc="episode_reward_mean = 0")
 
 
 """Training loop"""
-
 for tensordict_data in collector: ##loops over frame_per_batch
 
     ## Generate the rollouts
@@ -368,10 +296,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
         .expand(tensordict_data.get_item_shape(("next", env.reward_key))),  # Adjust index to start from 0
     )
 
-    # Helping function
-    tensordict_data = ensure_tmp_and_logprob(tensordict_data)
-
-
     # Compute GAE for all agents
     with torch.no_grad():
             GAE(
@@ -387,11 +311,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
     for _ in range(num_epochs):
         for _ in range(frames_per_batch // minibatch_size):
             subdata = replay_buffer.sample()
-
-            # Helping functions
-            ensure_composite_action_on(subdata)
-            rebuild_prev_logprob_root(subdata)
-            
             loss_vals = loss_module(subdata)
 
             loss_value = (
@@ -408,7 +327,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
 
             optim.step()
             optim.zero_grad()
-
    
     collector.update_policy_weights_()
    
