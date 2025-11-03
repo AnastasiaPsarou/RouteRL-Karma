@@ -4,6 +4,7 @@ import os
 import sys
 import ast
 import pandas as pd
+import numpy as np
 
 from tensordict.nn import TensorDictModule
 from torchrl.collectors import SyncDataCollector
@@ -107,7 +108,7 @@ env_params = {
         "network_name" : "network",
         "custom_network_folder" : "../../network_analysis/network_base",
         "sumo_type" : "sumo",
-        "simulation_timesteps": 100,
+        "simulation_timesteps": 1500,
     },  
     "plotter_parameters" : {
         "phases" : phases,
@@ -166,12 +167,13 @@ check_env_specs(env)
 
 share_parameters_policy = False 
 
+#print("value is: ", 2 * np.prod(env.action_spec["agents", "action"].shape))
 
 # Create the MLP for multiple agents
-policy_torch = nn.Sequential(
+policy_net = nn.Sequential(
     MultiAgentMLP(
         n_agent_inputs = env.observation_spec["agents", "observation"].shape[-1],
-        n_agent_outputs = env.action_spec.space.n,
+        n_agent_outputs = 3*100,
         n_agents = env.n_agents,
         centralised=True,
         share_params=share_parameters_policy,
@@ -249,7 +251,7 @@ replay_buffer = ReplayBuffer(
 """Loss module"""
 
 loss_module = ClipPPOLoss(
-    actor_network=policy_actor,
+    actor_network=policy,
     critic_network=critic,
     clip_epsilon=clip_epsilon,
     entropy_coef=entropy_eps,
