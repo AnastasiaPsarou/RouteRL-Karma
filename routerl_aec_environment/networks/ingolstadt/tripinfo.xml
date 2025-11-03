@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-03-27 21:25:36 by Eclipse SUMO sumo Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/ingolstadt.net.xml"/>
+        <route-files value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/route.rou.xml"/>
+        <additional-files value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/det.add.xml"/>
+    </input>
+
+    <output>
+        <fcd-output value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/fcd.xml"/>
+        <summary-output value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/summary.xml"/>
+        <tripinfo-output value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/ingolstadt/tripinfo.xml"/>
+    </output>
+
+    <processing>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>
