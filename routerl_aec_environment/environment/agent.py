@@ -145,6 +145,7 @@ class HumanAgent(BaseAgent):
         self.model = get_learning_model(params, initial_knowledge)
         self.last_reward = None
         self.last_obs = 0
+        self.monetary_pricing = None
 
     def __repr__(self):
         return f"Human {self.id}"
@@ -252,6 +253,7 @@ class MachineAgent(BaseAgent):
         self.last_reward = None
         self.rewards_coefs = self._get_reward_coefs()
         self.marginal_calculation = False
+        self.monetary_pricing = None
         #self.marginal_cost_beta = marginal_cost_beta
 
     def __repr__(self) -> str:
