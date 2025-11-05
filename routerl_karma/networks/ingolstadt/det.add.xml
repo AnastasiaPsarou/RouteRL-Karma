@@ -1,9 +1,0 @@
-<additional>
-<laneAreaDetector id="E0_det" lane="E0_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E1_det" lane="E1_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E2_det" lane="E2_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E3_det" lane="E3_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E4_det" lane="E4_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E5_det" lane="E5_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-<laneAreaDetector id="E7_det" lane="E7_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
-</additional>

@@ -135,6 +135,9 @@ if total_area == 0:
     raise ValueError("All values are zero after smoothing; cannot normalize.")
 Y_plot = Y_smooth / total_area
 
+np.savez("income_distribution_arrays.npz",
+         d_fine=d_fine, Y_plot=Y_plot, regions=regions)
+
 
 # -----------------------------
 # 5) Plot with Excel-style padding
