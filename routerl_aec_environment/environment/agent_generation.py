@@ -52,7 +52,14 @@ def generate_agents(params, free_flow_times, generate_data, seed=23423) -> list:
     action_space_size = params[kc.ACTION_SPACE_SIZE]
     agents = list()     # Where we will store & return agents
 
-    income_list = load_unique_incomes("income_samples.csv")
+    #income_list = load_unique_incomes("income_samples.csv")
+    num_agents = params[kc.NUM_AGENTS]
+    income_list = load_shuffled_incomes(
+        "income_samples.csv",
+        seed=seed,
+        col="income",
+        n_needed=num_agents      # <- sample n agents, no repeats
+    )
 
     # Generating agent objects from generated agent data
     for i, row in agents_data_df.iterrows():
@@ -147,6 +154,36 @@ def load_unique_incomes(samples_path, col="income"):
     if uniq.size == 0:
         raise ValueError(f"No valid numeric '{col}' values found in {samples_path}.")
     return uniq
+
+def load_shuffled_incomes(samples_path, seed, col="income", n_needed=None):
+    """
+    Load incomes from CSV and return a randomized selection.
+    - If n_needed is None: return all incomes in a random order.
+    - If n_needed is provided:
+        * sample WITHOUT replacement n_needed values (so each is used once).
+    """
+    s = pd.read_csv(samples_path, usecols=[col])[col]
+    s = pd.to_numeric(s, errors="coerce").dropna().to_numpy()
+
+    if s.size == 0:
+        raise ValueError(f"No valid numeric '{col}' values found in {samples_path}.")
+
+    rng = np.random.default_rng(seed)
+
+    if n_needed is None:
+        rng.shuffle(s)              # full random permutation
+        return s
+
+    if s.size < n_needed:
+        raise ValueError(
+            f"[income sampling] CSV has only {s.size} incomes but {n_needed} agents."
+        )
+
+    # sample exactly n_needed rows without replacement
+    idx = rng.choice(s.size, size=n_needed, replace=False)
+    return s[idx]
+
+
 
 def set_seed(seed):
     """Set the seed for random number generation.
