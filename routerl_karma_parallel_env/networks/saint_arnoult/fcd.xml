@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-10-05 11:41:01 by Eclipse SUMO sumo Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/saint_arnoult/saint_arnoult.net.xml"/>
+        <route-files value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/saint_arnoult/route.rou.xml"/>
+        <additional-files value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/saint_arnoult/det.add.xml"/>
+    </input>
+
+    <output>
+        <fcd-output value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/saint_arnoult/fcd.xml"/>
+        <summary-output value="C:\Users\Anastasia\Documents\RouteRL_exps_benchmark\RouteRL\routerl\environment\../networks/saint_arnoult/summary.xml"/>
+        <tripinfo-output value="training_records_saint_arnoult_no_marginal_10_agents\SUMO_output\detailed_sumo_stats_632.xml"/>
+        <statistic-output value="training_records_saint_arnoult_no_marginal_10_agents\SUMO_output\sumo_stats_632.xml"/>
+    </output>
+
+    <processing>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="995580"/>
+    </random_number>
+
+</configuration>
+-->
+
+<fcd-export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/fcd_file.xsd">
+</fcd-export>

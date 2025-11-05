@@ -48,8 +48,8 @@ device = (
 )
 
 # Sampling
-frames_per_batch = 600  # Number of team frames collected per training iteration
-n_iters = 50  # Number of sampling and training iterations - the episodes the plotter plots
+frames_per_batch = 3000  # Number of team frames collected per training iteration
+n_iters = 1  # Number of sampling and training iterations - the episodes the plotter plots
 total_frames = frames_per_batch * n_iters
 
 # Training
@@ -87,8 +87,9 @@ origins = ["E0"]
 destinations = ["E17.600"]
 
 
-records_folder = "training_records_monetary_pricing_300_agents"
-plots_folder = "plots_monetary_pricing_300_agents"
+records_folder = "training_records_monetary_pricing_300_agents_fee_0_1"
+plots_folder = "plots_monetary_pricing_300_agents_fee_0_1"
+torch.manual_seed(10)
 
 # Training phases - needed for the plotting
 phases = [1, int(training_episodes)]
@@ -129,7 +130,7 @@ env_params = {
 }
 
 # Environment initialization
-env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing = True, **env_params)
+env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
 
 # Initialize the connection with SUMo
 env.start()
@@ -175,7 +176,7 @@ policy_net = nn.Sequential(
         n_agent_inputs = env.observation_spec["agents", "observation"].shape[-1],
         n_agent_outputs = env.action_spec.space.n,
         n_agents = env.n_agents,
-        centralised=True,
+        centralised=False,
         share_params=share_parameters_policy,
         device=device,
         depth=policy_network_depth,
