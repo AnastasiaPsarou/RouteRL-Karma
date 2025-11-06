@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-06 11:46:58 by Eclipse SUMO sumo Version 1.15.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="network_analysis/network_base/network.net.xml"/>
+        <route-files value="network_analysis/network_base/route.rou.xml"/>
+        <additional-files value="network_analysis/network_base/det.add.xml"/>
+    </input>
+
+    <output>
+        <fcd-output value="network_analysis/network_base/fcd.xml"/>
+        <summary-output value="network_analysis/network_base/summary.xml"/>
+        <tripinfo-output value="training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long/SUMO_output/detailed_sumo_stats_207.xml"/>
+        <tripinfo-output.write-undeparted value="true"/>
+        <statistic-output value="training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long/SUMO_output/sumo_stats_207.xml"/>
+    </output>
+
+    <time>
+        <step-length value="0.5"/>
+    </time>
+
+    <processing>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+    <tripinfo id="236" depart="14.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="214.50" arrivalLane="E17.600_1" arrivalPos="1396.00" arrivalSpeed="29.61" duration="200.50" routeLength="5294.64" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="22.32" rerouteNo="0" devices="tripinfo_236 fcd_236" vType="AV" speedFactor="1.07" vaporized=""/>
+    <tripinfo id="281" depart="31.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="11.50" arrival="221.00" arrivalLane="E17.600_3" arrivalPos="1396.00" arrivalSpeed="31.18" duration="189.50" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="24.15" rerouteNo="0" devices="tripinfo_281 fcd_281" vType="AV" speedFactor="1.13" vaporized=""/>
+    <tripinfo id="293" depart="7.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="228.50" arrivalLane="E17.600_1" arrivalPos="1396.00" arrivalSpeed="26.03" duration="221.50" routeLength="5296.87" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="20.01" rerouteNo="0" devices="tripinfo_293 fcd_293" vType="AV" speedFactor="0.95" vaporized=""/>
+    <tripinfo id="298" depart="26.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="6.00" arrival="229.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="26.76" duration="203.00" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="30.32" rerouteNo="0" devices="tripinfo_298 fcd_298" vType="AV" speedFactor="1.08" vaporized=""/>
+    <tripinfo id="242" depart="28.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="8.50" arrival="241.50" arrivalLane="E17.600_1" arrivalPos="1396.00" arrivalSpeed="28.02" duration="213.00" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="31.08" rerouteNo="0" devices="tripinfo_242 fcd_242" vType="AV" speedFactor="1.03" vaporized=""/>
+    <tripinfo id="4" depart="23.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="6.00" arrival="247.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="25.56" duration="224.00" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="22.90" rerouteNo="0" devices="tripinfo_4 fcd_4" vType="AV" speedFactor="0.93" vaporized=""/>
+    <tripinfo id="113" depart="54.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="29.50" arrival="247.00" arrivalLane="E17.600_4" arrivalPos="1396.00" arrivalSpeed="31.23" duration="192.50" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="26.40" rerouteNo="0" devices="tripinfo_113 fcd_113" vType="AV" speedFactor="1.13" vaporized=""/>
+    <tripinfo id="94" depart="39.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="18.00" arrival="248.50" arrivalLane="E17.600_1" arrivalPos="1396.00" arrivalSpeed="27.70" duration="209.50" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="22.66" rerouteNo="0" devices="tripinfo_94 fcd_94" vType="AV" speedFactor="1.00" vaporized=""/>
+    <tripinfo id="152" depart="41.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="19.50" arrival="253.50" arrivalLane="E17.600_1" arrivalPos="1396.00" arrivalSpeed="27.16" duration="212.00" routeLength="5296.87" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="20.08" rerouteNo="0" devices="tripinfo_152 fcd_152" vType="AV" speedFactor="0.99" vaporized=""/>
+    <tripinfo id="204" depart="20.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="5.00" arrival="256.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="24.06" duration="236.50" routeLength="5296.87" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="19.36" rerouteNo="0" devices="tripinfo_204 fcd_204" vType="AV" speedFactor="0.88" vaporized=""/>
+    <tripinfo id="142" depart="17.00" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="3.00" arrival="258.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="32.10" duration="241.50" routeLength="5895.06" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="66.21" rerouteNo="0" devices="tripinfo_142 fcd_142" vType="AV" speedFactor="1.16" vaporized=""/>
+    <tripinfo id="188" depart="65.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="38.50" arrival="270.50" arrivalLane="E17.600_3" arrivalPos="1396.00" arrivalSpeed="30.09" duration="205.00" routeLength="5193.55" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="34.13" rerouteNo="0" devices="tripinfo_188 fcd_188" vType="AV" speedFactor="1.10" vaporized=""/>
+    <tripinfo id="230" depart="51.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="26.50" arrival="275.50" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="27.16" duration="224.00" routeLength="5294.64" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="30.97" rerouteNo="0" devices="tripinfo_230 fcd_230" vType="AV" speedFactor="0.99" vaporized=""/>
+    <tripinfo id="174" depart="73.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="45.50" arrival="280.00" arrivalLane="E17.600_2" arrivalPos="1396.00" arrivalSpeed="30.64" duration="206.50" routeLength="5294.64" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="35.98" rerouteNo="0" devices="tripinfo_174 fcd_174" vType="AV" speedFactor="1.12" vaporized=""/>
+    <tripinfo id="60" depart="36.50" departLane="E0_0" departPos="5.10" departSpeed="0.00" departDelay="15.50" arrival="281.00" arrivalLane="E17.600_0" arrivalPos="1396.00" arrivalSpeed="22.89" duration="244.50" routeLength="5296.87" waitingTime="0.50" waitingCount="1" stopTime="0.00" timeLoss="18.27" rerouteNo="0" devices="tripinfo_60 fcd_60" vType="AV" speedFactor="0.84" vaporized=""/>
