@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 
 # === USER PARAMETERS ===
 FOLDER_PATHS = [
+    #r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_0001/episodes",
     r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_1/episodes",
     r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_25/episodes",
     r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_5/episodes",
@@ -30,17 +31,24 @@ RECURSIVE = False
 ROUTES = [0, 1, 2]
 
 # === PLOT STYLE PARAMETERS ===
-TITLE_FONTSIZE = 18
-AXIS_LABEL_FONTSIZE = 16
-TICK_FONTSIZE = 12
-LEGEND_FONTSIZE = 14
-ANNOTATION_FONTSIZE = 14
+TITLE_FONTSIZE = 23
+AXIS_LABEL_FONTSIZE = 24
+TICK_FONTSIZE = 16
+LEGEND_FONTSIZE = 24
+ANNOTATION_FONTSIZE = 16.3
+ANNOTATION_COLS = 3  # how many entries per line in the Route 0 annotation
 ANNOTATION_FONTWEIGHT = 'bold'
 
 # place the Route 0 income/percentile box below the barplot
 ANNOTATION_BELOW = True
 ANNOTATION_BELOW_Y = -0.25   # how far below (axes fraction; negative goes outside)
 
+def _format_route0_rows(route0_df: pd.DataFrame, cols: int) -> str:
+    # compact "income (percentile%)", three per line
+    items = [f"{inc:.1f} ({pct:.1f}%)"
+             for inc, pct in zip(route0_df["income"], route0_df["percentile"])]
+    lines = [",  ".join(items[i:i+cols]) for i in range(0, len(items), cols)]
+    return "\n".join(lines)
 
 
 def find_csvs(folder: str, recursive: bool) -> list[str]:
@@ -167,7 +175,10 @@ def main():
     items.sort(key=lambda t: (float("inf") if t[0] is None else t[0]))
 
     n = len(items)
-    fig, axes = plt.subplots(2, n, figsize=(6 * n, 10), sharey="row")
+    #fig, axes = plt.subplots(2, n, figsize=(8 * n, 12), sharey="row")
+    fig, axes = plt.subplots(2, n, figsize=(9 * n, 12), sharey="row",
+                         gridspec_kw={'hspace': 0.4})  # increase vertical space
+
     if n == 1:
         axes = axes.reshape(2, 1)
 
@@ -195,8 +206,15 @@ def main():
     axes[0, 0].set_ylabel("Average Reward", fontsize=AXIS_LABEL_FONTSIZE)
 
     handles, labels = axes[0, min(n - 1, 0)].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=len(ROUTES),
-               bbox_to_anchor=(0.5, 0.995), fontsize=LEGEND_FONTSIZE)
+    #fig.legend(handles, labels, loc="upper center", ncol=len(ROUTES),
+    #           bbox_to_anchor=(0.5, 0.995), fontsize=LEGEND_FONTSIZE)
+    fig.legend(handles, labels,
+           loc="upper center",
+           ncol=len(ROUTES),
+           bbox_to_anchor=(0.5, 1.02),
+           fontsize=LEGEND_FONTSIZE + 4,   # larger legend text
+           frameon=False)
+
 
     # --- Row 2: bar plots + Route 0 annotation ---
     for col, (fee, fee_label, folder, _, counts, route0_df) in enumerate(items):
@@ -217,42 +235,47 @@ def main():
                         va="bottom", fontsize=ANNOTATION_FONTSIZE)
 
         # --- annotate Route 0 with exact incomes + percentiles ---
-        # --- annotate Route 0 with exact incomes + percentiles (one per line) ---
-        # --- annotate Route 0 with exact incomes + percentiles (3 per line) ---
+                # --- annotate Route 0 with exact incomes + percentiles ---
         if not route0_df.empty:
             fee_str = "unknown" if fee is None else str(fee).replace(".", "_")
             csv_path = f"imgs/income_route0_fee_{fee_str}.csv"
             route0_df.to_csv(csv_path, index=False)
 
-            # Build entries like "42.0 (85.3%)"
-            entries = [f"{inc:.1f} ({pct:.1f}%)"
-                    for inc, pct in zip(route0_df["income"], route0_df["percentile"])]
-
-            # Group entries into lines of 3
-            grouped_lines = [", ".join(entries[i:i+3]) for i in range(0, len(entries), 3)]
-            list_text = "\n".join(grouped_lines)
-
-            text = (f"Route 0 incomes ({len(entries)} agents):\n{list_text}")
+            list_text = _format_route0_rows(route0_df, ANNOTATION_COLS)
+            text = f"Route 0 incomes ({len(route0_df)} agents):\n{list_text}"
 
             if ANNOTATION_BELOW:
-                # Place the box centered below the plot
-                ax.annotate(text,
-                            xy=(0.5, ANNOTATION_BELOW_Y), xycoords="axes fraction",
-                            ha="center", va="top",
-                            fontsize=ANNOTATION_FONTSIZE, fontweight=ANNOTATION_FONTWEIGHT,
-                            bbox=dict(boxstyle="round,pad=0.3", alpha=0.2),
-                            annotation_clip=False)
+                # draw plain text (no arrow), fixed in axes coords
+                ax.text(
+                    0.5, ANNOTATION_BELOW_Y, text,
+                    transform=ax.transAxes,
+                    ha="center", va="top",
+                    fontsize=ANNOTATION_FONTSIZE,
+                    fontweight=ANNOTATION_FONTWEIGHT,
+                    family="monospace",
+                    multialignment="left",
+                    wrap=False,
+                    bbox=dict(boxstyle="round,pad=0.3", alpha=0.2),
+                    clip_on=False
+                )
             else:
-                # Original: above the Route 0 bar
                 idx0 = ROUTES.index(0)
                 rect0 = bars[idx0]
                 y0 = rect0.get_height()
-                ax.annotate(text,
-                            xy=(rect0.get_x() + rect0.get_width()/2, y0),
-                            xytext=(0, 34), textcoords="offset points",
-                            ha="center", va="bottom",
-                            fontsize=ANNOTATION_FONTSIZE, fontweight=ANNOTATION_FONTWEIGHT,
-                            bbox=dict(boxstyle="round,pad=0.3", alpha=0.2))
+                ax.text(
+                    rect0.get_x() + rect0.get_width()/2, y0 + 34,
+                    text, transform=ax.get_yaxis_transform(),
+                    ha="center", va="bottom",
+                    fontsize=ANNOTATION_FONTSIZE,
+                    fontweight=ANNOTATION_FONTWEIGHT,
+                    family="monospace",
+                    multialignment="left",
+                    wrap=False,
+                    bbox=dict(boxstyle="round,pad=0.3", alpha=0.2),
+                    clip_on=False
+                )
+
+
 
     axes[1, 0].set_ylabel("Number of Agents", fontsize=AXIS_LABEL_FONTSIZE)
 

@@ -14,12 +14,11 @@ plt.rcParams['font.sans-serif'] = ['Times New Roman']
 # ---- USER PARAMETERS ----
 # ==========================================================
 folders = [
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long/episodes",
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long_1/episodes",
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long_2/episodes",
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long_3/episodes",
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long_4/episodes",
-    "../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long_5/episodes",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long/episodes",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long/episodes",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long/episodes",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long/episodes",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long/episodes",
 ]
 metric = "income"          # column to plot
 SAVE_PNG = "imgs/income_scatter_last_episode.png"

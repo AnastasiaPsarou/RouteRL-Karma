@@ -16,7 +16,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # === USER PARAMETERS ===
-FOLDER_PATH = r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_5/episodes"   # <-- CHANGE THIS to your folder path
+FOLDER_PATH = r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_1/episodes"
 #FOLDER_PATH = r"../data/training_records_300_agents/training_records_monetary_pricing_300_agents_long/episodes"   # <-- CHANGE THIS to your folder path
 RECURSIVE = False                       # set True if you want to include subfolders
 ROUTES = [0, 1, 2]                      # Routes to track

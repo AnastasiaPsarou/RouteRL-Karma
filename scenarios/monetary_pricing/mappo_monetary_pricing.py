@@ -87,8 +87,8 @@ origins = ["E0"]
 destinations = ["E17.600"]
 
 
-records_folder = "training_records_monetary_pricing_300_agents_fee_0_1"
-plots_folder = "plots_monetary_pricing_300_agents_fee_0_1"
+records_folder = "training_records_monetary_pricing_300_agents_fee_0_0001"
+plots_folder = "plots_monetary_pricing_300_agents_fee_0_0001"
 torch.manual_seed(10)
 
 # Training phases - needed for the plotting
