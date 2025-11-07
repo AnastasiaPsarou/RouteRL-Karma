@@ -523,7 +523,7 @@ class MachineAgent(BaseAgent):
         agent_info = next((entry for entry in observation if entry["id"] == self.id), None)
 
         if agent_info['action'] == np.int64(0):
-            route_fee = 0.1
+            route_fee = 0.0001
         else:
             route_fee = 0
 

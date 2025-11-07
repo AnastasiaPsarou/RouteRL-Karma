@@ -272,7 +272,7 @@ def compare_agent_delays_side_by_side(
     route_order="appearance",
     income_csv=None,
     output_csvs=None,
-    figsize_per_panel=(5, 4),
+    figsize_per_panel=(6, 7),
     figure_title="Income vs Avg Delay (per run)",
     save_fig_path=None,
     share_limits=True,
@@ -280,7 +280,13 @@ def compare_agent_delays_side_by_side(
     jitter_if_same_income=True,
     jitter_frac=0.01,
     show_plot=False,
+    title_fontsize=14,
+    axis_label_fontsize=11,
+    tick_fontsize=9,
+    legend_fontsize=10,
+    suptitle_fontsize=16,
 ):
+
     """
     Scatter per panel: x=income, y=avg_delay, colored by chosen_route_index.
     Uses discrete colors per route, saves figure correctly before showing.
@@ -362,11 +368,20 @@ def compare_agent_delays_side_by_side(
     fig, axes = plt.subplots(1, n, figsize=(fig_width, fig_height), squeeze=False)
     axes = axes[0]
 
-    for ax, label, tmp in zip(axes, labels, per_run_clean):
-        ax.set_title(label, pad=8)
-        ax.set_xlabel("Income")
-        ax.set_ylabel("Avg delay")
+    for i, (ax, label, tmp) in enumerate(zip(axes, labels, per_run_clean)):
+        ax.set_title(label, pad=8, fontsize=title_fontsize)
+        ax.set_xlabel("Income", fontsize=axis_label_fontsize)
+
+        # only show y-axis label for the first (leftmost) subplot
+        if i == 0:
+            ax.set_ylabel("Avg delay", fontsize=axis_label_fontsize)
+        else:
+            ax.set_ylabel("")          # remove label
+            ax.tick_params(labelleft=False)  # hide y tick labels for cleaner look
+
+        ax.tick_params(axis='both', which='major', labelsize=tick_fontsize)
         ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.5)
+
 
         if tmp.empty:
             ax.text(0.5, 0.5, "No data", ha="center", va="center", transform=ax.transAxes)
@@ -387,7 +402,7 @@ def compare_agent_delays_side_by_side(
                 eps = max(span * jitter_frac, 1e-9)
                 x = x + (np.random.rand(len(x)) - 0.5) * 2 * eps
 
-            ax.scatter(x, y, c=colors)
+            ax.scatter(x, y, c=colors, s=100)
 
         if shared_xlim and shared_ylim:
             ax.set_xlim(shared_xlim)
@@ -396,20 +411,23 @@ def compare_agent_delays_side_by_side(
     # Legend (below suptitle, not overlapping it)
     if sorted_routes:
         legend_elements = [
-            Line2D([0], [0], marker='o', linestyle='', color=route_to_color[r], label=f"Route {r}")
+            Line2D([0], [0], marker='o', linestyle='', markersize=16,  color=route_to_color[r], label=f"Route {r}")
             for r in sorted_routes
         ]
-        # Adjust top margin to make room for legend + title
         plt.subplots_adjust(top=0.80)
         fig.legend(
             handles=legend_elements,
             loc="upper center",
             ncol=min(len(sorted_routes), 6),
             frameon=False,
-            bbox_to_anchor=(0.5, 0.95)
+            bbox_to_anchor=(0.5, 0.95),
+            fontsize=legend_fontsize
         )
 
-    fig.suptitle(figure_title, y=0.98, fontsize=14, fontweight="bold")
+    fig.suptitle(figure_title, y=0.98, fontsize=suptitle_fontsize, fontweight="bold")
+
+
+    #fig.suptitle(figure_title, y=0.98, fontsize=14, fontweight="bold")
     fig.tight_layout(rect=[0, 0, 1, 0.85])
 
     # Save before showing
@@ -437,20 +455,28 @@ def compare_agent_delays_side_by_side(
 LABELS = ["Run A", "Run B", "Run C", "Run D", "Run E"]"""
 
 BASE_DIRS = [
-    r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_25",
-    r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_0_5",
-    r"../scenarios/monetary_pricing/training_records_monetary_pricing_300_agents_fee_1",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long",
+    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long",
 ]
 
-LABELS = ["Run A", "Run B", "Run C"]
+LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
 
 _ = compare_agent_delays_side_by_side(
     base_dirs=BASE_DIRS,
     labels=LABELS,
     last_n=10,
     route_order="appearance",
-    save_fig_path="income_delay_by_route.png",
+    save_fig_path="imgs/income_delay_by_route.png",
     cmap_name="tab20",
-    show_plot=False,   # save first; show if you want
+    title_fontsize=28,
+    axis_label_fontsize=24,
+    tick_fontsize=22,
+    legend_fontsize=24,
+    suptitle_fontsize=28,
+    show_plot=False,
 )
+
 
