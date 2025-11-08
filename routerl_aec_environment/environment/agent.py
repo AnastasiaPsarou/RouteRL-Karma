@@ -254,6 +254,7 @@ class MachineAgent(BaseAgent):
         self.rewards_coefs = self._get_reward_coefs()
         self.marginal_calculation = False
         self.monetary_pricing = None
+        self.route_0_fee = params[kc.ROUTE_0_FEE]
         #self.marginal_cost_beta = marginal_cost_beta
 
     def __repr__(self) -> str:
@@ -523,7 +524,7 @@ class MachineAgent(BaseAgent):
         agent_info = next((entry for entry in observation if entry["id"] == self.id), None)
 
         if agent_info['action'] == np.int64(0):
-            route_fee = 0.0001
+            route_fee = self.route_0_fee
         else:
             route_fee = 0
 
