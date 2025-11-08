@@ -28,7 +28,7 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
 The `routerl_karma_parallel_env` directory contains an updated version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, in which each agent’s actions involve selecting both a **route** and a **departure time**. To accommodate this MultiDiscrete action space, this version employs the **Parallel API** from the PettingZoo library instead of the **AEC API** used in the original RouteRL implementation. Furthermore, it introduces **monetary pricing** and **karma-based mechanisms** within the route choice context.
 
 
-The `routerl_aec_environment` contains a version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, where agents are assigned an income value, and travel route costs are incorporated into the reward function based on each agent’s Value of Time (VoT).
+The `routerl_aec_environment` contains a version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, where agents are assigned an income value, and travel route costs are incorporated into the agent's reward function based on each agent’s Value of Time (VoT).
 
 
 `scenarios` folder the different scenarios that are going to be tested during the work. Specifically, 
@@ -57,6 +57,7 @@ Riehl, K., Kouvelas, A. & Makridis, M.A. Karma economies for sustainable urban m
 ```
 Akman*, A. O., Psarou*, A., Gorczyca, Ł., Varga, Z. G., Jamróz, G., & Kucharski, R. (2025). RouteRL: Multi-agent reinforcement learning framework for urban route choice with autonomous vehicles. SoftwareX, 31, 102279. https://doi.org/10.1016/j.softx.2025.102279
 ```
+
 
 
 
