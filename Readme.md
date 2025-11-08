@@ -19,6 +19,8 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
 │    └── ...
 ├── scenarios/
 │   └── ...
+├── server_scripts/
+│   └── ...
 ```
 
 
@@ -33,9 +35,12 @@ The `routerl_aec_environment` contains a version of the [RouteRL](https://github
 
 `scenarios` folder the different scenarios that are going to be tested during the work. Specifically, 
 
-- [`google maps`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/google_maps) models AV agents that independently learn optimal routes and departure times. Each agent acts selfishly, aiming to minimize its own travel time.
+- [`google maps`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/google_maps) contains scripts where AV agents act independently, learn optimal routes and departure times. Each agent acts selfishly, aiming to minimize its own travel time.
 - [`benevolent_dictator`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/benevolent_dictator) contains the implementation of the **benevolent dictator**, a centralized multi-agent reinforcement learning (MARL) scenario where the agents aim to minimize the system travel time.
+- [`monetary_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/benevolent_dictator) contains scripts where agents choose routes aiming to minimize their cost, which consists of route fees and their VoT.
 
+  
+The `server_scripts` folder contains scripts for running experiments using the GMUM servers.
 
 <!--
 ## Installation
@@ -57,6 +62,7 @@ Riehl, K., Kouvelas, A. & Makridis, M.A. Karma economies for sustainable urban m
 ```
 Akman*, A. O., Psarou*, A., Gorczyca, Ł., Varga, Z. G., Jamróz, G., & Kucharski, R. (2025). RouteRL: Multi-agent reinforcement learning framework for urban route choice with autonomous vehicles. SoftwareX, 31, 102279. https://doi.org/10.1016/j.softx.2025.102279
 ```
+
 
 
 
