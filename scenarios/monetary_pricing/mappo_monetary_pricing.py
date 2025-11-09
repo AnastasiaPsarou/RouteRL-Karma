@@ -73,11 +73,11 @@ critic_network_num_cells = 64
 """ Environment hyperparameters."""
 
 # Number of agents
-num_agents = 10
+num_agents = 300
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 10 # All the agents are AVs, no humans available in the system.
+new_machines_after_mutation = 300 # All the agents are AVs, no humans available in the system.
 
 # number of episodes the AV training will take
 training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)

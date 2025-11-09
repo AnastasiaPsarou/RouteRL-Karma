@@ -372,6 +372,8 @@ class TrafficEnvironment(AECEnv):
         self.machine_agents = [agent for agent in self.all_agents if agent.kind == kc.TYPE_MACHINE]
         self.human_agents = [agent for agent in self.all_agents if agent.kind == kc.TYPE_HUMAN]
         self.possible_agents = list()
+        self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
+        self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10)  # restrict to 1–10
 
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag() # Initialize monetary pricing flag
@@ -420,6 +422,7 @@ class TrafficEnvironment(AECEnv):
             agent: Discrete(self.simulation_params[kc.NUMBER_OF_PATHS]) for agent in self.possible_agents
         }
 
+        self._assign_urgency_level_to_agents()
         logging.info("\nMachine's observation space is: %s ", self._observation_spaces)
         logging.info("Machine's action space is: %s", self._action_spaces)
 
@@ -463,6 +466,7 @@ class TrafficEnvironment(AECEnv):
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
             self.observations = self.observation_obj.reset_observation()
+            self._assign_urgency_level_to_agents() # assign urgency level to agents
         else:
             self.observations = {}
 
@@ -739,7 +743,8 @@ class TrafficEnvironment(AECEnv):
                            kc.AGENT_ORIGIN: agent.origin,
                            kc.AGENT_DESTINATION: agent.destination,
                            kc.AGENT_START_TIME: agent.start_time,
-                           kc.INCOME: agent.income}
+                           kc.INCOME: agent.income,
+                           kc.URGENCY: agent.urgency}
             self.simulator.add_vehicle(action_dict)
             self.episode_actions[agent.id] = action_dict
         timestep, stopped_vehicles_info, arrivals, teleported = self.simulator.step()
@@ -794,6 +799,8 @@ class TrafficEnvironment(AECEnv):
 
         self.travel_times_list = []
         self.episode_actions = dict()
+        self._assign_urgency_level_to_agents()
+
 
     def _assign_rewards(self) -> None:
 
@@ -818,6 +825,10 @@ class TrafficEnvironment(AECEnv):
             elif self.human_learning:
                 agent.learn(agent.last_action, self.travel_times_list)
     
+    def _assign_urgency_level_to_agents(self) -> None:
+
+        for machine in self.machine_agents:
+            machine.urgency = np.random.choice(self.urgency_distribution)
 
     ###################################
     #### Marginal cost calculation ####
