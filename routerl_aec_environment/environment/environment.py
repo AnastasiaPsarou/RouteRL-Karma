@@ -1040,7 +1040,8 @@ class TrafficEnvironment(AECEnv):
             return PreviousAgentStartPlusStartTime(self.machine_agents,
                                                    self.human_agents,
                                                    self.simulation_params,
-                                                   self.agent_params)
+                                                   self.agent_params,
+                                                   self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
         elif observation_type == kc.PREVIOUS_AGENTS:
             return PreviousAgentStart(self.machine_agents,
                                       self.human_agents,
