@@ -146,6 +146,7 @@ class PreviousAgentStartPlusStartTime(Observations):
         human_agents_list: List[Any],
         simulation_params: Dict[str, Any],
         agent_params: Dict[str, Any],
+        observations_time_window: int
     ) -> None:
         """Initialize the observation function.
 
@@ -163,6 +164,7 @@ class PreviousAgentStartPlusStartTime(Observations):
         self.agent_params = agent_params
         self.observations = self.reset_observation()
         self.agent_vectors = {}
+        self.time_window = observations_time_window
 
     def __call__(self, all_agents: List[Any]) -> Dict[str, Any]:
         """Generate observations for all agents.
@@ -262,7 +264,9 @@ class PreviousAgentStartPlusStartTime(Observations):
                 machine.destination == agent.destination and
                 machine.start_time > agent.start_time):
                 
-                observation[agent.last_action] += 1
+                dt = abs(agent.start_time - machine.start_time)
+                if 0 < dt < self.time_window:
+                    observation[agent.last_action] += 1
 
         observation = np.concatenate(([machine.start_time], observation))
 

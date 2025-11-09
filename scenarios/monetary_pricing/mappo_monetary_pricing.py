@@ -112,6 +112,10 @@ env_params = {
         "sumo_type" : "sumo",
         "simulation_timesteps": 100,
     },  
+    "environment_parameters":
+    {
+        "observations_time_window": 40
+    },
     "plotter_parameters" : {
         "phases" : phases,
         "smooth_by" : 50,
