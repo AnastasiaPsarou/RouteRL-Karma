@@ -255,6 +255,7 @@ class MachineAgent(BaseAgent):
         self.marginal_calculation = False
         self.monetary_pricing = None
         self.route_0_fee = params[kc.ROUTE_0_FEE]
+        self.urgency = None
         #self.marginal_cost_beta = marginal_cost_beta
 
     def __repr__(self) -> str:
@@ -507,7 +508,7 @@ class MachineAgent(BaseAgent):
             hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
             travel_times_hrs = -1 * agent_reward / 60
 
-            agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs)
+            agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
 
 
         if self.marginal_calculation:
