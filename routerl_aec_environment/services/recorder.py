@@ -75,7 +75,7 @@ class Recorder:
     ####### Remember methods #######
     ################################
 
-    def record(self, episode, ep_observations, cost_tables, det_dict) -> None:
+    def record(self, episode, ep_observations, observations, cost_tables, det_dict) -> None:
         """Records the episode.
 
         Args:
@@ -88,11 +88,11 @@ class Recorder:
             None
         """
 
-        self.remember_episode(episode, ep_observations, cost_tables)
+        self.remember_episode(episode, ep_observations, observations, cost_tables)
         self.remember_detector(episode, det_dict)
         
 
-    def remember_episode(self, episode, ep_observations, cost_tables) -> None:
+    def remember_episode(self, episode, ep_observations, observations, cost_tables) -> None:
         """Remember the episode.
 
         Args:
@@ -105,12 +105,18 @@ class Recorder:
         
         ep_observations_df = pl.from_dicts(ep_observations)
 
+        for entry in observations:
+            entry['observation'] = ','.join(map(str, entry['observation']))
+
+        observations_df = pl.from_dicts(observations)
+
         for entry in cost_tables:
             entry['cost_table'] = ','.join(map(str, entry['cost_table']))
 
         cost_tables_df = pl.from_dicts(cost_tables)
         
-        merged_df = ep_observations_df.join(cost_tables_df, on=kc.AGENT_ID)
+        merged_df = ep_observations_df.join(observations_df, on=kc.AGENT_ID)
+        merged_df = merged_df.join(cost_tables_df, on=kc.AGENT_ID)
         merged_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
 
     def remember_detector(self, episode, det_dict) -> None:

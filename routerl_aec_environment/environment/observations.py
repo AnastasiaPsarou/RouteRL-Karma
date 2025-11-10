@@ -213,7 +213,8 @@ class PreviousAgentStartPlusStartTime(Observations):
             str(agent.id): np.concatenate(  # Combine start_time and vector into a single array
                 [
                     np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
-                    self.agent_vectors[agent]  # Vector as array
+                    self.agent_vectors[agent],  # Vector as array
+                    np.array([agent.urgency], dtype=np.int32),  # Start time as scalar
                 ]
             )
             for agent in self.machine_agents_list
@@ -231,7 +232,7 @@ class PreviousAgentStartPlusStartTime(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 1 + self.simulation_params[kc.NUMBER_OF_PATHS]
+        total_size = 2 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
 
         return {
             str(agent.id): Box(
@@ -268,7 +269,7 @@ class PreviousAgentStartPlusStartTime(Observations):
                 if 0 < dt < self.time_window:
                     observation[agent.last_action] += 1
 
-        observation = np.concatenate(([machine.start_time], observation))
+        observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
         self.observations[str(machine.id)] = observation
         
