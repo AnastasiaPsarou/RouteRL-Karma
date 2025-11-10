@@ -50,6 +50,7 @@ class Keychain:
     MARGINAL_MATRICES_FOLDER = "marginal_matrices_folder"
     ROUTE_0_FEE = "route_0_fee"
     URGENCY = "urgency"
+    OBSERVATION = "observation"
 
 
     ### Environment

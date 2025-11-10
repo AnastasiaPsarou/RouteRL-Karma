@@ -410,6 +410,8 @@ class TrafficEnvironment(AECEnv):
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
 
+        self._assign_urgency_level_to_agents()
+
         ## Initialize the observation object
         self.observation_obj = self.get_observation_function()
         self._observation_spaces = self.observation_obj.observation_space()
@@ -422,7 +424,6 @@ class TrafficEnvironment(AECEnv):
             agent: Discrete(self.simulation_params[kc.NUMBER_OF_PATHS]) for agent in self.possible_agents
         }
 
-        self._assign_urgency_level_to_agents()
         logging.info("\nMachine's observation space is: %s ", self._observation_spaces)
         logging.info("Machine's action space is: %s", self._action_spaces)
 
@@ -465,8 +466,8 @@ class TrafficEnvironment(AECEnv):
         if len(self.machine_agents) > 0:
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
+            #self._assign_urgency_level_to_agents() # assign urgency level to agents
             self.observations = self.observation_obj.reset_observation()
-            self._assign_urgency_level_to_agents() # assign urgency level to agents
         else:
             self.observations = {}
 
@@ -737,6 +738,9 @@ class TrafficEnvironment(AECEnv):
     def _help_step(self, actions: list[tuple]) -> dict:
 
         for agent, action in actions:
+
+            obs_val = np.atleast_1d(getattr(self, 'observations', {}).get(str(agent.id), [])).ravel().tolist()
+
             action_dict = {kc.AGENT_ID: agent.id,
                            kc.AGENT_KIND: agent.kind,
                            kc.ACTION: action,
@@ -744,7 +748,9 @@ class TrafficEnvironment(AECEnv):
                            kc.AGENT_DESTINATION: agent.destination,
                            kc.AGENT_START_TIME: agent.start_time,
                            kc.INCOME: agent.income,
-                           kc.URGENCY: agent.urgency}
+                           kc.URGENCY: agent.urgency,
+                           #kc.OBSERVATION: self.observations[str(agent.id)].tolist()
+            }
             self.simulator.add_vehicle(action_dict)
             self.episode_actions[agent.id] = action_dict
         timestep, stopped_vehicles_info, arrivals, teleported = self.simulator.step()
@@ -793,13 +799,15 @@ class TrafficEnvironment(AECEnv):
                                                                         detectors_dict))
             recording_task.start()
         
+        # Assign new urgency levels to the agents
+        self._assign_urgency_level_to_agents()
+
         # Reset observations
         if len(self.machine_agents) > 0:
             self.observations = self.observation_obj.reset_observation()
 
         self.travel_times_list = []
         self.episode_actions = dict()
-        self._assign_urgency_level_to_agents()
 
 
     def _assign_rewards(self) -> None:
@@ -973,13 +981,21 @@ class TrafficEnvironment(AECEnv):
         cost_tables = [
             {
                 kc.AGENT_ID: agent.id,
-                kc.COST_TABLE: getattr(agent.model, 'costs', zero_space) if hasattr(agent, 'model') else zero_space
+                kc.COST_TABLE: getattr(agent.model, 'costs', zero_space) if hasattr(agent, 'model') else zero_space,
+            }
+            for agent in dc_agents
+        ]
+
+        observations = [
+            {
+                kc.AGENT_ID: agent.id,
+                kc.OBSERVATION: np.atleast_1d(getattr(self, 'observations', {}).get(str(agent.id), [])).ravel().tolist()
             }
             for agent in dc_agents
         ]
 
         if self.recorder != None:
-            self.recorder.record(dc_episode, dc_ep_observations, cost_tables, dc_detectors)
+            self.recorder.record(dc_episode, dc_ep_observations, observations, cost_tables, dc_detectors)
 
     def plot_results(self) -> None:
         """Method that plot the results of the simulation.
