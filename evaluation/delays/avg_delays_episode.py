@@ -283,11 +283,11 @@ def compare_avg_delay_per_episode_by_route(
 
 
 BASE_DIRS = [
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10",
 ]
 LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
 

@@ -10,18 +10,19 @@ plt.rcParams['font.sans-serif'] = ['Times New Roman']
 # ---- USER PARAMETERS ----
 # ==========================================================
 data_paths = [
-    "../data/training_records_monetary_pricing_300_agents_long/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_2/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_3/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_4/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_5/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10/episodes",
+
 ]
 PLOT_STAT = "travel_time"   # column in CSV
 KIND_COL  = "kind"          # filter column (if present)
 PLOT_KIND = "AV"            # "AV", "Human", or "All"
 SMOOTH    = 20               # moving average window; 0/1 disables
-MAX_EPISODE = 110           # None = no cap
-XLIM = (0, 110)           # None = auto
+MAX_EPISODE = 1010           # None = no cap
+XLIM = (0, 1010)           # None = auto
 SAVE_PNG = "imgs/mean_travel_time_across_replications.png"  # None to skip saving
 TITLE = "Mean travel time per episode (mean ± std across replications)"
 XLABEL = "Episodes (days)"
