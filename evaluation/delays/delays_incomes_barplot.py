@@ -298,8 +298,8 @@ def plot_avg_delay_by_income_quintile(
 
     per_run_agent = []
     for i, (bdir, inc_csv) in enumerate(zip(base_dirs, income_csvs)):
-        buf = io.StringIO()
-        with contextlib.redirect_stdout(buf):
+        """buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):"""
         df = compute_agent_delays(
             base_dir=str(bdir),
             last_n=last_n,
@@ -507,8 +507,8 @@ def plot_crossrun_mean_std_by_quintile(
 
     per_run_agent = []
     for (bdir, inc_csv) in zip(base_dirs, income_csvs):
-        buf = io.StringIO()
-        with contextlib.redirect_stdout(buf):
+        """buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):"""
         df = compute_agent_delays(
             base_dir=str(bdir),
             last_n=last_n,
@@ -629,11 +629,11 @@ def plot_crossrun_mean_std_by_quintile(
 
 
 BASE_DIRS = [
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10",
 ]
 LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
 

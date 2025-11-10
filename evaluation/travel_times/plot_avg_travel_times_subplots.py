@@ -10,11 +10,12 @@ plt.rcParams['font.sans-serif'] = ['Times New Roman']
 # ---- USER PARAMETERS ----
 # ==========================================================
 data_paths = [
-    "../data/training_records_monetary_pricing_300_agents_long/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_2/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_3/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_4/episodes",
-    "../data/training_records_monetary_pricing_300_agents_long_5/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9/episodes",
+    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10/episodes",
+
 ]
 PLOT_STAT = "travel_time"   # column in CSV
 KIND_COL  = "kind"          # filter column (if present)
