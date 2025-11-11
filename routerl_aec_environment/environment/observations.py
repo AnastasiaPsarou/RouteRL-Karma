@@ -265,9 +265,9 @@ class PreviousAgentStartPlusStartTime(Observations):
                 machine.destination == agent.destination and
                 machine.start_time > agent.start_time):
                 
-                dt = abs(agent.start_time - machine.start_time)
-                if 0 < dt < self.time_window:
-                    observation[agent.last_action] += 1
+                #dt = abs(agent.start_time - machine.start_time)
+                #if 0 < dt < self.time_window:
+                observation[agent.last_action] += 1
 
         observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
