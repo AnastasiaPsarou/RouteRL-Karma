@@ -38,3 +38,15 @@
     </random_number>
 
 </configuration>
+-->
+
+<statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
+    <vehicles loaded="300" inserted="300" running="0" waiting="0"/>
+    <teleports total="0" jam="0" yield="0" wrongLane="0"/>
+    <safety collisions="0" emergencyStops="0"/>
+    <persons loaded="0" running="0" jammed="0"/>
+    <vehicleTripStatistics count="300" routeLength="5459.74" speed="23.55" duration="234.21" waitingTime="0.34" timeLoss="36.40" departDelay="355.11" departDelayWaiting="0.00" totalTravelTime="70264.00" totalDepartDelay="106531.50"/>
+    <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
+    <rideStatistics number="0"/>
+    <transportStatistics number="0"/>
+</statistics>
