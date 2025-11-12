@@ -114,7 +114,8 @@ env_params = {
     },  
     "environment_parameters":
     {
-        "observations_time_window": 40
+        "observations_time_window": 100,
+        "save_every" : 2,
     },
     "plotter_parameters" : {
         "phases" : phases,
