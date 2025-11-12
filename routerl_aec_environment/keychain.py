@@ -19,6 +19,7 @@ class Keychain:
     ### Agent parameters
     HUMAN_PARAMETERS = "human_parameters"
     MACHINE_PARAMETERS = "machine_parameters"
+    QUINTILE_GROUPS = "quintile_groups"
     # Common
     ACTION_SPACE_SIZE = "action_space_size"
     # Human
