@@ -410,8 +410,6 @@ class TrafficEnvironment(AECEnv):
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
 
-        self._assign_urgency_level_to_agents()
-
         ## Initialize the observation object
         self.observation_obj = self.get_observation_function()
         self._observation_spaces = self.observation_obj.observation_space()
@@ -466,7 +464,6 @@ class TrafficEnvironment(AECEnv):
         if len(self.machine_agents) > 0:
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
-            #self._assign_urgency_level_to_agents() # assign urgency level to agents
             self.observations = self.observation_obj.reset_observation()
         else:
             self.observations = {}
@@ -526,7 +523,11 @@ class TrafficEnvironment(AECEnv):
                 self.truncations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.terminations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.infos = {agent: {} for agent in self.agents}
+                #print("\n\n\nBefore observation_obj self.observations are: ", self.observations, "\n\n")
+
                 self.observations = self.observation_obj(self.all_agents)
+                #print("\n\n\nBefore reset episode self.observations are: ", self.observations, "\n\n")
+
                 self._reset_episode()
             else:
                 # no rewards are allocated until all players give an action
@@ -584,6 +585,8 @@ class TrafficEnvironment(AECEnv):
         
         params = self.agent_params[kc.MACHINE_PARAMETERS]
         observation_type = params[kc.OBSERVATION_TYPE]
+
+        self._assign_urgency_level_to_an_agent(machine)
 
         if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST:
             return self.observation_obj.agent_observations(agent, self.all_agents, self.travel_times_list)
@@ -749,7 +752,6 @@ class TrafficEnvironment(AECEnv):
                            kc.AGENT_START_TIME: agent.start_time,
                            kc.INCOME: agent.income,
                            kc.URGENCY: agent.urgency,
-                           #kc.OBSERVATION: self.observations[str(agent.id)].tolist()
             }
             self.simulator.add_vehicle(action_dict)
             self.episode_actions[agent.id] = action_dict
@@ -793,17 +795,17 @@ class TrafficEnvironment(AECEnv):
             self.agent_selection = self._agent_selector.next()
 
         if self.day % self.save_every == 0 & self.second_sumo == False: #In the case where we compute the marginal cost matrix we do not need to record. 
-            recording_task = threading.Thread(target=self._record, args=(self.day,
+            
+            """recording_task = threading.Thread(target=self._record, args=(self.day,
                                                                         self.travel_times_list,
                                                                         self.all_agents,
                                                                         detectors_dict))
-            recording_task.start()
+            recording_task.start()"""
+            self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
         
-        # Assign new urgency levels to the agents
-        self._assign_urgency_level_to_agents()
-
         # Reset observations
         if len(self.machine_agents) > 0:
+            #print("\n\nInside reset observations\n\n")
             self.observations = self.observation_obj.reset_observation()
 
         self.travel_times_list = []
@@ -832,11 +834,10 @@ class TrafficEnvironment(AECEnv):
             # Human learning
             elif self.human_learning:
                 agent.learn(agent.last_action, self.travel_times_list)
-    
-    def _assign_urgency_level_to_agents(self) -> None:
 
-        for machine in self.machine_agents:
-            machine.urgency = np.random.choice(self.urgency_distribution)
+    def _assign_urgency_level_to_an_agent(self, machine) -> None:
+
+        machine.urgency = np.random.choice(self.urgency_distribution)
 
     ###################################
     #### Marginal cost calculation ####
@@ -985,7 +986,7 @@ class TrafficEnvironment(AECEnv):
             }
             for agent in dc_agents
         ]
-
+        
         observations = [
             {
                 kc.AGENT_ID: agent.id,
@@ -993,6 +994,7 @@ class TrafficEnvironment(AECEnv):
             }
             for agent in dc_agents
         ]
+        #print("before recording observations are: ", observations)
 
         if self.recorder != None:
             self.recorder.record(dc_episode, dc_ep_observations, observations, cost_tables, dc_detectors)
