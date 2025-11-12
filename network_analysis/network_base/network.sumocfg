@@ -13,6 +13,10 @@
 
     <report>
         <no-step-log value="true"/>
+        <duration-log.disable value="true"/>      <!-- hides the final Performance/Statistics block -->
+        <no-warnings value="true"/>               <!-- hides warnings -->
+        <message-log value="NUL"/>                <!-- hides 'Loading ... done.' etc. -->
+        <error-log value="NUL"/>                  <!-- hides errors (use with care) -->
     </report>
 
    <output>
@@ -20,7 +24,7 @@
         <tripinfo-output value="tripinfo.xml"/>
         <tripinfo-output.write-unfinished value="true"/>
         <tripinfo-output.write-undeparted value="true"/>
-        <duration-log.statistics value="true"/>
+        
     </output>
 
     <processing>
