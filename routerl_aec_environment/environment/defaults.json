@@ -4,6 +4,7 @@
         "num_agents" : 100,
         "new_machines_after_mutation": 25,
         "agents_csv_file_name": "agents.csv",
+        "quintile_groups": 5,
 
         "machine_parameters" :
         {

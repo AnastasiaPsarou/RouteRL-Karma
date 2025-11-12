@@ -1,5 +1,6 @@
 import os
 
+from itertools import chain
 import logging
 import numpy as np
 import pandas as pd
@@ -51,23 +52,13 @@ def generate_agents(params, free_flow_times, generate_data, seed=23423) -> list:
     # Getting parameters
     action_space_size = params[kc.ACTION_SPACE_SIZE]
     agents = list()     # Where we will store & return agents
-
-    #income_list = load_unique_incomes("income_samples.csv")
-    num_agents = params[kc.NUM_AGENTS]
-    income_list = load_shuffled_incomes(
-        "income_samples.csv",
-        seed=seed,
-        col="income",
-        n_needed=num_agents      # <- sample n agents, no repeats
-    )
-
+    
     # Generating agent objects from generated agent data
     for i, row in agents_data_df.iterrows():
         row_dict = row.to_dict()
 
-        id, start_time = row_dict[kc.AGENT_ID], row_dict[kc.AGENT_START_TIME]
+        id, start_time, income = row_dict[kc.AGENT_ID], row_dict[kc.AGENT_START_TIME], row_dict[kc.INCOME]
         origin, destination = row_dict[kc.AGENT_ORIGIN], row_dict[kc.AGENT_DESTINATION]
-        income = income_list[i]
 
         if row_dict[kc.AGENT_KIND] == kc.TYPE_MACHINE:
             agent_params = params[kc.MACHINE_PARAMETERS]
@@ -107,7 +98,7 @@ def generate_agent_data(params, seed=23423) -> pd.DataFrame:
     
     num_agents = params[kc.NUM_AGENTS]
     simulation_timesteps = params[kc.SIMULATION_TIMESTEPS]
-    agent_attributes = [kc.AGENT_ID, kc.AGENT_ORIGIN, kc.AGENT_DESTINATION, kc.AGENT_START_TIME, kc.AGENT_KIND]
+    agent_attributes = [kc.AGENT_ID, kc.AGENT_ORIGIN, kc.AGENT_DESTINATION, kc.AGENT_START_TIME, kc.INCOME, kc.AGENT_KIND]
     
     num_origins = len(params[kc.ORIGINS])
     num_destinations = len(params[kc.DESTINATIONS])
@@ -118,8 +109,35 @@ def generate_agent_data(params, seed=23423) -> pd.DataFrame:
     mean_timestep = simulation_timesteps / 2
     std_dev_timestep = simulation_timesteps / 6
 
-    # Generating agent data
-    for id in range(num_agents):
+    num_agents = params[kc.NUM_AGENTS]
+
+    # Create quantiles of agents based on income values
+    groups = get_income_groups(params, 
+                                    "income_samples.csv",
+                                    seed=seed,
+                                    col="income",
+                                    n_needed=num_agents)
+
+
+    # Create different distributions of departure times for each income group
+    start_time_samplers = build_normal_samplers(
+        params[kc.QUINTILE_GROUPS],
+        simulation_timesteps,
+        mean_frac= (mean_timestep / simulation_timesteps),  # earliest groups start earlier
+        std_frac= (std_dev_timestep / simulation_timesteps),   # poorer groups more variation
+    )
+
+    start_time_stream = iter_sampled_incomes_by_group(
+        groups,
+        start_time_samplers,
+        simulation_timesteps,
+        seed=42,
+    )
+
+    income_stream = chain.from_iterable(groups)
+
+    # Iterate over id value, start time and income value
+    for id, (income, start_time) in zip(range(num_agents), zip(income_stream, start_time_stream)):
         
         # Decide on agent type (temporary solution)
         agent_type = kc.TYPE_HUMAN
@@ -127,12 +145,8 @@ def generate_agent_data(params, seed=23423) -> pd.DataFrame:
         # Randomly assign origin & destination
         origin, destination = random.randrange(num_origins), random.randrange(num_destinations)
 
-        # Randomly assign start time (normal dist)
-        start_time = int(rng.normal(mean_timestep, std_dev_timestep))
-        start_time = max(0, min(simulation_timesteps, start_time))
-
         # Registering to the dataframe
-        agent_features = [id, origin, destination, start_time, agent_type]
+        agent_features = [id, origin, destination, start_time, income, agent_type]
         agent_dict = {attribute : feature for attribute, feature in zip(agent_attributes, agent_features)}
         agents_df.loc[id] = agent_dict
         
@@ -140,8 +154,60 @@ def generate_agent_data(params, seed=23423) -> pd.DataFrame:
     agents_csv_path = os.path.join(params[kc.RECORDS_FOLDER], params[kc.AGENTS_CSV_FILE_NAME])
     agents_csv_path = str(agents_csv_path)
     agents_df.to_csv(agents_csv_path, index=False)
-    
     return agents_df
+
+def iter_sampled_incomes_by_group(groups, samplers, simulation_timesteps, seed=None, sort_each_group=False):
+    """
+    Yields integer start times sequentially by group.
+    Each group's sampler defines its own distribution.
+    Clipping ensures all values are within [0, simulation_timesteps].
+    """
+    if len(samplers) != len(groups):
+        raise ValueError("samplers and groups must have the same length.")
+
+    rng = np.random.default_rng(seed)
+
+    for g_idx, group in enumerate(groups):
+        size = len(group)
+        values = samplers[g_idx](size) # sample floats
+        values = np.clip(values, 0, simulation_timesteps)  # bound to [0, T]
+        values = np.rint(values).astype(int)               # convert to int (rounded)
+        if sort_each_group:
+            values = np.sort(values)
+        for v in values:
+            yield v
+
+
+def make_normal_sampler(mu, sigma, low, high, rng=None):
+    rng = np.random.default_rng(rng)
+    def sample(size=None):
+        x = rng.normal(mu, sigma, size=size)
+        return np.clip(x, low, high)
+    return sample
+
+
+def build_normal_samplers(n_groups, simulation_timesteps,
+                          mean_fracs=None, std_fracs=None,
+                          mean_frac=None, std_frac=None,
+                          mean_start_frac=0.15, mean_end_frac=0.85,
+                          std_start_frac=0.10, std_end_frac=0.04,
+                          base_seed=None):      # optional: for reproducibility
+    T = simulation_timesteps
+    ss = np.random.SeedSequence(base_seed)
+    child_seeds = ss.spawn(n_groups)
+
+    # broadcast same params to all groups
+    if mean_fracs is None:
+        mean_fracs = np.full(n_groups, mean_frac if mean_frac is not None else 0.5)
+    if std_fracs is None:
+        std_fracs  = np.full(n_groups, std_frac if std_frac is not None else 0.08)
+
+    samplers = [
+        make_normal_sampler(mu=mf * T, sigma=sf * T, low=0, high=T, rng=np.random.default_rng(cs))
+        for mf, sf, cs in zip(mean_fracs, std_fracs, child_seeds)
+    ]
+    return samplers
+
 
 def load_unique_incomes(samples_path, col="income"):
     """
@@ -183,6 +249,24 @@ def load_shuffled_incomes(samples_path, seed, col="income", n_needed=None):
     idx = rng.choice(s.size, size=n_needed, replace=False)
     return s[idx]
 
+
+def get_income_groups(params, samples_path, seed, col="income", n_needed=None):
+    """
+    Load incomes (using load_shuffled_incomes) and return them split into n_groups lists,
+    each sorted ascending. Lower-income values go into the first list, etc.
+
+    Example:
+        get_income_groups("incomes.csv", seed=42, n_groups=3)
+        -> [[lowest incomes], [middle incomes], [highest incomes]]
+    """
+    incomes = load_shuffled_incomes(samples_path, seed, col=col, n_needed=n_needed)
+    incomes_sorted = np.sort(incomes)
+
+    # split into n_groups as evenly as possible
+    groups = np.array_split(incomes_sorted, params[kc.QUINTILE_GROUPS])
+
+    # convert numpy arrays to normal Python lists
+    return [g.tolist() for g in groups]
 
 
 def set_seed(seed):

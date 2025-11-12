@@ -523,10 +523,8 @@ class TrafficEnvironment(AECEnv):
                 self.truncations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.terminations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.infos = {agent: {} for agent in self.agents}
-                #print("\n\n\nBefore observation_obj self.observations are: ", self.observations, "\n\n")
 
                 self.observations = self.observation_obj(self.all_agents)
-                #print("\n\n\nBefore reset episode self.observations are: ", self.observations, "\n\n")
 
                 self._reset_episode()
             else:
@@ -805,7 +803,6 @@ class TrafficEnvironment(AECEnv):
         
         # Reset observations
         if len(self.machine_agents) > 0:
-            #print("\n\nInside reset observations\n\n")
             self.observations = self.observation_obj.reset_observation()
 
         self.travel_times_list = []
@@ -994,7 +991,6 @@ class TrafficEnvironment(AECEnv):
             }
             for agent in dc_agents
         ]
-        #print("before recording observations are: ", observations)
 
         if self.recorder != None:
             self.recorder.record(dc_episode, dc_ep_observations, observations, cost_tables, dc_detectors)
