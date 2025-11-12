@@ -201,7 +201,6 @@ class PreviousAgentStartPlusStartTime(Observations):
         Returns:
             obs (Dict[str, np.ndarray]): A dictionary of initial observations for all machine agents.
         """
-
         # Initialize agent vectors as zero arrays
         self.agent_vectors = {
             agent: np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
@@ -214,7 +213,7 @@ class PreviousAgentStartPlusStartTime(Observations):
                 [
                     np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
                     self.agent_vectors[agent],  # Vector as array
-                    np.array([agent.urgency], dtype=np.int32),  # Start time as scalar
+                    np.array([0], dtype=np.int32),  # Start time as scalar
                 ]
             )
             for agent in self.machine_agents_list
@@ -327,7 +326,6 @@ class PreviousAgentStartPlusStartTimeDetectorData(Observations):
         Returns:
             obs (Dict[str, np.ndarray]): A dictionary of initial observations for all machine agents.
         """
-
         # Initialize agent vectors as zero arrays
         self.agent_vectors = {
             agent: np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
