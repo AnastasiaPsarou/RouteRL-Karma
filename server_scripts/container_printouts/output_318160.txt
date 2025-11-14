@@ -1,0 +1,23 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+Traceback (most recent call last):
+  File "/app/scenarios/monetary_pricing/mappo_monetary_pricing.py", line 139, in <module>
+    env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/environment.py", line 368, in __init__
+    self.recorder = Recorder(self.plotter_params)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/services/recorder.py", line 37, in __init__
+    self._clear_records(self.sumo_folder)
+  File "/app/routerl_aec_environment/services/recorder.py", line 58, in _clear_records
+    os.remove(os.path.join(folder, file))
+OSError: [Errno 16] Device or resource busy: 'training_records_monetary_pricing_300_agents_fee_0_1_urgency_obs_seed_3/SUMO_output/.nfs000000000dd500a90002354a'

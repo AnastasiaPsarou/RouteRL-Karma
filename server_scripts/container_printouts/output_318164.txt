@@ -1,0 +1,209 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/app/scenarios/monetary_pricing/mappo_monetary_pricing.py", line 139, in <module>
+    env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/environment.py", line 369, in __init__
+    self.simulator = SumoSimulator(self.simulation_params, self.path_gen_params, seed, not create_agents, save_detectors_info, randomize_sumo_seed)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/simulator.py", line 106, in __init__
+    self._get_paths(params, path_gen_params, using_custom_demand)
+  File "/app/routerl_aec_environment/environment/simulator.py", line 203, in _get_paths
+    futures = [executor.submit(self._route_vis_process, demands, origin_idx, dest_idx, origin, destination, routes, path_visuals_path) for origin_idx, origin in enumerate(origins) for dest_idx, destination in enumerate(destinations)]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 830, in submit
+    self._adjust_process_count()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 789, in _adjust_process_count
+    self._spawn_process()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 807, in _spawn_process
+    p.start()
+  File "/usr/local/lib/python3.12/multiprocessing/process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/context.py", line 289, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 32, in __init__
+    super().__init__(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_fork.py", line 19, in __init__
+    self._launch(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 42, in _launch
+    prep_data = spawn.get_preparation_data(process_obj._name)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 164, in get_preparation_data
+    _check_not_importing_main()
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 140, in _check_not_importing_main
+    raise RuntimeError('''
+RuntimeError: 
+        An attempt has been made to start a new process before the
+        current process has finished its bootstrapping phase.
+
+        This probably means that you are not using fork to start your
+        child processes and you have forgotten to use the proper idiom
+        in the main module:
+
+            if __name__ == '__main__':
+                freeze_support()
+                ...
+
+        The "freeze_support()" line can be omitted if the program
+        is not going to be frozen to produce an executable.
+
+        To fix this issue, refer to the "Safe importing of main module"
+        section in https://docs.python.org/3/library/multiprocessing.html
+        
+ Retrying in 1 seconds
+Number of total agents is:  300 
+
+Number of human agents is:  0 
+
+Number of machine agents (autonomous vehicles) is:  300 
+
+2025-11-12 14:50:38,628 [torchrl][INFO] check_env_specs succeeded!
+episode_reward_mean = 0:   0%|          | 0/50 [00:00<?, ?it/s]episode_reward_mean = -9.45305061340332:   2%|▏         | 1/50 [02:48<2:17:32, 168.42s/it]episode_reward_mean = -8.553668975830078:   4%|▍         | 2/50 [05:41<2:17:09, 171.45s/it]episode_reward_mean = -9.29891586303711:   6%|▌         | 3/50 [08:36<2:15:13, 172.63s/it] episode_reward_mean = -9.411320686340332:   8%|▊         | 4/50 [11:29<2:12:43, 173.11s/it]episode_reward_mean = -10.301386833190918:  10%|█         | 5/50 [14:24<2:10:07, 173.50s/it]episode_reward_mean = -9.644103050231934:  12%|█▏        | 6/50 [17:19<2:07:49, 174.31s/it] episode_reward_mean = -9.365137100219727:  14%|█▍        | 7/50 [20:12<2:04:30, 173.74s/it]episode_reward_mean = -8.714815139770508:  16%|█▌        | 8/50 [23:05<2:01:26, 173.50s/it]episode_reward_mean = -9.489977836608887:  18%|█▊        | 9/50 [25:56<1:57:57, 172.61s/it]episode_reward_mean = -8.559992790222168:  20%|██        | 10/50 [28:42<1:53:48, 170.71s/it]episode_reward_mean = -8.671465873718262:  22%|██▏       | 11/50 [31:31<1:50:34, 170.12s/it]episode_reward_mean = -9.178316116333008:  24%|██▍       | 12/50 [34:18<1:47:09, 169.19s/it]episode_reward_mean = -9.694038391113281:  26%|██▌       | 13/50 [37:04<1:43:49, 168.38s/it]episode_reward_mean = -9.289464950561523:  28%|██▊       | 14/50 [39:52<1:40:55, 168.22s/it]episode_reward_mean = -8.180013656616211:  30%|███       | 15/50 [42:39<1:37:49, 167.70s/it]episode_reward_mean = -9.12182331085205:  32%|███▏      | 16/50 [45:26<1:35:01, 167.68s/it] episode_reward_mean = -9.41557788848877:  34%|███▍      | 17/50 [48:16<1:32:28, 168.13s/it]episode_reward_mean = -9.492719650268555:  36%|███▌      | 18/50 [51:04<1:29:43, 168.24s/it]episode_reward_mean = -9.227578163146973:  38%|███▊      | 19/50 [53:50<1:26:33, 167.53s/it]episode_reward_mean = -10.280477523803711:  40%|████      | 20/50 [56:38<1:23:47, 167.58s/it]episode_reward_mean = -9.388494491577148:  42%|████▏     | 21/50 [59:24<1:20:51, 167.29s/it] episode_reward_mean = -9.856940269470215:  44%|████▍     | 22/50 [1:02:11<1:17:55, 166.99s/it]episode_reward_mean = -9.044811248779297:  46%|████▌     | 23/50 [1:05:00<1:15:32, 167.86s/it]episode_reward_mean = -10.05895709991455:  48%|████▊     | 24/50 [1:07:48<1:12:45, 167.89s/it]episode_reward_mean = -9.446473121643066:  50%|█████     | 25/50 [1:10:36<1:09:57, 167.89s/it]episode_reward_mean = -8.602828979492188:  52%|█████▏    | 26/50 [1:13:23<1:07:00, 167.51s/it]episode_reward_mean = -9.91418170928955:  54%|█████▍    | 27/50 [1:16:10<1:04:06, 167.23s/it] episode_reward_mean = -10.351404190063477:  56%|█████▌    | 28/50 [1:18:57<1:01:23, 167.42s/it]episode_reward_mean = -10.234086036682129:  58%|█████▊    | 29/50 [1:21:44<58:28, 167.08s/it]  episode_reward_mean = -8.789527893066406:  60%|██████    | 30/50 [1:24:29<55:32, 166.63s/it] episode_reward_mean = -9.4005765914917:  62%|██████▏   | 31/50 [1:27:17<52:53, 167.05s/it]  episode_reward_mean = -8.786211013793945:  64%|██████▍   | 32/50 [1:30:05<50:09, 167.19s/it]episode_reward_mean = -9.573796272277832:  66%|██████▌   | 33/50 [1:32:51<47:19, 167.02s/it]episode_reward_mean = -9.16888427734375:  68%|██████▊   | 34/50 [1:35:41<44:44, 167.75s/it] episode_reward_mean = -10.217220306396484:  70%|███████   | 35/50 [1:38:27<41:48, 167.20s/it]episode_reward_mean = -9.144464492797852:  72%|███████▏  | 36/50 [1:41:13<38:57, 166.94s/it] episode_reward_mean = -9.79557991027832:  74%|███████▍  | 37/50 [1:43:59<36:06, 166.65s/it] episode_reward_mean = -9.67705249786377:  76%|███████▌  | 38/50 [1:46:46<33:20, 166.74s/it]episode_reward_mean = -9.346774101257324:  78%|███████▊  | 39/50 [1:49:33<30:35, 166.86s/it]episode_reward_mean = -9.11458683013916:  80%|████████  | 40/50 [1:52:18<27:43, 166.32s/it] episode_reward_mean = -9.503482818603516:  82%|████████▏ | 41/50 [1:55:05<24:57, 166.39s/it]episode_reward_mean = -9.81617546081543:  84%|████████▍ | 42/50 [1:57:53<22:15, 166.93s/it] episode_reward_mean = -9.516831398010254:  86%|████████▌ | 43/50 [2:00:41<19:31, 167.29s/it]episode_reward_mean = -9.141868591308594:  88%|████████▊ | 44/50 [2:03:28<16:42, 167.13s/it]episode_reward_mean = -9.624144554138184:  90%|█████████ | 45/50 [2:06:17<13:59, 167.85s/it]episode_reward_mean = -8.735662460327148:  92%|█████████▏| 46/50 [2:09:04<11:09, 167.42s/it]episode_reward_mean = -9.700055122375488:  94%|█████████▍| 47/50 [2:11:51<08:21, 167.21s/it]episode_reward_mean = -9.273816108703613:  96%|█████████▌| 48/50 [2:14:39<05:35, 167.57s/it]episode_reward_mean = -9.541308403015137:  98%|█████████▊| 49/50 [2:17:25<02:47, 167.16s/it]episode_reward_mean = -9.514602661132812: 100%|██████████| 50/50 [2:20:11<00:00, 166.85s/it]17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+17:22:09 [WARNING] findfont: Font family 'Times New Roman' not found.
+episode_reward_mean = -9.514602661132812: 100%|██████████| 50/50 [2:31:30<00:00, 181.80s/it]

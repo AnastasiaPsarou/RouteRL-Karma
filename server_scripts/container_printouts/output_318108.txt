@@ -1,0 +1,3885 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/app/scenarios/monetary_pricing/mappo_monetary_pricing.py", line 138, in <module>
+    env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/environment.py", line 369, in __init__
+    self.simulator = SumoSimulator(self.simulation_params, self.path_gen_params, seed, not create_agents, save_detectors_info, randomize_sumo_seed)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/simulator.py", line 106, in __init__
+    self._get_paths(params, path_gen_params, using_custom_demand)
+  File "/app/routerl_aec_environment/environment/simulator.py", line 203, in _get_paths
+    futures = [executor.submit(self._route_vis_process, demands, origin_idx, dest_idx, origin, destination, routes, path_visuals_path) for origin_idx, origin in enumerate(origins) for dest_idx, destination in enumerate(destinations)]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 830, in submit
+    self._adjust_process_count()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 789, in _adjust_process_count
+    self._spawn_process()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 807, in _spawn_process
+    p.start()
+  File "/usr/local/lib/python3.12/multiprocessing/process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/context.py", line 289, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 32, in __init__
+    super().__init__(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_fork.py", line 19, in __init__
+    self._launch(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 42, in _launch
+    prep_data = spawn.get_preparation_data(process_obj._name)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 164, in get_preparation_data
+    _check_not_importing_main()
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 140, in _check_not_importing_main
+    raise RuntimeError('''
+RuntimeError: 
+        An attempt has been made to start a new process before the
+        current process has finished its bootstrapping phase.
+
+        This probably means that you are not using fork to start your
+        child processes and you have forgotten to use the proper idiom
+        in the main module:
+
+            if __name__ == '__main__':
+                freeze_support()
+                ...
+
+        The "freeze_support()" line can be omitted if the program
+        is not going to be frozen to produce an executable.
+
+        To fix this issue, refer to the "Safe importing of main module"
+        section in https://docs.python.org/3/library/multiprocessing.html
+        
+ Retrying in 1 seconds
+***Starting server on port 58133 ***
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.00s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Number of total agents is:  300 
+
+Number of human agents is:  0 
+
+Number of machine agents (autonomous vehicles) is:  300 
+
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.75s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.02s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+2025-11-12 09:42:07,932 [torchrl][INFO] check_env_specs succeeded!
+Simulation ended at time: 7.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 1.44s
+ TraCI-Duration: 0.42s
+ Real time factor: 5.21558
+ UPS: 0.695410
+Vehicles: 
+ Inserted: 1 (Loaded: 3)
+ Running: 1
+ Waiting: 0
+Statistics (avg of 1):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.50
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = 0:   0%|          | 0/1500 [00:00<?, ?it/s]Simulation ended at time: 1079.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.65s
+ TraCI-Duration: 63.67s
+ Real time factor: 16.4443
+ UPS: 2127.913353
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5461.32
+ Speed: 23.70
+ Duration: 232.81
+ WaitingTime: 0.33
+ TimeLoss: 35.32
+ DepartDelay: 363.02
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1075.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.19s
+ TraCI-Duration: 63.19s
+ Real time factor: 16.4989
+ UPS: 2155.340104
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5473.02
+ Speed: 23.65
+ Duration: 234.16
+ WaitingTime: 0.33
+ TimeLoss: 36.31
+ DepartDelay: 358.67
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.419336318969727:   0%|          | 1/1500 [02:44<68:20:56, 164.15s/it]Simulation ended at time: 1086.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.55s
+ TraCI-Duration: 96.52s
+ Real time factor: 11.02
+ UPS: 1425.001015
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5457.63
+ Speed: 23.57
+ Duration: 234.05
+ WaitingTime: 0.34
+ TimeLoss: 35.73
+ DepartDelay: 361.16
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1093.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.92s
+ TraCI-Duration: 63.90s
+ Real time factor: 16.581
+ UPS: 2131.737435
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5474.56
+ Speed: 23.66
+ Duration: 234.20
+ WaitingTime: 0.32
+ TimeLoss: 36.90
+ DepartDelay: 360.07
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.884786605834961:   0%|          | 2/1500 [05:28<68:25:07, 164.42s/it]Simulation ended at time: 1084.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.61s
+ TraCI-Duration: 96.57s
+ Real time factor: 10.9981
+ UPS: 1430.766266
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5471.52
+ Speed: 23.52
+ Duration: 235.14
+ WaitingTime: 0.33
+ TimeLoss: 36.68
+ DepartDelay: 360.17
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1079.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.20s
+ TraCI-Duration: 63.17s
+ Real time factor: 16.5493
+ UPS: 2151.674105
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5447.35
+ Speed: 23.56
+ Duration: 233.81
+ WaitingTime: 0.35
+ TimeLoss: 35.17
+ DepartDelay: 354.46
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.755744934082031:   0%|          | 3/1500 [08:13<68:21:39, 164.40s/it]Simulation ended at time: 1078.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.73s
+ TraCI-Duration: 96.70s
+ Real time factor: 10.9186
+ UPS: 1423.565040
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5472.15
+ Speed: 23.62
+ Duration: 234.25
+ WaitingTime: 0.33
+ TimeLoss: 36.23
+ DepartDelay: 359.92
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1066.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.14s
+ TraCI-Duration: 63.14s
+ Real time factor: 16.3722
+ UPS: 2151.640288
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5456.43
+ Speed: 23.60
+ Duration: 233.60
+ WaitingTime: 0.34
+ TimeLoss: 36.83
+ DepartDelay: 350.93
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (3ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.12s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.210683822631836:   0%|          | 4/1500 [10:57<68:16:43, 164.31s/it]Simulation ended at time: 1084.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.07s
+ TraCI-Duration: 96.06s
+ Real time factor: 11.0532
+ UPS: 1409.234126
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5421.93
+ Speed: 23.79
+ Duration: 230.34
+ WaitingTime: 0.36
+ TimeLoss: 35.12
+ DepartDelay: 364.61
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1069.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.61s
+ TraCI-Duration: 62.61s
+ Real time factor: 16.5467
+ UPS: 2152.867425
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5427.60
+ Speed: 23.65
+ Duration: 231.81
+ WaitingTime: 0.36
+ TimeLoss: 35.55
+ DepartDelay: 351.43
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.838859558105469:   0%|          | 5/1500 [13:40<68:03:13, 163.88s/it]Simulation ended at time: 1073.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.45s
+ TraCI-Duration: 96.47s
+ Real time factor: 10.9045
+ UPS: 1419.793592
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5455.67
+ Speed: 23.68
+ Duration: 232.96
+ WaitingTime: 0.34
+ TimeLoss: 35.77
+ DepartDelay: 360.19
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1069.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.11s
+ TraCI-Duration: 63.09s
+ Real time factor: 16.4258
+ UPS: 2176.037843
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5490.86
+ Speed: 23.49
+ Duration: 236.14
+ WaitingTime: 0.32
+ TimeLoss: 36.10
+ DepartDelay: 355.17
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.173639297485352:   0%|          | 6/1500 [16:24<68:02:23, 163.95s/it]Simulation ended at time: 1091.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.42s
+ TraCI-Duration: 96.39s
+ Real time factor: 11.09
+ UPS: 1416.380484
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5452.77
+ Speed: 23.72
+ Duration: 232.34
+ WaitingTime: 0.34
+ TimeLoss: 35.55
+ DepartDelay: 360.65
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1090.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.88s
+ TraCI-Duration: 62.89s
+ Real time factor: 16.8008
+ UPS: 2163.799747
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5467.01
+ Speed: 23.62
+ Duration: 233.97
+ WaitingTime: 0.33
+ TimeLoss: 36.26
+ DepartDelay: 359.73
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (3ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.965303421020508:   0%|          | 7/1500 [19:08<67:56:49, 163.84s/it]Simulation ended at time: 1070.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.80s
+ TraCI-Duration: 97.81s
+ Real time factor: 10.7262
+ UPS: 1418.358350
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5487.31
+ Speed: 23.50
+ Duration: 235.93
+ WaitingTime: 0.32
+ TimeLoss: 36.87
+ DepartDelay: 359.30
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1078.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.88s
+ TraCI-Duration: 62.85s
+ Real time factor: 16.624
+ UPS: 2165.114989
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5469.74
+ Speed: 23.66
+ Duration: 234.11
+ WaitingTime: 0.33
+ TimeLoss: 36.50
+ DepartDelay: 355.61
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.186561584472656:   1%|          | 8/1500 [21:53<68:03:58, 164.23s/it]Simulation ended at time: 1067.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 97.84s
+ TraCI-Duration: 95.84s
+ Real time factor: 10.9102
+ UPS: 1432.024447
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5456.61
+ Speed: 23.62
+ Duration: 233.53
+ WaitingTime: 0.34
+ TimeLoss: 35.95
+ DepartDelay: 353.32
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1053.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.80s
+ TraCI-Duration: 63.82s
+ Real time factor: 16.0111
+ UPS: 2119.593301
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5449.02
+ Speed: 23.70
+ Duration: 232.44
+ WaitingTime: 0.34
+ TimeLoss: 35.06
+ DepartDelay: 357.96
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.00s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.343271255493164:   1%|          | 9/1500 [24:37<68:02:21, 164.28s/it]Simulation ended at time: 1091.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.19s
+ TraCI-Duration: 97.17s
+ Real time factor: 10.9996
+ UPS: 1410.596360
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5467.03
+ Speed: 23.73
+ Duration: 233.18
+ WaitingTime: 0.33
+ TimeLoss: 36.42
+ DepartDelay: 360.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1077.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.52s
+ TraCI-Duration: 64.48s
+ Real time factor: 16.1981
+ UPS: 2105.727601
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5464.24
+ Speed: 23.65
+ Duration: 233.46
+ WaitingTime: 0.33
+ TimeLoss: 35.57
+ DepartDelay: 360.33
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.12s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.478294372558594:   1%|          | 10/1500 [27:23<68:13:55, 164.86s/it]Simulation ended at time: 1058.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 97.80s
+ TraCI-Duration: 95.77s
+ Real time factor: 10.8181
+ UPS: 1446.139531
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5492.91
+ Speed: 23.59
+ Duration: 235.72
+ WaitingTime: 0.31
+ TimeLoss: 37.08
+ DepartDelay: 358.95
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1088.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.06s
+ TraCI-Duration: 63.02s
+ Real time factor: 16.7317
+ UPS: 2167.747787
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5481.35
+ Speed: 23.58
+ Duration: 235.04
+ WaitingTime: 0.32
+ TimeLoss: 37.00
+ DepartDelay: 359.62
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.348278999328613:   1%|          | 11/1500 [30:06<67:59:08, 164.37s/it]Simulation ended at time: 1063.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.27s
+ TraCI-Duration: 97.23s
+ Real time factor: 10.708
+ UPS: 1408.191635
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5456.41
+ Speed: 23.67
+ Duration: 232.99
+ WaitingTime: 0.34
+ TimeLoss: 35.20
+ DepartDelay: 359.57
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1085.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.70s
+ TraCI-Duration: 64.68s
+ Real time factor: 16.2659
+ UPS: 2101.792996
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5467.13
+ Speed: 23.66
+ Duration: 233.66
+ WaitingTime: 0.33
+ TimeLoss: 35.95
+ DepartDelay: 366.47
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.64292049407959:   1%|          | 12/1500 [32:53<68:11:38, 164.99s/it] Simulation ended at time: 1081.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.62s
+ TraCI-Duration: 96.62s
+ Real time factor: 10.9667
+ UPS: 1428.070211
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5475.09
+ Speed: 23.62
+ Duration: 234.72
+ WaitingTime: 0.33
+ TimeLoss: 35.72
+ DepartDelay: 360.47
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1091.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.87s
+ TraCI-Duration: 62.91s
+ Real time factor: 16.827
+ UPS: 2150.880276
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5440.60
+ Speed: 23.66
+ Duration: 232.53
+ WaitingTime: 0.35
+ TimeLoss: 35.21
+ DepartDelay: 358.87
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.29240608215332:   1%|          | 13/1500 [35:37<68:00:54, 164.66s/it]Simulation ended at time: 1069.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 97.72s
+ TraCI-Duration: 95.70s
+ Real time factor: 10.9451
+ UPS: 1440.167835
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5480.68
+ Speed: 23.64
+ Duration: 234.54
+ WaitingTime: 0.32
+ TimeLoss: 36.17
+ DepartDelay: 357.95
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1055.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.62s
+ TraCI-Duration: 62.59s
+ Real time factor: 16.3257
+ UPS: 2182.383708
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5473.89
+ Speed: 23.53
+ Duration: 235.05
+ WaitingTime: 0.33
+ TimeLoss: 35.53
+ DepartDelay: 352.58
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.178533554077148:   1%|          | 14/1500 [38:20<67:44:46, 164.12s/it]Simulation ended at time: 1081.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 97.51s
+ TraCI-Duration: 95.52s
+ Real time factor: 11.0913
+ UPS: 1432.185747
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5449.15
+ Speed: 23.65
+ Duration: 232.75
+ WaitingTime: 0.34
+ TimeLoss: 35.79
+ DepartDelay: 357.04
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1080.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.03s
+ TraCI-Duration: 63.06s
+ Real time factor: 16.6144
+ UPS: 2128.994065
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5420.87
+ Speed: 23.73
+ Duration: 230.76
+ WaitingTime: 0.37
+ TimeLoss: 34.42
+ DepartDelay: 364.58
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.38457202911377:   1%|          | 15/1500 [41:03<67:32:32, 163.74s/it] Simulation ended at time: 1089.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.52s
+ TraCI-Duration: 96.50s
+ Real time factor: 11.0534
+ UPS: 1415.724407
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5451.63
+ Speed: 23.71
+ Duration: 232.47
+ WaitingTime: 0.34
+ TimeLoss: 35.40
+ DepartDelay: 361.78
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1075.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.47s
+ TraCI-Duration: 63.45s
+ Real time factor: 16.4187
+ UPS: 2141.094175
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5463.21
+ Speed: 23.65
+ Duration: 233.64
+ WaitingTime: 0.33
+ TimeLoss: 36.88
+ DepartDelay: 357.58
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.50912094116211:   1%|          | 16/1500 [43:47<67:34:52, 163.94s/it]Simulation ended at time: 1045.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.31s
+ TraCI-Duration: 96.35s
+ Real time factor: 10.6344
+ UPS: 1424.104645
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5456.98
+ Speed: 23.63
+ Duration: 233.35
+ WaitingTime: 0.34
+ TimeLoss: 35.95
+ DepartDelay: 362.84
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.12s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1073.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.04s
+ TraCI-Duration: 63.03s
+ Real time factor: 16.4965
+ UPS: 2144.240822
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5448.85
+ Speed: 23.70
+ Duration: 232.45
+ WaitingTime: 0.34
+ TimeLoss: 35.55
+ DepartDelay: 357.20
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.768128395080566:   1%|          | 17/1500 [46:31<67:32:07, 163.94s/it]Simulation ended at time: 1076.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.19s
+ TraCI-Duration: 96.14s
+ Real time factor: 10.9631
+ UPS: 1429.735317
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5468.70
+ Speed: 23.64
+ Duration: 233.98
+ WaitingTime: 0.33
+ TimeLoss: 36.29
+ DepartDelay: 353.02
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1079.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 65.67s
+ TraCI-Duration: 63.64s
+ Real time factor: 16.4375
+ UPS: 2128.880971
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5450.85
+ Speed: 23.64
+ Duration: 233.02
+ WaitingTime: 0.34
+ TimeLoss: 36.10
+ DepartDelay: 359.69
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -10.167546272277832:   1%|          | 18/1500 [49:15<67:31:02, 164.01s/it]Simulation ended at time: 1091.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 98.54s
+ TraCI-Duration: 96.49s
+ Real time factor: 11.0765
+ UPS: 1419.110633
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5455.88
+ Speed: 23.69
+ Duration: 233.07
+ WaitingTime: 0.34
+ TimeLoss: 35.20
+ DepartDelay: 359.62
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1079.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 64.57s
+ TraCI-Duration: 62.61s
+ Real time factor: 16.7196
+ UPS: 2151.273910
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5433.29
+ Speed: 23.70
+ Duration: 231.50
+ WaitingTime: 0.35
+ TimeLoss: 35.30
+ DepartDelay: 360.86
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.714700698852539:   1%|▏         | 19/1500 [51:59<67:24:40, 163.86s/it] Simulation ended at time: 1078.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.39s
+ TraCI-Duration: 98.30s
+ Real time factor: 10.738
+ UPS: 1392.326005
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5441.33
+ Speed: 23.61
+ Duration: 232.96
+ WaitingTime: 0.35
+ TimeLoss: 36.49
+ DepartDelay: 360.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1089.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 68.97s
+ TraCI-Duration: 66.87s
+ Real time factor: 15.7902
+ UPS: 2031.072832
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5465.74
+ Speed: 23.69
+ Duration: 233.46
+ WaitingTime: 0.33
+ TimeLoss: 36.17
+ DepartDelay: 364.73
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.33216667175293:   1%|▏         | 20/1500 [54:48<68:06:03, 165.65s/it] Simulation ended at time: 1063.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.52s
+ TraCI-Duration: 98.42s
+ Real time factor: 10.5805
+ UPS: 1392.976173
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5451.21
+ Speed: 23.62
+ Duration: 233.36
+ WaitingTime: 0.34
+ TimeLoss: 35.31
+ DepartDelay: 352.35
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.17s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1083.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.55s
+ TraCI-Duration: 65.53s
+ Real time factor: 16.0316
+ UPS: 2066.509755
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5448.71
+ Speed: 23.67
+ Duration: 232.67
+ WaitingTime: 0.34
+ TimeLoss: 35.88
+ DepartDelay: 360.54
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.660582542419434:   1%|▏         | 21/1500 [57:37<68:24:15, 166.50s/it]Simulation ended at time: 1075.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.87s
+ TraCI-Duration: 98.77s
+ Real time factor: 10.6626
+ UPS: 1391.634529
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5464.38
+ Speed: 23.62
+ Duration: 233.95
+ WaitingTime: 0.33
+ TimeLoss: 36.36
+ DepartDelay: 358.71
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.17s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1098.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.42s
+ TraCI-Duration: 64.29s
+ Real time factor: 16.5312
+ UPS: 2120.806986
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5487.85
+ Speed: 23.64
+ Duration: 234.77
+ WaitingTime: 0.31
+ TimeLoss: 37.59
+ DepartDelay: 360.71
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -10.136199951171875:   1%|▏         | 22/1500 [1:00:25<68:30:31, 166.87s/it]Simulation ended at time: 1082.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.44s
+ TraCI-Duration: 97.34s
+ Real time factor: 10.8806
+ UPS: 1416.711081
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5479.17
+ Speed: 23.60
+ Duration: 234.80
+ WaitingTime: 0.32
+ TimeLoss: 35.92
+ DepartDelay: 364.18
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1076.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.75s
+ TraCI-Duration: 64.52s
+ Real time factor: 16.1203
+ UPS: 2109.081920
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5473.59
+ Speed: 23.58
+ Duration: 234.63
+ WaitingTime: 0.32
+ TimeLoss: 36.65
+ DepartDelay: 354.98
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.738900184631348:   2%|▏         | 23/1500 [1:03:11<68:25:58, 166.80s/it] Simulation ended at time: 1059.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.19s
+ TraCI-Duration: 98.12s
+ Real time factor: 10.575
+ UPS: 1401.840521
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5464.65
+ Speed: 23.58
+ Duration: 234.08
+ WaitingTime: 0.33
+ TimeLoss: 35.57
+ DepartDelay: 358.39
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1066.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.25s
+ TraCI-Duration: 65.18s
+ Real time factor: 15.8508
+ UPS: 2091.521442
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5474.08
+ Speed: 23.61
+ Duration: 234.43
+ WaitingTime: 0.32
+ TimeLoss: 36.87
+ DepartDelay: 362.13
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.029054641723633:   2%|▏         | 24/1500 [1:05:59<68:31:04, 167.12s/it]Simulation ended at time: 1067.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.83s
+ TraCI-Duration: 97.61s
+ Real time factor: 10.6934
+ UPS: 1404.155147
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5474.12
+ Speed: 23.70
+ Duration: 233.62
+ WaitingTime: 0.32
+ TimeLoss: 36.59
+ DepartDelay: 356.19
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1083.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.12s
+ TraCI-Duration: 64.06s
+ Real time factor: 16.3798
+ UPS: 2130.962824
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5478.53
+ Speed: 23.62
+ Duration: 234.82
+ WaitingTime: 0.32
+ TimeLoss: 36.85
+ DepartDelay: 357.46
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.38068675994873:   2%|▏         | 25/1500 [1:08:45<68:22:55, 166.90s/it] Simulation ended at time: 1075.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.55s
+ TraCI-Duration: 97.51s
+ Real time factor: 10.799
+ UPS: 1414.069877
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5476.16
+ Speed: 23.63
+ Duration: 234.61
+ WaitingTime: 0.33
+ TimeLoss: 35.79
+ DepartDelay: 361.32
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1082.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.35s
+ TraCI-Duration: 64.33s
+ Real time factor: 16.316
+ UPS: 2112.908088
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5468.05
+ Speed: 23.66
+ Duration: 233.64
+ WaitingTime: 0.33
+ TimeLoss: 35.73
+ DepartDelay: 359.38
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.743525505065918:   2%|▏         | 26/1500 [1:11:32<68:17:49, 166.80s/it]Simulation ended at time: 1080.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 101.65s
+ TraCI-Duration: 99.56s
+ Real time factor: 10.6301
+ UPS: 1383.471887
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5466.85
+ Speed: 23.57
+ Duration: 234.37
+ WaitingTime: 0.33
+ TimeLoss: 36.23
+ DepartDelay: 361.42
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1068.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.34s
+ TraCI-Duration: 65.28s
+ Real time factor: 15.867
+ UPS: 2078.035669
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5443.18
+ Speed: 23.57
+ Duration: 233.23
+ WaitingTime: 0.34
+ TimeLoss: 36.87
+ DepartDelay: 356.42
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.347149848937988:   2%|▏         | 27/1500 [1:14:21<68:32:27, 167.51s/it]Simulation ended at time: 1070.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.64s
+ TraCI-Duration: 97.61s
+ Real time factor: 10.7384
+ UPS: 1407.799924
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5462.30
+ Speed: 23.63
+ Duration: 233.79
+ WaitingTime: 0.34
+ TimeLoss: 36.25
+ DepartDelay: 354.05
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1054.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 68.20s
+ TraCI-Duration: 66.12s
+ Real time factor: 15.4621
+ UPS: 2038.167715
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5452.19
+ Speed: 23.79
+ Duration: 231.67
+ WaitingTime: 0.34
+ TimeLoss: 36.10
+ DepartDelay: 360.14
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.418295860290527:   2%|▏         | 28/1500 [1:17:10<68:35:13, 167.74s/it]Simulation ended at time: 1071.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.96s
+ TraCI-Duration: 97.87s
+ Real time factor: 10.7192
+ UPS: 1395.054071
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5448.27
+ Speed: 23.73
+ Duration: 232.42
+ WaitingTime: 0.34
+ TimeLoss: 35.02
+ DepartDelay: 357.93
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1050.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.03s
+ TraCI-Duration: 64.03s
+ Real time factor: 15.909
+ UPS: 2111.067361
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5449.70
+ Speed: 23.72
+ Duration: 232.33
+ WaitingTime: 0.34
+ TimeLoss: 35.72
+ DepartDelay: 357.28
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.177446365356445:   2%|▏         | 29/1500 [1:19:56<68:22:40, 167.34s/it]Simulation ended at time: 1079.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.57s
+ TraCI-Duration: 97.52s
+ Real time factor: 10.8366
+ UPS: 1409.541026
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5460.35
+ Speed: 23.61
+ Duration: 233.91
+ WaitingTime: 0.34
+ TimeLoss: 35.89
+ DepartDelay: 358.05
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1067.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 68.08s
+ TraCI-Duration: 66.00s
+ Real time factor: 15.6792
+ UPS: 2063.774161
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5460.50
+ Speed: 23.61
+ Duration: 234.18
+ WaitingTime: 0.33
+ TimeLoss: 36.89
+ DepartDelay: 353.26
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.201620101928711:   2%|▏         | 30/1500 [1:22:44<68:25:19, 167.56s/it]Simulation ended at time: 1057.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.19s
+ TraCI-Duration: 98.08s
+ Real time factor: 10.5504
+ UPS: 1401.423353
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5467.85
+ Speed: 23.62
+ Duration: 234.00
+ WaitingTime: 0.33
+ TimeLoss: 36.08
+ DepartDelay: 354.28
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1100.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.73s
+ TraCI-Duration: 65.51s
+ Real time factor: 16.2417
+ UPS: 2076.498295
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5472.35
+ Speed: 23.63
+ Duration: 234.39
+ WaitingTime: 0.33
+ TimeLoss: 36.19
+ DepartDelay: 357.53
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.071170806884766:   2%|▏         | 31/1500 [1:25:32<68:28:22, 167.80s/it]Simulation ended at time: 1060.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.32s
+ TraCI-Duration: 98.29s
+ Real time factor: 10.5663
+ UPS: 1393.096024
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5451.09
+ Speed: 23.64
+ Duration: 232.92
+ WaitingTime: 0.34
+ TimeLoss: 35.03
+ DepartDelay: 363.53
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.00s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1073.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.58s
+ TraCI-Duration: 65.55s
+ Real time factor: 15.8787
+ UPS: 2078.150203
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5470.33
+ Speed: 23.60
+ Duration: 234.05
+ WaitingTime: 0.33
+ TimeLoss: 36.69
+ DepartDelay: 356.99
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.41109848022461:   2%|▏         | 32/1500 [1:28:21<68:33:25, 168.12s/it] Simulation ended at time: 1080.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 99.55s
+ TraCI-Duration: 97.35s
+ Real time factor: 10.8485
+ UPS: 1408.978132
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5466.86
+ Speed: 23.65
+ Duration: 233.78
+ WaitingTime: 0.33
+ TimeLoss: 35.67
+ DepartDelay: 359.23
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1068.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 66.92s
+ TraCI-Duration: 64.87s
+ Real time factor: 15.9675
+ UPS: 2078.724390
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5432.74
+ Speed: 23.69
+ Duration: 231.84
+ WaitingTime: 0.36
+ TimeLoss: 34.69
+ DepartDelay: 357.57
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.16s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.141002655029297:   2%|▏         | 33/1500 [1:31:08<68:21:49, 167.76s/it]Simulation ended at time: 1051.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 101.13s
+ TraCI-Duration: 99.04s
+ Real time factor: 10.3978
+ UPS: 1391.814253
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5480.68
+ Speed: 23.62
+ Duration: 234.58
+ WaitingTime: 0.32
+ TimeLoss: 36.33
+ DepartDelay: 353.29
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1090.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.40s
+ TraCI-Duration: 65.35s
+ Real time factor: 16.1733
+ UPS: 2065.791231
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5448.91
+ Speed: 23.75
+ Duration: 232.04
+ WaitingTime: 0.34
+ TimeLoss: 35.67
+ DepartDelay: 360.65
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.17s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.385009765625:   2%|▏         | 34/1500 [1:33:57<68:27:54, 168.13s/it]   Simulation ended at time: 1035.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.63s
+ TraCI-Duration: 98.56s
+ Real time factor: 10.2852
+ UPS: 1397.277154
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5468.54
+ Speed: 23.60
+ Duration: 234.35
+ WaitingTime: 0.33
+ TimeLoss: 35.67
+ DepartDelay: 355.11
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.17s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (2ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1074.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.17s
+ TraCI-Duration: 65.15s
+ Real time factor: 15.9883
+ UPS: 2066.230982
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5434.21
+ Speed: 23.72
+ Duration: 231.33
+ WaitingTime: 0.35
+ TimeLoss: 35.44
+ DepartDelay: 355.26
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.79757308959961:   2%|▏         | 35/1500 [1:36:45<68:25:38, 168.15s/it]Simulation ended at time: 1082.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 100.95s
+ TraCI-Duration: 98.88s
+ Real time factor: 10.7187
+ UPS: 1388.548219
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5461.53
+ Speed: 23.64
+ Duration: 233.61
+ WaitingTime: 0.33
+ TimeLoss: 35.84
+ DepartDelay: 363.13
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.13s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (8ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1054.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 70.81s
+ TraCI-Duration: 68.62s
+ Real time factor: 14.8851
+ UPS: 1956.022540
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5429.32
+ Speed: 23.75
+ Duration: 230.84
+ WaitingTime: 0.35
+ TimeLoss: 35.34
+ DepartDelay: 361.13
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -10.618432998657227:   2%|▏         | 36/1500 [1:39:38<68:53:06, 169.39s/it]Simulation ended at time: 1084.50
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 102.24s
+ TraCI-Duration: 100.04s
+ Real time factor: 10.6077
+ UPS: 1365.836243
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5451.32
+ Speed: 23.69
+ Duration: 232.73
+ WaitingTime: 0.34
+ TimeLoss: 35.65
+ DepartDelay: 362.44
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.07s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (5ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (0ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1084.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 69.48s
+ TraCI-Duration: 67.27s
+ Real time factor: 15.6012
+ UPS: 1988.860424
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5425.38
+ Speed: 23.81
+ Duration: 230.32
+ WaitingTime: 0.36
+ TimeLoss: 34.76
+ DepartDelay: 360.07
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.17s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -8.938347816467285:   2%|▏         | 37/1500 [1:42:30<69:10:27, 170.22s/it] Simulation ended at time: 1084.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 102.01s
+ TraCI-Duration: 99.87s
+ Real time factor: 10.6267
+ UPS: 1369.092317
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5452.85
+ Speed: 23.71
+ Duration: 232.76
+ WaitingTime: 0.34
+ TimeLoss: 35.15
+ DepartDelay: 356.74
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (6ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (7ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 1079.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 67.84s
+ TraCI-Duration: 65.77s
+ Real time factor: 15.9048
+ UPS: 2080.895034
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5486.11
+ Speed: 23.58
+ Duration: 235.28
+ WaitingTime: 0.32
+ TimeLoss: 36.96
+ DepartDelay: 359.51
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.14s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+episode_reward_mean = -9.6272611618042:   3%|▎         | 38/1500 [1:45:20<69:07:51, 170.23s/it]  Simulation ended at time: 1091.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 102.57s
+ TraCI-Duration: 100.39s
+ Real time factor: 10.6363
+ UPS: 1356.828795
+Vehicles: 
+ Inserted: 300
+ Running: 0
+ Waiting: 0
+Statistics (avg of 300):
+ RouteLength: 5437.60
+ Speed: 23.66
+ Duration: 231.96
+ WaitingTime: 0.35
+ TimeLoss: 35.73
+ DepartDelay: 362.92
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
+Simulation ended at time: 0.00
+Reason: TraCI issued load command.
+Performance: 
+ Duration: 0.15s
+ TraCI-Duration: 0.00s
+ Real time factor: 0
+ UPS: 0.000000
+Vehicles: 
+ Inserted: 0
+ Running: 0
+ Waiting: 0
+Statistics (avg of 0):
+ RouteLength: 0.00
+ Speed: 0.00
+ Duration: 0.00
+ WaitingTime: 0.00
+ TimeLoss: 0.00
+ DepartDelay: 0.00
+ DepartDelayWaiting: 0.00
+
+Loading net-file from 'network_analysis/network_base/network.net.xml' ... done (4ms).
+Loading additional-files from 'network_analysis/network_base/det.add.xml' ... done (1ms).
+Loading done.
+Simulation version 1.15.0 started with time: 0.00.
