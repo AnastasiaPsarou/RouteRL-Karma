@@ -1,0 +1,48 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/app/scenarios/monetary_pricing/mappo_monetary_pricing.py", line 139, in <module>
+    env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/environment.py", line 368, in __init__
+    self.recorder = Recorder(self.plotter_params)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/services/recorder.py", line 37, in __init__
+    self._clear_records(self.sumo_folder)
+  File "/app/routerl_aec_environment/services/recorder.py", line 58, in _clear_records
+    os.remove(os.path.join(folder, file))
+OSError: [Errno 16] Device or resource busy: 'training_records_monetary_pricing_300_agents_fee_0_1_urgency_obs_seed_3/SUMO_output/.nfs000000000dd500a90002354a'
+ Retrying in 1 seconds
+Number of total agents is:  300 
+
+Number of human agents is:  0 
+
+Number of machine agents (autonomous vehicles) is:  300 
+
+2025-11-12 14:42:28,787 [torchrl][INFO] check_env_specs succeeded!
+episode_reward_mean = 0:   0%|          | 0/150 [00:00<?, ?it/s]

@@ -1,0 +1,89 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+/home/psarou/.local/lib/python3.12/site-packages/torchrl/data/replay_buffers/samplers.py:37: UserWarning: Failed to import torchrl C++ binaries. Some modules (eg, prioritized replay buffers) may not work with your installation. This is likely due to a discrepancy between your package version and the PyTorch version. Make sure both are compatible. Usually, torchrl majors follow the pytorch majors within a few days around the release. For instance, TorchRL 0.5 requires PyTorch 2.4.0, and TorchRL 0.6 requires PyTorch 2.5.0.
+  warnings.warn(EXTENSION_WARNING)
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 286, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/app/scenarios/monetary_pricing/mappo_monetary_pricing.py", line 139, in <module>
+    env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/environment.py", line 369, in __init__
+    self.simulator = SumoSimulator(self.simulation_params, self.path_gen_params, seed, not create_agents, save_detectors_info, randomize_sumo_seed)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/routerl_aec_environment/environment/simulator.py", line 106, in __init__
+    self._get_paths(params, path_gen_params, using_custom_demand)
+  File "/app/routerl_aec_environment/environment/simulator.py", line 203, in _get_paths
+    futures = [executor.submit(self._route_vis_process, demands, origin_idx, dest_idx, origin, destination, routes, path_visuals_path) for origin_idx, origin in enumerate(origins) for dest_idx, destination in enumerate(destinations)]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 830, in submit
+    self._adjust_process_count()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 789, in _adjust_process_count
+    self._spawn_process()
+  File "/usr/local/lib/python3.12/concurrent/futures/process.py", line 807, in _spawn_process
+    p.start()
+  File "/usr/local/lib/python3.12/multiprocessing/process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/context.py", line 289, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 32, in __init__
+    super().__init__(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_fork.py", line 19, in __init__
+    self._launch(process_obj)
+  File "/usr/local/lib/python3.12/multiprocessing/popen_spawn_posix.py", line 42, in _launch
+    prep_data = spawn.get_preparation_data(process_obj._name)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 164, in get_preparation_data
+    _check_not_importing_main()
+  File "/usr/local/lib/python3.12/multiprocessing/spawn.py", line 140, in _check_not_importing_main
+    raise RuntimeError('''
+RuntimeError: 
+        An attempt has been made to start a new process before the
+        current process has finished its bootstrapping phase.
+
+        This probably means that you are not using fork to start your
+        child processes and you have forgotten to use the proper idiom
+        in the main module:
+
+            if __name__ == '__main__':
+                freeze_support()
+                ...
+
+        The "freeze_support()" line can be omitted if the program
+        is not going to be frozen to produce an executable.
+
+        To fix this issue, refer to the "Safe importing of main module"
+        section in https://docs.python.org/3/library/multiprocessing.html
+        
+ Retrying in 1 seconds
+Number of total agents is:  300 
+
+Number of human agents is:  0 
+
+Number of machine agents (autonomous vehicles) is:  300 
+
+2025-11-12 14:43:22,179 [torchrl][INFO] check_env_specs succeeded!
+episode_reward_mean = 0:   0%|          | 0/100 [00:00<?, ?it/s]episode_reward_mean = -9.43252944946289:   1%|          | 1/100 [03:24<5:38:10, 204.96s/it]episode_reward_mean = -8.56449031829834:   2%|▏         | 2/100 [06:23<5:08:55, 189.13s/it]episode_reward_mean = -9.21857738494873:   3%|▎         | 3/100 [09:39<5:11:06, 192.44s/it]episode_reward_mean = -9.36565113067627:   4%|▍         | 4/100 [12:45<5:04:09, 190.10s/it]episode_reward_mean = -10.325787544250488:   5%|▌         | 5/100 [16:19<5:14:41, 198.75s/it]episode_reward_mean = -9.66464900970459:   6%|▌         | 6/100 [19:21<5:02:23, 193.01s/it]  episode_reward_mean = -9.41093921661377:   7%|▋         | 7/100 [22:41<5:02:16, 195.02s/it]episode_reward_mean = -8.762392044067383:   8%|▊         | 8/100 [25:58<5:00:10, 195.77s/it]episode_reward_mean = -9.438943862915039:   9%|▉         | 9/100 [29:01<4:50:56, 191.83s/it]episode_reward_mean = -8.532224655151367:  10%|█         | 10/100 [32:28<4:54:37, 196.42s/it]episode_reward_mean = -8.715187072753906:  11%|█         | 11/100 [35:46<4:52:12, 196.99s/it]episode_reward_mean = -9.149025917053223:  12%|█▏        | 12/100 [38:57<4:46:10, 195.12s/it]episode_reward_mean = -9.606101036071777:  13%|█▎        | 13/100 [42:14<4:43:56, 195.82s/it]episode_reward_mean = -9.238884925842285:  14%|█▍        | 14/100 [45:13<4:33:05, 190.52s/it]episode_reward_mean = -8.106871604919434:  15%|█▌        | 15/100 [48:18<4:27:48, 189.04s/it]episode_reward_mean = -9.155600547790527:  16%|█▌        | 16/100 [51:54<4:35:49, 197.02s/it]episode_reward_mean = -9.341879844665527:  17%|█▋        | 17/100 [55:27<4:39:24, 201.98s/it]episode_reward_mean = -9.51010799407959:  18%|█▊        | 18/100 [58:26<4:26:35, 195.07s/it] episode_reward_mean = -9.238600730895996:  19%|█▉        | 19/100 [1:01:32<4:19:36, 192.31s/it]episode_reward_mean = -10.381999969482422:  20%|██        | 20/100 [1:04:33<4:12:00, 189.01s/it]episode_reward_mean = -9.421168327331543:  21%|██        | 21/100 [1:07:52<4:12:40, 191.90s/it] episode_reward_mean = -9.849936485290527:  22%|██▏       | 22/100 [1:10:52<4:04:54, 188.39s/it]episode_reward_mean = -9.045738220214844:  23%|██▎       | 23/100 [1:14:25<4:10:58, 195.57s/it]episode_reward_mean = -10.04263687133789:  24%|██▍       | 24/100 [1:17:42<4:08:28, 196.17s/it]episode_reward_mean = -9.592904090881348:  25%|██▌       | 25/100 [1:20:44<3:59:42, 191.77s/it]episode_reward_mean = -8.54089641571045:  26%|██▌       | 26/100 [1:23:41<3:51:15, 187.51s/it] episode_reward_mean = -9.847338676452637:  27%|██▋       | 27/100 [1:27:01<3:52:35, 191.17s/it]episode_reward_mean = -10.367396354675293:  28%|██▊       | 28/100 [1:30:34<3:57:17, 197.75s/it]episode_reward_mean = -10.249197959899902:  29%|██▉       | 29/100 [1:33:53<3:54:19, 198.03s/it]episode_reward_mean = -8.8341703414917:  30%|███       | 30/100 [1:37:23<3:55:15, 201.64s/it]   episode_reward_mean = -9.391090393066406:  31%|███       | 31/100 [1:40:41<3:50:50, 200.73s/it]episode_reward_mean = -8.829689025878906:  32%|███▏      | 32/100 [1:44:07<3:49:04, 202.12s/it]episode_reward_mean = -9.477073669433594:  33%|███▎      | 33/100 [1:47:27<3:44:55, 201.43s/it]episode_reward_mean = -9.10727596282959:  34%|███▍      | 34/100 [1:51:01<3:45:42, 205.19s/it] episode_reward_mean = -10.224596977233887:  35%|███▌      | 35/100 [1:54:35<3:45:10, 207.86s/it]episode_reward_mean = -9.152997016906738:  36%|███▌      | 36/100 [1:57:35<3:33:03, 199.75s/it] episode_reward_mean = -9.70418930053711:  37%|███▋      | 37/100 [2:00:39<3:24:30, 194.77s/it] episode_reward_mean = -9.63287353515625:  38%|███▊      | 38/100 [2:04:12<3:26:56, 200.26s/it]episode_reward_mean = -9.371611595153809:  39%|███▉      | 39/100 [2:07:33<3:23:57, 200.61s/it]episode_reward_mean = -9.197041511535645:  40%|████      | 40/100 [2:11:04<3:23:48, 203.81s/it]episode_reward_mean = -9.496362686157227:  41%|████      | 41/100 [2:14:26<3:19:47, 203.18s/it]episode_reward_mean = -9.878393173217773:  42%|████▏     | 42/100 [2:18:02<3:20:05, 206.99s/it]episode_reward_mean = -9.564425468444824:  43%|████▎     | 43/100 [2:21:39<3:19:24, 209.91s/it]episode_reward_mean = -9.074689865112305:  44%|████▍     | 44/100 [2:25:11<3:16:36, 210.66s/it]episode_reward_mean = -9.631685256958008:  45%|████▌     | 45/100 [2:28:14<3:05:21, 202.21s/it]episode_reward_mean = -8.715415954589844:  46%|████▌     | 46/100 [2:31:32<3:00:52, 200.98s/it]episode_reward_mean = -9.702069282531738:  47%|████▋     | 47/100 [2:35:05<3:00:50, 204.73s/it]episode_reward_mean = -9.249520301818848:  48%|████▊     | 48/100 [2:38:06<2:51:11, 197.53s/it]episode_reward_mean = -9.575540542602539:  49%|████▉     | 49/100 [2:41:40<2:52:05, 202.47s/it]episode_reward_mean = -9.554261207580566:  50%|█████     | 50/100 [2:44:36<2:42:01, 194.42s/it]episode_reward_mean = -9.970906257629395:  51%|█████     | 51/100 [2:47:49<2:38:33, 194.15s/it]episode_reward_mean = -9.575959205627441:  52%|█████▏    | 52/100 [2:50:43<2:30:33, 188.20s/it]episode_reward_mean = -10.07889461517334:  53%|█████▎    | 53/100 [2:53:40<2:24:42, 184.74s/it]episode_reward_mean = -10.220952033996582:  54%|█████▍    | 54/100 [2:56:35<2:19:27, 181.90s/it]episode_reward_mean = -9.760568618774414:  55%|█████▌    | 55/100 [2:59:32<2:15:11, 180.25s/it] episode_reward_mean = -9.239889144897461:  56%|█████▌    | 56/100 [3:03:01<2:18:29, 188.85s/it]episode_reward_mean = -8.579707145690918:  57%|█████▋    | 57/100 [3:05:59<2:13:02, 185.64s/it]episode_reward_mean = -7.8704915046691895:  58%|█████▊    | 58/100 [3:09:30<2:15:18, 193.31s/it]episode_reward_mean = -9.63982105255127:  59%|█████▉    | 59/100 [3:12:26<2:08:34, 188.15s/it]  episode_reward_mean = -9.982833862304688:  60%|██████    | 60/100 [3:15:27<2:04:00, 186.01s/it]episode_reward_mean = -9.139482498168945:  61%|██████    | 61/100 [3:18:54<2:05:01, 192.34s/it]episode_reward_mean = -9.604544639587402:  62%|██████▏   | 62/100 [3:22:12<2:02:52, 194.00s/it]episode_reward_mean = -8.024519920349121:  63%|██████▎   | 63/100 [3:25:40<2:02:12, 198.17s/it]episode_reward_mean = -9.774042129516602:  64%|██████▍   | 64/100 [3:29:03<1:59:44, 199.57s/it]episode_reward_mean = -9.874712944030762:  65%|██████▌   | 65/100 [3:32:00<1:52:30, 192.88s/it]episode_reward_mean = -9.591437339782715:  66%|██████▌   | 66/100 [3:35:31<1:52:17, 198.17s/it]episode_reward_mean = -9.952194213867188:  67%|██████▋   | 67/100 [3:38:43<1:48:05, 196.52s/it]episode_reward_mean = -9.507402420043945:  68%|██████▊   | 68/100 [3:41:58<1:44:31, 195.99s/it]episode_reward_mean = -9.80095386505127:  69%|██████▉   | 69/100 [3:45:25<1:43:01, 199.41s/it] episode_reward_mean = -9.884806632995605:  70%|███████   | 70/100 [3:48:57<1:41:28, 202.96s/it]episode_reward_mean = -8.922292709350586:  71%|███████   | 71/100 [3:52:28<1:39:16, 205.38s/it]episode_reward_mean = -9.889787673950195:  72%|███████▏  | 72/100 [3:55:59<1:36:37, 207.06s/it]episode_reward_mean = -9.81576156616211:  73%|███████▎  | 73/100 [3:59:10<1:31:03, 202.35s/it] episode_reward_mean = -9.580323219299316:  74%|███████▍  | 74/100 [4:02:08<1:24:26, 194.87s/it]episode_reward_mean = -9.814824104309082:  75%|███████▌  | 75/100 [4:05:21<1:20:59, 194.38s/it]episode_reward_mean = -8.135343551635742:  76%|███████▌  | 76/100 [4:08:17<1:15:34, 188.95s/it]episode_reward_mean = -9.46320915222168:  77%|███████▋  | 77/100 [4:11:15<1:11:09, 185.64s/it] episode_reward_mean = -8.334087371826172:  78%|███████▊  | 78/100 [4:14:27<1:08:45, 187.53s/it]episode_reward_mean = -10.100763320922852:  79%|███████▉  | 79/100 [4:17:43<1:06:29, 190.00s/it]episode_reward_mean = -9.284361839294434:  80%|████████  | 80/100 [4:21:10<1:05:03, 195.15s/it] episode_reward_mean = -10.59450912475586:  81%|████████  | 81/100 [4:24:24<1:01:43, 194.90s/it]episode_reward_mean = -9.211385726928711:  82%|████████▏ | 82/100 [4:27:21<56:48, 189.36s/it]  episode_reward_mean = -8.921188354492188:  83%|████████▎ | 83/100 [4:30:34<54:00, 190.62s/it]episode_reward_mean = -8.838690757751465:  84%|████████▍ | 84/100 [4:33:48<51:05, 191.57s/it]episode_reward_mean = -9.464921951293945:  85%|████████▌ | 85/100 [4:37:01<47:58, 191.87s/it]episode_reward_mean = -8.474309921264648:  86%|████████▌ | 86/100 [4:39:55<43:35, 186.79s/it]episode_reward_mean = -9.063021659851074:  87%|████████▋ | 87/100 [4:43:13<41:08, 189.88s/it]episode_reward_mean = -9.937873840332031:  88%|████████▊ | 88/100 [4:46:40<39:01, 195.10s/it]episode_reward_mean = -8.645284652709961:  89%|████████▉ | 89/100 [4:50:08<36:30, 199.18s/it]episode_reward_mean = -8.099116325378418:  90%|█████████ | 90/100 [4:53:03<31:57, 191.80s/it]episode_reward_mean = -8.181217193603516:  91%|█████████ | 91/100 [4:56:03<28:14, 188.24s/it]episode_reward_mean = -8.616385459899902:  92%|█████████▏| 92/100 [4:59:17<25:19, 189.98s/it]episode_reward_mean = -10.061009407043457:  93%|█████████▎| 93/100 [5:02:45<22:47, 195.42s/it]episode_reward_mean = -9.174254417419434:  94%|█████████▍| 94/100 [5:06:13<19:55, 199.17s/it] episode_reward_mean = -9.642339706420898:  95%|█████████▌| 95/100 [5:09:11<16:04, 192.91s/it]episode_reward_mean = -10.614870071411133:  96%|█████████▌| 96/100 [5:12:20<12:46, 191.67s/it]episode_reward_mean = -8.768453598022461:  97%|█████████▋| 97/100 [5:15:42<09:44, 194.86s/it] episode_reward_mean = -9.117368698120117:  98%|█████████▊| 98/100 [5:18:50<06:25, 192.75s/it]episode_reward_mean = -9.637866973876953:  99%|█████████▉| 99/100 [5:21:44<03:07, 187.04s/it]episode_reward_mean = -8.586034774780273: 100%|██████████| 100/100 [5:24:35<00:00, 182.24s/it]

@@ -48,8 +48,8 @@ device = (
 )
 
 # Sampling
-frames_per_batch = 600  # Number of team frames collected per training iteration
-n_iters = 50  # Number of sampling and training iterations - the episodes the plotter plots
+frames_per_batch = 800  # Number of team frames collected per training iteration
+n_iters = 500  # Number of sampling and training iterations - the episodes the plotter plots
 total_frames = frames_per_batch * n_iters
 
 # Training
@@ -73,11 +73,11 @@ critic_network_num_cells = 64
 """ Environment hyperparameters."""
 
 # Number of agents
-num_agents = 300
+num_agents = 400
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 300 # All the agents are AVs, no humans available in the system.
+new_machines_after_mutation = 400 # All the agents are AVs, no humans available in the system.
 
 # number of episodes the AV training will take
 training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)
@@ -87,9 +87,9 @@ origins = ["E0"]
 destinations = ["E17.600"]
 
 
-records_folder = "training_records_monetary_pricing_300_agents_fee_0_1"
-plots_folder = "plots_monetary_pricing_300_agents_fee_0_1"
-torch.manual_seed(10)
+records_folder = "training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9"
+plots_folder = "plots_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9"
+torch.manual_seed(9)
 
 # Training phases - needed for the plotting
 phases = [1, int(training_episodes)]
@@ -103,12 +103,12 @@ env_params = {
         {
             "behavior" : "selfish",
             "observation_type" : "previous_agents_plus_start_time",
-            "route_0_fee": 0.1
+            "route_0_fee": 0.05
         }
     },
     "simulator_parameters" : {
         "network_name" : "network",
-        "custom_network_folder" : "../../network_analysis/network_base",
+        "custom_network_folder" : "network_analysis/network_base",
         "sumo_type" : "sumo",
         "simulation_timesteps": 100,
     },  
