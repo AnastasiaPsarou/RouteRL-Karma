@@ -180,41 +180,41 @@ def _all_bounds(lanes):
 def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_prefix: str):
     """Plot the network colored by a given attribute ('speed' or 'length'), per-lane."""
     vals = np.array([ln[attr_name] for ln in lanes], dtype=float)
+
+    # Convert speeds to km/h for plotting
+    if attr_name == "speed":
+        vals = vals * 3.6
+
     all_lengths = np.array([ln["length"] for ln in lanes], dtype=float)
 
     print(f"[INFO] Lanes: {len(lanes)}  |  {attr_name} min={vals.min():.4f}, max={vals.max():.4f}")
 
     cmap = mpl.cm.get_cmap(cmap_name)
 
-    # Force color scale range (20–40 m/s)
+    # Use km/h normalization range
     if attr_name == "speed":
-        norm = mpl.colors.Normalize(vmin=20.0, vmax=40.0)
+        norm = mpl.colors.Normalize(vmin=72.0, vmax=144.0)  # 20–40 m/s → 72–144 km/h
     else:
-        # Keep automatic scaling for length
         norm = mpl.colors.Normalize(
             vmin=float(vals.min()),
             vmax=float(vals.max()) if float(vals.max()) > float(vals.min()) else float(vals.min()) + 1e-9
         )
+
     size_map = map_length_to_size(all_lengths)
 
-    # ---- Compute data bounds and figure aspect ----
     xmin, xmax, ymin, ymax = _all_bounds(lanes)
     xr = xmax - xmin
     yr = ymax - ymin
-    # small padding (1%)
     pad_x = xr * 0.01 if xr > 0 else 1.0
     pad_y = yr * 0.01 if yr > 0 else 1.0
 
     data_aspect = (yr + 2 * pad_y) / (xr + 2 * pad_x) if (xr + 2 * pad_x) > 0 else 1.0
 
-    # Choose a base width and derive height to match data aspect (so 'equal' doesn't add huge whitespace)
     base_width = 12.0
     fig_height = max(6.0, base_width * data_aspect)
-
-    # Use constrained_layout to avoid colorbar/tight_layout conflicts
     fig, ax = plt.subplots(figsize=(base_width, fig_height))
 
-    # ----- draw lanes -----
+    # Draw lanes
     for ln, val in zip(lanes, vals):
         xs, ys = zip(*ln["points"])
         color = cmap(norm(val))
@@ -227,29 +227,28 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
                        edgecolors=END_CIRCLE_EDGE, linewidths=END_CIRCLE_EDGEWIDTH,
                        alpha=END_CIRCLE_ALPHA, zorder=5)
 
-    # Lock limits tightly around data (with small padding), then set equal aspect
     ax.set_xlim(xmin - pad_x, xmax + pad_x)
     ax.set_ylim(ymin - pad_y, ymax + pad_y)
     ax.set_aspect("equal", adjustable="box")
-
-    """ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.grid(True, linewidth=0.3)"""
     ax.set_axis_off()
     ax.set_title(f"{title_prefix} — lanes colored by {attr_name}", pad=25, fontsize=14, fontweight="bold")
 
     sm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
 
-    label = "Speed (m/s)" if attr_name == "speed" else "Length (m)"
+    label = "Speed (km/h)" if attr_name == "speed" else "Length (m)"
+
     fig.colorbar(
         sm, ax=ax, orientation="horizontal",
         location="bottom", fraction=0.045, pad=0.06
     ).set_label(label)
 
+
+
     fig.savefig(out_path, dpi=220, bbox_inches="tight", pad_inches=0.05)
     plt.close(fig)
     print(f"[OK] Saved: {out_path.resolve()}")
+
 
 def main():
     net_path = Path(NET_FILE)
