@@ -4,7 +4,6 @@
     <input>
         <net-file value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\network_base\network.net.xml" />
         <route-files value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\runs_out\veh600_route2\handmade_routes.rou_600_route2.rou.xml" />
-        <additional-files value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\network_base\det.add.xml" />
     </input>
 
    <output>

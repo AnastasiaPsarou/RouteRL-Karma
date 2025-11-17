@@ -193,7 +193,7 @@ def plot_attribute(lanes, attr_name: str, cmap_name: str, out_path: Path, title_
 
     # Use km/h normalization range
     if attr_name == "speed":
-        norm = mpl.colors.Normalize(vmin=72.0, vmax=144.0)  # 20–40 m/s → 72–144 km/h
+        norm = mpl.colors.Normalize(vmin=10.0, vmax=100.0)  # 20–40 m/s → 72–144 km/h
     else:
         norm = mpl.colors.Normalize(
             vmin=float(vals.min()),

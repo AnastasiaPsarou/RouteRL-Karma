@@ -29,11 +29,11 @@ ROU_TEMPLATE = "../network_base/handmade_routes.rou.xml"
 FLOW_ID = "flow_am_peak"
 
 # Vehicle counts for each run (cycled if fewer than RUNS)
-COUNTS = [1, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000]
+COUNTS = [1, 10, 20, 50, 70, 80, 100, 150, 180, 200, 220, 230, 240, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000]
 
 # SUMO / execution settings
-RUNS = 14            # how many total runs
-PARALLEL = 14       # how many in parallel
+RUNS = 25           # how many total runs
+PARALLEL = 25       # how many in parallel
 STEP_LIMIT = None  # optional cap on simulation steps (None = until finished)
 USE_GUI = False     # False = headless (recommended)
 SEED_START = None  # None = SUMO default seed
@@ -42,13 +42,13 @@ SIM_END = 1500
 
 # --- Route variants you want to test (label -> edges string) ---
 ROUTE_VARIANTS = {
-    "route0": "E0 E20 E20.444 E17 E17.200 E17.400 E17.600",
+    "route0": "E0 E20 E20.444 E20.444.91 E17 E17.200 E17.400 E17.600",
     "route1": "E0 E2 E18 E18.118 E19 E17 E17.200 E17.400 E17.600",
     "route2": "E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600",
 }
 
 # Choose which route each run uses (cycled if fewer than RUNS)
-ROUTE_SEQUENCE = ["route0"]   # will cycle for RUNS > 3
+ROUTE_SEQUENCE = ["route2"]   # will cycle for RUNS > 3
 
 # ============================================================
 
