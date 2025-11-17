@@ -48,7 +48,7 @@ ROUTE_VARIANTS = {
 }
 
 # Choose which route each run uses (cycled if fewer than RUNS)
-ROUTE_SEQUENCE = ["route2"]   # will cycle for RUNS > 3
+ROUTE_SEQUENCE = ["route0"]   # will cycle for RUNS > 3
 
 # ============================================================
 
