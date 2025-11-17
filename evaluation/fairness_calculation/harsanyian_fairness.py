@@ -13,15 +13,13 @@ import numpy as np
 # ============================================================
 
 BASE_DIRS = [
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9",
 ]
-LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
+LABELS = ["Run 1", "Run 2", "Run 3"]
 
-LAST_N_EPISODES = 10  # how many of the latest episodes to analyze
+LAST_N_EPISODES = 1010  # how many of the latest episodes to analyze
 
 SAVE_DETAILED_CSV = "csvs/agent_avg_delay_traveltime_last10.csv"
 SAVE_RUN_SUMMARY_CSV = "csvs/per_run_avg_summary_last10.csv"

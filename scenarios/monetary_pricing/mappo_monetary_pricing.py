@@ -73,11 +73,11 @@ critic_network_num_cells = 64
 """ Environment hyperparameters."""
 
 # Number of agents
-num_agents = 400
+num_agents = 10
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 400 # All the agents are AVs, no humans available in the system.
+new_machines_after_mutation = 10 # All the agents are AVs, no humans available in the system.
 
 # number of episodes the AV training will take
 training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)
@@ -108,14 +108,14 @@ env_params = {
     },
     "simulator_parameters" : {
         "network_name" : "network",
-        "custom_network_folder" : "network_analysis/network_base",
-        "sumo_type" : "sumo",
+        "custom_network_folder" : "../../network_analysis/network_base",
+        "sumo_type" : "sumo-gui",
         "simulation_timesteps": 100,
     },  
     "environment_parameters":
     {
         "observations_time_window": 100,
-        "save_every" : 2,
+        "save_every" : 1,
     },
     "plotter_parameters" : {
         "phases" : phases,

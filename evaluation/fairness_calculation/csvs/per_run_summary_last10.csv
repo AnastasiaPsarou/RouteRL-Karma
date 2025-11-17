@@ -1,0 +1,3 @@
+run,max_delay,max_delay_agent,max_delay_agent_income,max_travel_time,max_travel_time_agent,max_travel_time_agent_income
+Run 1,40.92109968556251,49,115.03993242161341,43.38333333333333,49,115.03993242161341
+Run 2,40.837766352229174,74,154.2701607479601,43.3,74,154.2701607479601
