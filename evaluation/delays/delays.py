@@ -455,19 +455,17 @@ def compare_agent_delays_side_by_side(
 LABELS = ["Run A", "Run B", "Run C", "Run D", "Run E"]"""
 
 BASE_DIRS = [
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9",
 ]
 
-LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
+LABELS = ["Run 1", "Run 2", "Run 3"]
 
 _ = compare_agent_delays_side_by_side(
     base_dirs=BASE_DIRS,
     labels=LABELS,
-    last_n=10,
+    last_n=1010,
     route_order="appearance",
     save_fig_path="imgs/income_delay_by_route.png",
     cmap_name="tab20",

@@ -9,12 +9,9 @@ import pandas as pd
 # ---- USER PARAMETERS (edit these) ----
 # ==========================================================
 folders = [
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5/episodes",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6/episodes",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8/episodes",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9/episodes",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10/episodes",
-
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7/episodes",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8/episodes",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9/episodes",
 ]
 
 """folders = [
@@ -27,7 +24,7 @@ folders = [
     # add more folders if needed
 ]"""
 last_n = 10                  # Number of last episodes to include per folder
-metric = "income"            # "income" or "travel_time"
+metric = "travel_time"            # "income" or "travel_time"
 print_table = False          # Print per-agent averages table?
 # ==========================================================
 

@@ -629,18 +629,16 @@ def plot_crossrun_mean_std_by_quintile(
 
 
 BASE_DIRS = [
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9",
 ]
-LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
+LABELS = ["Run 1", "Run 2", "Run 3"]
 
 _, _ = plot_crossrun_mean_std_by_quintile(
     base_dirs=BASE_DIRS,
     labels=LABELS,
-    last_n=10,
+    last_n=1010,
     global_quintiles=True,
     use_observed_range_on_xlabel=True,
     income_decimals=0,

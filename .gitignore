@@ -1,0 +1,5 @@
+*.pyc
+network_analysis/network_base/summary.xml
+network_analysis/network_base/tripinfo.xml
+network_analysis/network_base/fcd.xml
+network_analysis/network_base/det.add.xml

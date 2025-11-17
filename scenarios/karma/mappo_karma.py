@@ -33,7 +33,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 from utils import ensure_composite_action_on, ensure_tmp_and_logprob, rebuild_prev_logprob_root
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-from routerl_karma import TrafficEnvironment
+from routerl_aec_environment_karma import TrafficEnvironment
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -163,6 +163,7 @@ env = TransformedEnv(
 
 # Runs some rollouts in the wrapped pettingzoo env to ensure that the spaces are okay.
 check_env_specs(env)
+check_env_specs(env)
 
 
 share_parameters_policy = False 
@@ -173,9 +174,9 @@ share_parameters_policy = False
 policy_net = nn.Sequential(
     MultiAgentMLP(
         n_agent_inputs = env.observation_spec["agents", "observation"].shape[-1],
-        n_agent_outputs = 3*100,
+        n_agent_outputs = env.action_spec.space.n,
         n_agents = env.n_agents,
-        centralised=True,
+        centralised=False,
         share_params=share_parameters_policy,
         device=device,
         depth=policy_network_depth,
@@ -259,13 +260,13 @@ loss_module = ClipPPOLoss(
 )
 
 
-loss_module.set_keys(
-    reward=env.reward_key,
-    action=("agents","_tmp_action"),
-    sample_log_prob=("_prev_log_prob_struct",),  # root-level parent (NOT under "agents")
-    value=("agents","state_value"),
-    done=("agents","done"),
-    terminated=("agents","terminated"),
+loss_module.set_keys( 
+    reward=env.reward_key,  
+    action=env.action_key, 
+    sample_log_prob=("agents", "sample_log_prob"),
+    value=("agents", "state_value"),
+    done=("agents", "done"),
+    terminated=("agents", "terminated"),
 )
 
 loss_module.make_value_estimator(
@@ -280,7 +281,6 @@ pbar = tqdm(total=n_iters, desc="episode_reward_mean = 0")
 
 
 """Training loop"""
-
 for tensordict_data in collector: ##loops over frame_per_batch
 
     ## Generate the rollouts
@@ -297,10 +297,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
         .expand(tensordict_data.get_item_shape(("next", env.reward_key))),  # Adjust index to start from 0
     )
 
-    # Helping function
-    tensordict_data = ensure_tmp_and_logprob(tensordict_data)
-
-
     # Compute GAE for all agents
     with torch.no_grad():
             GAE(
@@ -316,11 +312,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
     for _ in range(num_epochs):
         for _ in range(frames_per_batch // minibatch_size):
             subdata = replay_buffer.sample()
-
-            # Helping functions
-            ensure_composite_action_on(subdata)
-            rebuild_prev_logprob_root(subdata)
-            
             loss_vals = loss_module(subdata)
 
             loss_value = (
@@ -337,7 +328,6 @@ for tensordict_data in collector: ##loops over frame_per_batch
 
             optim.step()
             optim.zero_grad()
-
    
     collector.update_policy_weights_()
    

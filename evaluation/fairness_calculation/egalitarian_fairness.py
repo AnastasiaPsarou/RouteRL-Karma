@@ -13,17 +13,14 @@ import numpy as np
 # ============================================================
 
 BASE_DIRS = [
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_5",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_6",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_7",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_8",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_9",
-    r"../../data/training_records_300_agents_fee_0_1_long/training_records_monetary_pricing_300_agents_fee_0_1_seed_10",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9",
 ]
 
-LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
+LABELS = ["Run 1", "Run 2", "Run 3"]
 
-LAST_N_EPISODES = 10  # number of last episodes to consider
+LAST_N_EPISODES = 1010  # number of last episodes to consider
 
 # If you know the agent column name, set it here; otherwise leave as None to auto-detect.
 AGENT_COL = None  # e.g., "agent_id", "agent", or "id"

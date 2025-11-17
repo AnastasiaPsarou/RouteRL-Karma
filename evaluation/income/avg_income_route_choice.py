@@ -153,18 +153,16 @@ def plot_avg_income_by_action_across_runs(
 
 
 BASE_DIRS = [
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_4_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_5_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_6_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_7_long",
-    r"../data/training_records_300_agents_fee_0_1/training_records_monetary_pricing_300_agents_fee_0_1_seed_8_long",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_7",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_8",
+    r"../../data/training_records_400_agents/training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9",
 ]
-LABELS = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5"]
+LABELS = ["Run 1", "Run 2", "Run 3"]
 
 plot_avg_income_by_action_across_runs(
     base_dirs=BASE_DIRS,
     labels=LABELS,
-    last_n=10,
+    last_n=100,
     save_fig_path="imgs/avg_income_by_route_mean_std.png",
     show_plot=True,
     title_fontsize=18,
