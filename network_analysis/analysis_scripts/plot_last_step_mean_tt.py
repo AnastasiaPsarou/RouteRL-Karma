@@ -194,7 +194,7 @@ def plot_data(data, path_full: Path, path_zoom: Path):
     # Full version
     make_plot(xlim=None, save_path=path_full)
     # Zoomed version (xlim = 2000)
-    make_plot(xlim=2000, save_path=path_zoom)
+    make_plot(xlim=800, save_path=path_zoom)
 
 
 # ===========================

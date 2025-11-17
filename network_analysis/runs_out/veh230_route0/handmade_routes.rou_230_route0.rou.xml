@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes>
+
+    
+    <vTypeDistribution id="distDrivers">
+
+        
+        
+
+        
+
+        
+        
+
+        <vType id="AV_Aggressive" color="255,165,0" guiShape="passenger/sedan" carFollowModel="IDM" accel="2.8" decel="3.5" desiredTimeHeadway="1.0" minGap="1.2" speedFactor="1.05" speedDev="0.02" impatience="0.3" lcStrategic="0.6" lcSpeedGain="0.5" lcCooperative="0.8" probability="0.10" />
+
+    </vTypeDistribution>
+
+    
+    
+    
+
+    <route id="route0" edges="E0 E20 E20.444 E20.444.91 E17 E17.200 E17.400 E17.600" /><flow id="flow_am_peak" route="route0" type="distDrivers" begin="0" end="1500" departLane="free" departSpeed="max" probability="0.153333" />
+
+</routes>
