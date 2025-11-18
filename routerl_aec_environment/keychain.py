@@ -52,7 +52,10 @@ class Keychain:
     ROUTE_0_FEE = "route_0_fee"
     URGENCY = "urgency"
     OBSERVATION = "observation"
-
+    REWARD_W1 = "reward_w1"
+    REWARD_W2 = "reward_w2"
+    REWARD_W3 = "reward_w3"
+    TRAVEL_TIME_NORMALIZATION_VALUE = "travel_time_normalization_value"
 
     ### Environment
     NUMBER_OF_DAYS = "number_of_days"
