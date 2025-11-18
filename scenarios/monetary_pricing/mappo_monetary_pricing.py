@@ -48,7 +48,7 @@ device = (
 )
 
 # Sampling
-frames_per_batch = 800  # Number of team frames collected per training iteration
+frames_per_batch = 600  # Number of team frames collected per training iteration
 n_iters = 500  # Number of sampling and training iterations - the episodes the plotter plots
 total_frames = frames_per_batch * n_iters
 
@@ -73,11 +73,11 @@ critic_network_num_cells = 64
 """ Environment hyperparameters."""
 
 # Number of agents
-num_agents = 10
+num_agents = 300
 
 # Human learning phase
 human_learning_episodes = 0
-new_machines_after_mutation = 10 # All the agents are AVs, no humans available in the system.
+new_machines_after_mutation = 300 # All the agents are AVs, no humans available in the system.
 
 # number of episodes the AV training will take
 training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_iters)
@@ -86,10 +86,12 @@ training_episodes = int((frames_per_batch / new_machines_after_mutation) * n_ite
 origins = ["E0"]
 destinations = ["E17.600"]
 
+seed = 9
 
-records_folder = "training_records_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9"
-plots_folder = "plots_monetary_pricing_400_agents_fee_0_05_urgency_obs_seed_9"
-torch.manual_seed(9)
+records_folder = "training_records_monetary_pricing_300_agents_new_reward_{seed}_fee_2"
+plots_folder = "plots_monetary_pricing_300_agents_new_reward_{seed}_fee_2"
+
+torch.manual_seed(seed)
 
 # Training phases - needed for the plotting
 phases = [1, int(training_episodes)]
@@ -103,7 +105,7 @@ env_params = {
         {
             "behavior" : "selfish",
             "observation_type" : "previous_agents_plus_start_time",
-            "route_0_fee": 0.05
+            "route_0_fee": 2
         }
     },
     "simulator_parameters" : {
@@ -136,7 +138,7 @@ env_params = {
 }
 
 # Environment initialization
-env = TrafficEnvironment(seed=42, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
 
 # Initialize the connection with SUMo
 env.start()
