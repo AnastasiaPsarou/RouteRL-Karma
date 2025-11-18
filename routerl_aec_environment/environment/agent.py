@@ -255,6 +255,13 @@ class MachineAgent(BaseAgent):
         self.marginal_calculation = False
         self.monetary_pricing = None
         self.route_0_fee = params[kc.ROUTE_0_FEE]
+
+        self.w1 = params[kc.REWARD_W1]
+        self.w2 = params[kc.REWARD_W2]
+        self.w3 = params[kc.REWARD_W3]
+
+        self.travel_time_normalization_value = params[kc.TRAVEL_TIME_NORMALIZATION_VALUE]
+
         self.urgency = None
         #self.marginal_cost_beta = marginal_cost_beta
 
@@ -506,9 +513,11 @@ class MachineAgent(BaseAgent):
         if self.monetary_pricing:
             route_fee = self._calculate_monetary_reward(observation)
             hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
-            travel_times_hrs = -1 * agent_reward / 60
+            daily_income = self.income / 30 # If we assume that each month has 30 days
+            travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
 
-            agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
+            #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
+            agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm + self.w3 * self.urgency
 
 
         if self.marginal_calculation:
