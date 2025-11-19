@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-11-18 17:41:11 by Eclipse SUMO sumo Version 1.15.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="network_analysis/network_base/network.net.xml"/>
+        <route-files value="network_analysis/network_base/route.rou.xml"/>
+    </input>
+
+    <output>
+        <fcd-output value="network_analysis/network_base/fcd.xml"/>
+        <summary-output value="network_analysis/network_base/summary.xml"/>
+        <tripinfo-output value="training_records_monetary_pricing_300_agents_new_reward_11_fee_2/SUMO_output/detailed_sumo_stats_208.xml"/>
+        <tripinfo-output.write-undeparted value="true"/>
+        <statistic-output value="training_records_monetary_pricing_300_agents_new_reward_11_fee_2/SUMO_output/sumo_stats_208.xml"/>
+    </output>
+
+    <time>
+        <step-length value="0.5"/>
+    </time>
+
+    <processing>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <no-warnings value="true"/>
+        <message-log value="/dev/null"/>
+        <error-log value="/dev/null"/>
+        <duration-log.disable value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="11"/>
+    </random_number>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>
