@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from collections import deque
+from collections import deque, defaultdict
 from .learning_model import BaseLearningModel
 
 class UCB(BaseLearningModel):
@@ -35,18 +35,20 @@ class UCB(BaseLearningModel):
         self.num_actions = num_actions
         self.obs_dim = tuple([num_agents] * num_actions)
 
-        self.sa_counts = np.zeros((num_states, num_actions), dtype=np.int32)
+        #self.sa_counts = np.zeros((num_states, num_actions), dtype=np.int32)
+        self.sa_counts = defaultdict(lambda: np.zeros(num_actions, dtype=np.float32))
 
         self.alpha = alpha
         self.beta = beta
 
         self.global_step = 1 # starting at 1 to avoid ln(0)
 
-        self.Q = np.full(
+        """self.Q = np.full(
             (num_states, num_actions),
-            dtype=np.float32,
+            dtype=np.float16,
             fill_value=0,
-        )
+        )"""
+        self.Q = defaultdict(lambda: np.zeros(num_actions, dtype=np.float32))
         np.random.seed(seed)
     
     def learn(self, state, action, reward):
