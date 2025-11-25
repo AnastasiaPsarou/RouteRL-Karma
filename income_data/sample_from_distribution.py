@@ -2,9 +2,9 @@
 import numpy as np
 import pandas as pd
 
-NPZ_PATH = "income_distribution_arrays.npz"   # the file you saved earlier
+NPZ_PATH = "income_distribution_arrays_europe.npz"   # the file you saved earlier
 N_SAMPLES = 800
-OUT_CSV   = "income_samples.csv"
+OUT_CSV   = "income_samples_europe.csv"
 
 # ---------- Load arrays ----------
 dat = np.load(NPZ_PATH, allow_pickle=True)
