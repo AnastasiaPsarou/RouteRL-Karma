@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-21 21:35:46 by Eclipse SUMO netedit Version 1.19.0
+<!-- generated on 2025-11-25 16:01:50 by Eclipse SUMO netedit Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
@@ -170,12 +170,12 @@
         <lane id=":J9_0_4" index="4" speed="4.41" length="5.22" shape="1598.57,-1100.72 1598.71,-1100.99 1598.84,-1101.16 1599.01,-1101.29 1599.28,-1101.43"/>
     </edge>
 
-    <edge id="E0" from="J0" to="J1" priority="-1" length="100.00">
-        <lane id="E0_0" index="0" speed="27.78" length="100.00" shape="1042.78,-214.40 1195.41,-214.22"/>
-        <lane id="E0_1" index="1" speed="27.78" length="100.00" shape="1042.77,-211.20 1195.99,-211.02"/>
-        <lane id="E0_2" index="2" speed="27.78" length="100.00" shape="1042.77,-208.00 1196.56,-207.82"/>
-        <lane id="E0_3" index="3" speed="27.78" length="100.00" shape="1042.77,-204.80 1197.14,-204.62"/>
-        <lane id="E0_4" index="4" speed="27.78" length="100.00" shape="1042.76,-201.60 1197.72,-201.42"/>
+    <edge id="E0" from="J0" to="J1" priority="-1" length="500.00">
+        <lane id="E0_0" index="0" speed="27.78" length="500.00" shape="1042.78,-214.40 1195.41,-214.22"/>
+        <lane id="E0_1" index="1" speed="27.78" length="500.00" shape="1042.77,-211.20 1195.99,-211.02"/>
+        <lane id="E0_2" index="2" speed="27.78" length="500.00" shape="1042.77,-208.00 1196.56,-207.82"/>
+        <lane id="E0_3" index="3" speed="27.78" length="500.00" shape="1042.77,-204.80 1197.14,-204.62"/>
+        <lane id="E0_4" index="4" speed="27.78" length="500.00" shape="1042.76,-201.60 1197.72,-201.42"/>
     </edge>
     <edge id="E10" from="J8" to="J9" priority="-1" length="250.00">
         <lane id="E10_0" index="0" speed="16.67" length="250.00" shape="1487.12,-906.44 1587.12,-1106.44"/>

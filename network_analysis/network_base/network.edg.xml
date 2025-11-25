@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-11-21 21:48:56 by Eclipse SUMO netconvert Version 1.19.0
+<!-- generated on 2025-11-25 17:23:38 by Eclipse SUMO netconvert Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -33,7 +33,7 @@
 -->
 
 <edges version="1.16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/edges_file.xsd">
-    <edge id="E0" from="J0" to="J1" priority="-1" numLanes="5" speed="27.78" length="100.00"/>
+    <edge id="E0" from="J0" to="J1" priority="-1" numLanes="5" speed="27.78" length="500.00"/>
     <edge id="E10" from="J8" to="J9" priority="-1" numLanes="5" speed="16.67" length="250.00"/>
     <edge id="E11" from="J9" to="J10" priority="-1" numLanes="5" speed="16.67" length="250.00"/>
     <edge id="E12" from="J10" to="J11" priority="-1" numLanes="5" speed="16.67" length="250.00"/>
