@@ -65,8 +65,9 @@ df["dincm"] = df["dincm"].astype(float)
 df["expdincm"] = df["expdincm"].astype(float)
 
 regions = [
-    "North America", "Europe", "East Asia", "Russia & Central Asia",
-    "MENA", "Latin America", "South & South-East Asia", "Sub-Saharan Africa"
+    "Europe"
+    #"North America", "Europe", "East Asia", "Russia & Central Asia",
+    #"MENA", "Latin America", "South & South-East Asia", "Sub-Saharan Africa"
 ]
 
 for c in regions:
@@ -135,7 +136,7 @@ if total_area == 0:
     raise ValueError("All values are zero after smoothing; cannot normalize.")
 Y_plot = Y_smooth / total_area
 
-np.savez("income_distribution_arrays.npz",
+np.savez("income_distribution_arrays_europe.npz",
          d_fine=d_fine, Y_plot=Y_plot, regions=regions)
 
 
