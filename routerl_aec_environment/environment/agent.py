@@ -43,6 +43,10 @@ class BaseAgent(ABC):
         self.last_action = 0
         self.default_action = None
         self.income = income 
+        
+        self.actions = []
+        self.observations = []
+        self.rewards = []
 
     @property
     @abstractmethod

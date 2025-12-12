@@ -20,7 +20,7 @@ import threading
 from routerl_aec_environment.environment import generate_agents
 from routerl_aec_environment.environment import SumoSimulator
 from routerl_aec_environment.environment import MachineAgent
-from routerl_aec_environment.environment import PreviousAgentStart, PreviousAgentStartPlusStartTime 
+from routerl_aec_environment.environment import PreviousAgentStart, PreviousAgentStartPlusStartTime, PreviousAvgTTperRoute 
 from routerl_aec_environment.environment import PreviousAgentStartPlusStartTimeDetectorData, PreviousAgentStartPlusStartTimeMarginalCost, Observations
 from routerl_aec_environment.keychain import Keychain as kc
 from routerl_aec_environment.services import plotter
@@ -588,7 +588,7 @@ class TrafficEnvironment(AECEnv):
 
         self._assign_urgency_level_to_an_agent(machine)
 
-        if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST:
+        if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
             return self.observation_obj.agent_observations(agent, self.all_agents, self.travel_times_list)
         
         return self.observation_obj.agent_observations(agent, self.all_agents)
@@ -806,6 +806,8 @@ class TrafficEnvironment(AECEnv):
         # Reset observations
         if len(self.machine_agents) > 0:
             self.observations = self.observation_obj.reset_observation()
+            #self._agent_selector = agent_selector(self.possible_agents)
+            #self.agent_selection = self._agent_selector.next()
 
         self.travel_times_list = []
         self.episode_actions = dict()
@@ -1058,6 +1060,13 @@ class TrafficEnvironment(AECEnv):
                                                    self.simulation_params,
                                                    self.agent_params,
                                                    self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
+        elif observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
+            return PreviousAvgTTperRoute(self.machine_agents,
+                                                   self.human_agents,
+                                                   self.simulation_params,
+                                                   self.agent_params,
+                                                   self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
+       
         elif observation_type == kc.PREVIOUS_AGENTS:
             return PreviousAgentStart(self.machine_agents,
                                       self.human_agents,

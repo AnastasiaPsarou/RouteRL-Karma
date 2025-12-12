@@ -46,6 +46,7 @@ class Keychain:
     PREVIOUS_AGENTS_PLUS_START_TIME = "previous_agents_plus_start_time"
     PREVIOUS_AGENTS_PLUS_START_TIME_DETECTOR_DATA = "previous_agents_plus_start_time_detector_data"
     PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST = "previous_agents_plus_start_time_marginal_cost"
+    PREVIOUS_AVERAGE_TT_PER_ROUTE = "previous_agents_avg_tt_per_route"
     GROUP_VICINITY = "group_vicinity"
     MARGINAL_COST_COEFFICIENT_BETA = "marginal_cost_coefficient_beta"
     MARGINAL_MATRICES_FOLDER = "marginal_matrices_folder"

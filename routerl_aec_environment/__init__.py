@@ -29,6 +29,8 @@ from .environment import (
 from .human_learning import (
     get_learning_model,
     DQN,
+    SharedDQN,
+    ReplayBuffer,
     MAPPO,
     UCB
 )

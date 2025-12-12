@@ -33,7 +33,8 @@ class UCB(BaseLearningModel):
         """
         self.num_states = num_states
         self.num_actions = num_actions
-        self.obs_dim = tuple([num_agents] * num_actions)
+        urgency_bins = 11
+        self.obs_dim = tuple([num_agents] * num_actions + [urgency_bins])
 
         #self.sa_counts = np.zeros((num_states, num_actions), dtype=np.int32)
         self.sa_counts = defaultdict(lambda: np.zeros(num_actions, dtype=np.float32))
@@ -51,6 +52,7 @@ class UCB(BaseLearningModel):
         self.Q = defaultdict(lambda: np.zeros(num_actions, dtype=np.float32))
         np.random.seed(seed)
     
+
     def learn(self, state, action, reward):
         """Updates the internal model with a new experience.
 
@@ -82,7 +84,9 @@ class UCB(BaseLearningModel):
         Returns:
             int: The action that maximizes the estimated Q-value.
         """
+
         obs_idx = np.ravel_multi_index(obs, self.obs_dim)
+
         self.last_obs = obs_idx
         division_coef = 0.001
 
