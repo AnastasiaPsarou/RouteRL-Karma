@@ -254,7 +254,7 @@ class PreviousAgentStartPlusStartTime(Observations):
         for machine in self.machine_agents_list:
             if machine.id == int(agent_id):
                 break
-
+        
         # If the agent has already acted, return the observation that was previously calculated
         observation = np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
 
@@ -268,7 +268,12 @@ class PreviousAgentStartPlusStartTime(Observations):
                 #if 0 < dt < self.time_window:
                 observation[agent.last_action] += 1
 
-        observation = np.concatenate((observation, [int(machine.urgency*10)], [machine.start_time], [int(machine.income)]))
+        # Normalize observations
+        observation = observation / len(all_agents)
+        #Normalize incomes over the highest agent's income        
+        richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
+
+        observation = np.concatenate((observation, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income]))
         #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
         self.observations[str(machine.id)] = observation
