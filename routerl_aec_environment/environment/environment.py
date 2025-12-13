@@ -375,7 +375,7 @@ class TrafficEnvironment(AECEnv):
 
         # Urgency distribution
         self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
-        self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
+        self.urgency_distribution = np.clip(self.urgency_distribution, 0, 9) / 10 # restrict to 1–10
 
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag() # Initialize monetary pricing flag

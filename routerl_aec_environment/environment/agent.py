@@ -521,7 +521,7 @@ class MachineAgent(BaseAgent):
             travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
 
             #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
-            agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm + self.w3 * self.urgency
+            agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm * (1 + self.urgency) #+ self.w3 * self.urgency
 
 
         if self.marginal_calculation:
