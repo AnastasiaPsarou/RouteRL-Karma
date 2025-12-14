@@ -14,7 +14,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 100
+training_episodes = 200
 testing_episodes = 20
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
@@ -42,7 +42,7 @@ env_params = {
         "num_agents": num_agents,
         "machine_parameters": {
             "behavior": "selfish",
-            "observation_type": "previous_agents_plus_start_time",
+            "observation_type": "previous_agents_avg_tt_per_route",
             "route_0_fee": 2,
             "travel_time_normalization_value": 100
         }
@@ -54,7 +54,7 @@ env_params = {
         "simulation_timesteps": 100,
     },
     "environment_parameters": {
-        "observations_time_window": 100,
+        "observations_time_window": 20,
         "save_every": 1,
         "number_of_days": 10
     },
@@ -116,8 +116,8 @@ shared_dqn = SharedDQN(
     action_space_size=ACTION_SIZE,
     num_agents=len(mutated_humans),
     epsilon=0.99,
-    epsilon_decay_rate=0.01,
-    epsilon_min=0.0,
+    epsilon_decay_rate=0.001,
+    epsilon_min=0.05,
     memory_size=50_000,      # with many agents, you typically want larger replay
     batch_size=256,          # increase if you have enough data/GPU
     gamma=0.9,
@@ -182,9 +182,9 @@ for episode in range(training_episodes):
 
         env.step(action)
 
-        # Do learning online (e.g., every step) or every k steps.
-        # With many agents, learning every few steps is often fine.
-        shared_dqn.learn(updates=1)
+    # Do learning online (e.g., every step) or every k steps.
+    # With many agents, learning every few steps is often fine.
+    shared_dqn.learn(updates=1)
 
     pbar.update()
 
