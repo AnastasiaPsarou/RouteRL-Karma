@@ -312,6 +312,7 @@ class PreviousAvgTTperRoute(Observations):
         self.observations = self.reset_observation()
         self.agent_vectors = {}
         self.time_window = observations_time_window
+        self.historic_travel_times = []
 
     def __call__(self, all_agents: List[Any]) -> Dict[str, Any]:
         """Generate observations for all agents.
@@ -358,8 +359,9 @@ class PreviousAvgTTperRoute(Observations):
         obs = {
             str(agent.id): np.concatenate(  # Combine start_time and vector into a single array
                 [
+                    #np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
                     self.agent_vectors[agent],  # Vector as array
-                    np.array([0], dtype=np.int32),  # Urgency
+                    np.array([0], dtype=np.int32),  # Start time as scalar
                 ]
             )
             for agent in self.machine_agents_list
@@ -377,19 +379,19 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 1 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
+        total_size = 3 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
 
         return {
             str(agent.id): Box(
                 low=0,
                 high=np.inf,
                 shape=(total_size,),  # Combined size for start_time and vector
-                dtype=np.float32
+                dtype=np.int32
             )
             for agent in self.machine_agents_list
         }
     
-    def agent_observations(self, agent_id: str, all_agents: List[Any], travel_times_list: List[Any]) -> np.ndarray:
+    def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict) -> np.ndarray:
         """Retrieve the observation for a specific agent.
 
         Args:
@@ -400,27 +402,152 @@ class PreviousAvgTTperRoute(Observations):
         for machine in self.machine_agents_list:
             if machine.id == int(agent_id):
                 break
+        
+        #print("travel times list is: ", travel_times_list, len(travel_times_list), "\n\n")
+        if historic_data:
+            #episode_records = historic_data[-1] if historic_data else []
+            mean_tt_before = self.historic_means_before_for_agent_all_episodes(
+                agent_id=machine.id,
+                historic_data=historic_data,   # full history is OK
+                actions=(0,1,2),
+                k_closest_before = self.time_window
+            )
+            mean_tt_before = list(mean_tt_before.values())
+            mean_tt_before = np.array(mean_tt_before) / 100
+        else:
+            mean_tt_before = [0.0, 0.0, 0.0]
 
-        print("travel_times_list is: ", travel_times_list, "\n\n")
+        #Normalize incomes over the highest agent's income        
+        richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
 
-        # If the agent has already acted, return the observation that was previously calculated
-        observation = np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
-
-        for agent in all_agents:
-            if (machine.id != agent.id and
-                machine.origin == agent.origin and
-                machine.destination == agent.destination and
-                machine.start_time > agent.start_time):
-                
-                #dt = abs(agent.start_time - machine.start_time)
-                #if 0 < dt < self.time_window:
-                observation[agent.last_action] += 1
-        print("observation is: ", observation, machine.urgency, "\n\n")
-        observation = np.concatenate((observation, [machine.urgency]))
+        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income]))
+        #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
         self.observations[str(machine.id)] = observation
         
         return observation
+
+    def historic_means_before_for_agent_all_episodes(
+        self,
+        agent_id: int,
+        historic_data,
+        actions=(0, 1, 2),
+        time_key="start_time",
+        action_key="action",
+        tt_key="travel_time",
+        id_key="id",
+        fill_value=np.nan,
+        k_closest_before=20,
+    ):
+        if not historic_data:
+            return []
+
+        # If someone passes a single iteration as list[dict], wrap it
+        if isinstance(historic_data, list) and historic_data and isinstance(historic_data[0], dict):
+            historic_data = [historic_data]
+
+        stats_list = []
+
+        total_sum_tt = {a: 0.0 for a in actions}
+        total_cnt_tt = {a: 0 for a in actions}
+
+        for idx, records in enumerate(historic_data):
+            if not records:
+                stats_list.append(None)
+                continue
+
+            agent_recs = [
+                r for r in records
+                if isinstance(r, dict) and r.get(id_key) == agent_id
+            ]
+            if not agent_recs:
+                stats_list.append(None)
+                continue
+
+            def safe_time(r):
+                t = r.get(time_key)
+                try:
+                    return float(t) if t is not None else np.inf
+                except (TypeError, ValueError):
+                    return np.inf
+
+            agent_rec = min(agent_recs, key=safe_time)
+            try:
+                agent_t = float(agent_rec.get(time_key))
+            except (TypeError, ValueError):
+                stats_list.append(None)
+                continue
+
+            # --- collect valid earlier departures ---
+            earlier = []
+            for r in records:
+                if not isinstance(r, dict):
+                    continue
+
+                t = r.get(time_key)
+                a = r.get(action_key)
+                tt = r.get(tt_key)
+                rid = r.get(id_key)
+
+                if t is None or tt is None or rid is None:
+                    continue
+
+                try:
+                    t = float(t)
+                    tt = float(tt)
+                except (TypeError, ValueError):
+                    continue
+
+                if t < agent_t and a in actions:
+                    earlier.append((t, a, tt, rid))
+
+            # pick k closest earlier
+            if k_closest_before is not None:
+                earlier.sort(key=lambda x: x[0], reverse=True)
+                earlier = earlier[:k_closest_before]
+
+            # compute stats
+            sum_tt = {a: 0.0 for a in actions}
+            cnt_tt = {a: 0 for a in actions}
+            selected_agent_ids = []
+
+            for t, a, tt, rid in earlier:
+                sum_tt[a] += tt
+                cnt_tt[a] += 1
+                selected_agent_ids.append(rid)
+
+            mean_tt_before = {
+                a: (sum_tt[a] / cnt_tt[a]) if cnt_tt[a] > 0 else fill_value
+                for a in actions
+            }
+
+            for a in actions:
+                total_sum_tt[a] += sum_tt[a]
+                total_cnt_tt[a] += cnt_tt[a]
+
+            stats_list.append({
+                "index": idx,
+                "agent_start_time": agent_t,
+                "counts_before": dict(cnt_tt),
+                "mean_tt_before": mean_tt_before,
+                "k_closest_before": k_closest_before,
+                "selected_agent_ids": selected_agent_ids,  # ⭐ NEW
+            })
+
+        overall_mean_tt_before = {
+            a: (total_sum_tt[a] / total_cnt_tt[a]) if total_cnt_tt[a] > 0 else fill_value
+            for a in actions
+        }
+        overall_counts_before = dict(total_cnt_tt)
+
+        for entry in stats_list:
+            if entry is None:
+                continue
+            entry["overall_counts_before"] = overall_counts_before
+            entry["overall_mean_tt_before"] = overall_mean_tt_before
+
+        return entry["overall_mean_tt_before"]
+
 
 
 
