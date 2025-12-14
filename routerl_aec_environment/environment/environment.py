@@ -363,6 +363,7 @@ class TrafficEnvironment(AECEnv):
         self.action_space_size = self.environment_params[kc.ACTION_SPACE_SIZE]
         self._set_seed(seed)
         self.recorder = None
+        self.historic_data = []
 
         if second_sumo == False:
             self.recorder = Recorder(self.plotter_params)
@@ -462,6 +463,12 @@ class TrafficEnvironment(AECEnv):
         self.rewards = {agent: 0 for agent in self.possible_agents}
         self.rewards_humans = {agent.id: 0 for agent in self.human_agents}
         self.travel_times_list = []
+
+        MAX_LEN = 50
+
+        if len(self.historic_data) > MAX_LEN:
+            del self.historic_data[:-MAX_LEN]
+
 
         if len(self.machine_agents) > 0:
             self._agent_selector = agent_selector(self.possible_agents)
@@ -589,7 +596,7 @@ class TrafficEnvironment(AECEnv):
         self._assign_urgency_level_to_an_agent(machine)
 
         if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
-            return self.observation_obj.agent_observations(agent, self.all_agents, self.travel_times_list)
+            return self.observation_obj.agent_observations(agent, self.all_agents, self.historic_data)
         
         return self.observation_obj.agent_observations(agent, self.all_agents)
 
@@ -808,7 +815,8 @@ class TrafficEnvironment(AECEnv):
             self.observations = self.observation_obj.reset_observation()
             #self._agent_selector = agent_selector(self.possible_agents)
             #self.agent_selection = self._agent_selector.next()
-
+        
+        self.historic_data.append(self.travel_times_list)
         self.travel_times_list = []
         self.episode_actions = dict()
 
