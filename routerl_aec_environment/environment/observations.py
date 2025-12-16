@@ -417,6 +417,9 @@ class PreviousAvgTTperRoute(Observations):
         else:
             mean_tt_before = [0.0, 0.0, 0.0]
 
+        ## If there are nan values -> transform them to zero
+        mean_tt_before = np.nan_to_num(mean_tt_before, nan=0.0)
+
         #Normalize incomes over the highest agent's income        
         richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
 
@@ -531,7 +534,7 @@ class PreviousAvgTTperRoute(Observations):
                 "counts_before": dict(cnt_tt),
                 "mean_tt_before": mean_tt_before,
                 "k_closest_before": k_closest_before,
-                "selected_agent_ids": selected_agent_ids,  # ⭐ NEW
+                "selected_agent_ids": selected_agent_ids, 
             })
 
         overall_mean_tt_before = {
