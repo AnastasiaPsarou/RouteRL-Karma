@@ -20,6 +20,6 @@
     
     
 
-    <route id="route2" edges="E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600" /><flow id="flow_am_peak" route="route2" type="distDrivers" begin="0" end="1500" departLane="free" departSpeed="max" probability="0.466667" />
+    <route id="route2" edges="E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600" /><flow id="flow_am_peak" route="route2" type="distDrivers" begin="0" end="100" departLane="free" departSpeed="max" vehsPerHour="25200.000000" />
 
 </routes>
