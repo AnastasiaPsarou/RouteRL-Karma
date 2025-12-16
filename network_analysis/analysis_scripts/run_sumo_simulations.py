@@ -32,13 +32,14 @@ FLOW_ID = "flow_am_peak"
 COUNTS = [1, 10, 20, 50, 70, 80, 100, 150, 180, 200, 220, 230, 240, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000]
 
 # SUMO / execution settings
-RUNS = 25           # how many total runs
-PARALLEL = 25       # how many in parallel
+RUNS = 23           # how many total runs
+PARALLEL = 23       # how many in parallel
 STEP_LIMIT = None  # optional cap on simulation steps (None = until finished)
 USE_GUI = False     # False = headless (recommended)
 SEED_START = None  # None = SUMO default seed
 EXTRA_SUMO_ARGS: List[str] = []  # e.g. ["--scale", "1.0"]
 SIM_END = 1500
+DEPARTURE_TILL_EPISODE = 100
 
 # --- Route variants you want to test (label -> edges string) ---
 ROUTE_VARIANTS = {
@@ -122,7 +123,9 @@ def write_routes_variant(rou_template: Path, out_path: Path,
         e = float(time_tag.find("end").get("value", 0))
         sim_dur = e - b
     if not sim_dur or sim_dur <= 0:
-        sim_dur = 1500.0  # fallback
+        sim_dur = 100.0  # fallback
+
+    sim_dur = DEPARTURE_TILL_EPISODE
 
     rate_per_sec = max(0.0, float(number_value) / float(sim_dur))
     use_probability = rate_per_sec <= 1.0
