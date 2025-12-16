@@ -14,8 +14,8 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 200
-testing_episodes = 20
+training_episodes = 100
+testing_episodes = 10
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
 
@@ -30,8 +30,8 @@ seed = 9
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-records_folder = f"training_records_monetary_pricing_300_agents_new_reward_{seed}_fee_2"
-plots_folder = f"plots_monetary_pricing_300_agents_new_reward_{seed}_fee_2"
+records_folder = f"training_records_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
+plots_folder = f"plots_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
 
 phases = [1, int(total_episodes)]
 phase_names = ["Mutation and AV learning", "Testing phase"]
@@ -43,7 +43,7 @@ env_params = {
         "machine_parameters": {
             "behavior": "selfish",
             "observation_type": "previous_agents_avg_tt_per_route",
-            "route_0_fee": 2,
+            "route_0_fee": 0.5,
             "travel_time_normalization_value": 100
         }
     },
@@ -55,8 +55,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 1,
-        "number_of_days": 10
+        "save_every": 2,
+        "number_of_days": 4
     },
     "plotter_parameters": {
         "phases": phases,
@@ -77,7 +77,7 @@ env_params = {
 }
 
 # ---- Environment initialization ----
-env = TrafficEnvironment(seed=44, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
+env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
 
 print("Number of total agents is: ", len(env.all_agents), "\n")
 print("Number of human agents is: ", len(env.human_agents), "\n")
@@ -108,7 +108,6 @@ some_agent = next(iter(obs_spaces))
 obs_space = obs_spaces[some_agent]
 
 STATE_SIZE = int(np.prod(obs_space.shape))
-print("STATE_SIZE is: ", STATE_SIZE, "\n\n")
 ACTION_SIZE = 3
 
 shared_dqn = SharedDQN(
@@ -142,7 +141,7 @@ os.makedirs("plots", exist_ok=True)
 # TRAINING
 # -------------------
 for episode in range(training_episodes):
-    print("episode is: ", episode, "\n\n")
+    #print("episode is: ", episode, "\n\n")
     env.reset()
 
     # (optional) reset per-episode storage
@@ -184,7 +183,7 @@ for episode in range(training_episodes):
 
     # Do learning online (e.g., every step) or every k steps.
     # With many agents, learning every few steps is often fine.
-    shared_dqn.learn(updates=1)
+    shared_dqn.learn(updates=10)
 
     pbar.update()
 
