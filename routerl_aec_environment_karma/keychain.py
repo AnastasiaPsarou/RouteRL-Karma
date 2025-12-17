@@ -42,6 +42,7 @@ class Keychain:
     OBSERVED_SPAN = "observed_span"
     OBSERVATION_TYPE = "observation_type"
     PREVIOUS_AGENTS = "previous_agents"
+    PREVIOUS_AVERAGE_TT_PER_ROUTE = "previous_agents_avg_tt_per_route"
     PREVIOUS_AGENTS_PLUS_START_TIME = "previous_agents_plus_start_time"
     PREVIOUS_AGENTS_PLUS_START_TIME_DETECTOR_DATA = "previous_agents_plus_start_time_detector_data"
     PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST = "previous_agents_plus_start_time_marginal_cost"
@@ -50,8 +51,15 @@ class Keychain:
     MARGINAL_MATRICES_FOLDER = "marginal_matrices_folder"
     ROUTE_0_FEE = "route_0_fee"
     URGENCY = "urgency"
+    BID_ROUTE_0 = "bid_route_0"
+    BID_ROUTE_1 = "bid_route_1"
+    BID_ROUTE_2 = "bid_route_2"
     OBSERVATION = "observation"
-
+    KARMA_BALANCE = "karma_balance"
+    REWARD_W1 = "reward_w1"
+    REWARD_W2 = "reward_w2"
+    REWARD_W3 = "reward_w3"
+    TRAVEL_TIME_NORMALIZATION_VALUE = "travel_time_normalization_value"
 
     ### Environment
     NUMBER_OF_DAYS = "number_of_days"

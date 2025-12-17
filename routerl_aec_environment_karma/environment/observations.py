@@ -3,6 +3,7 @@ Observation functions for RL agents (AVs).
 """
 
 from gymnasium.spaces import Box
+from gymnasium import spaces
 import numpy as np
 from abc import ABC, abstractmethod
 import os
@@ -207,15 +208,18 @@ class PreviousAgentStartPlusStartTime(Observations):
             for agent in self.machine_agents_list
         }
         
-        # Gather observations in a consistent format
+
         obs = {
-            str(agent.id): np.concatenate(  # Combine start_time and vector into a single array
-                [
-                    np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
-                    self.agent_vectors[agent],  # Vector as array
-                    np.array([0], dtype=np.int32),  # Start time as scalar
-                ]
-            )
+            str(agent.id): {
+                "observation": np.concatenate(  # Combine start_time and vector into a single array
+                    [
+                        self.agent_vectors[agent],  # Vector as array
+                        np.array([0], dtype=np.int32),  # Urgency as scalar
+                        np.array([agent.karma_balance], dtype=np.int32) # Karma points
+                    ]
+                ),
+                "action_mask": np.ones(pow(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID], 3), "int8"),
+                }
             for agent in self.machine_agents_list
         }
 
@@ -233,15 +237,21 @@ class PreviousAgentStartPlusStartTime(Observations):
 
         total_size = 2 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
 
-        return {
-            str(agent.id): Box(
-                low=0,
-                high=np.inf,
-                shape=(total_size,),  # Combined size for start_time and vector
-                dtype=np.float32
+        observation_spaces = {
+            str(agent.id): spaces.Dict(
+                {
+                    "observation": Box(
+                        low=0, high=np.inf, shape=(total_size,),  dtype=np.float32
+                    ),
+                    "action_mask": Box(
+                        low=0, high=1, shape=(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID],), dtype=np.int8
+                    ),
+                }
             )
             for agent in self.machine_agents_list
         }
+
+        return observation_spaces
     
     def agent_observations(self, agent_id: str, all_agents: List[Any]) -> np.ndarray:
         """Retrieve the observation for a specific agent.
@@ -268,12 +278,289 @@ class PreviousAgentStartPlusStartTime(Observations):
                 #if 0 < dt < self.time_window:
                 observation[agent.last_action] += 1
 
-        observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
+        observation = np.concatenate((observation, [int(machine.urgency*10)], [machine.karma_balance]))
 
-        self.observations[str(machine.id)] = observation
+        self.observations[str(machine.id)]["observation"] = observation
         
         return observation
     
+class PreviousAvgTTperRoute(Observations):
+    """Observes the number of agents with the same origin-destination and start time within a threshold
+    and includes the start of the specific agent as well.
+    """
+
+    def __init__(
+        self,
+        machine_agents_list: List[Any],
+        human_agents_list: List[Any],
+        simulation_params: Dict[str, Any],
+        agent_params: Dict[str, Any],
+        observations_time_window: int
+    ) -> None:
+        """Initialize the observation function.
+
+        Args:
+            machine_agents_list (List[Any]): List of machine agents.
+            human_agents_list (List[Any]): List of human agents.
+            simulation_params (Dict[str, Any]): Dictionary of simulation parameters.
+            agent_params (Dict[str, Any]): Dictionary of agent parameters.
+        Returns:
+            None
+        """
+
+        super().__init__(machine_agents_list, human_agents_list)
+        self.simulation_params = simulation_params
+        self.agent_params = agent_params
+        self.observations = self.reset_observation()
+        self.agent_vectors = {}
+        self.time_window = observations_time_window
+        self.historic_travel_times = []
+
+    def __call__(self, all_agents: List[Any]) -> Dict[str, Any]:
+        """Generate observations for all agents.
+
+        Args:
+            all_agents (List[Any]): List of all agents.
+        Returns:
+            Dict[str, Any]: A dictionary of observations keyed by agent IDs.
+        """
+
+        """for machine in self.machine_agents_list:
+            observation = np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
+
+            for agent in all_agents:
+                if (machine.id != agent.id and
+                    machine.origin == agent.origin and
+                    machine.destination == agent.destination and
+                    machine.start_time > agent.start_time):
+                    
+                    observation[agent.last_action] += 1
+
+            self.observations[str(machine.id)] = np.concatenate(
+                [
+                    np.array([machine.start_time], dtype=np.int32),  # Start time as scalar
+                    observation  # Vector of observations
+                ]
+            )"""
+
+        return self.observations
+
+    def reset_observation(self) -> Dict[str, np.ndarray]:
+        """Reset observations to the initial state.
+
+        Returns:
+            obs (Dict[str, np.ndarray]): A dictionary of initial observations for all machine agents.
+        """
+        # Initialize agent vectors as zero arrays
+        self.agent_vectors = {
+            agent: np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
+            for agent in self.machine_agents_list
+        }
+        
+        # Gather observations in a consistent format
+        obs = {
+            str(agent.id): {
+                "observation": np.concatenate(  # Combine start_time and vector into a single array
+                [
+                    #np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
+                    self.agent_vectors[agent],  # Vector as array
+                    np.array([0], dtype=np.int32),  # Start time as scalar
+                ]
+            ),
+            "action_mask": np.ones(pow(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID], 3), "int8"),
+            }
+            for agent in self.machine_agents_list
+        }
+
+        self.observations = obs
+
+        return obs
+
+    def observation_space(self) -> Dict[str, Box]:
+        """
+        Define the observation space for each machine agent.
+
+        Returns:
+            Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
+        """
+
+        total_size = 4 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
+
+        return {
+            str(agent.id): spaces.Dict(
+                {
+                    "observation": Box(low=0,
+                                        high=np.inf,
+                                        shape=(total_size,),  # Combined size for start_time and vector
+                                        dtype=np.int32
+                    ),
+                    "action_mask": Box(
+                        low=0, high=1, shape=(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID],), dtype=np.int8
+                    ),
+                }
+            )    
+            for agent in self.machine_agents_list
+        }
+    
+    def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict) -> np.ndarray:
+        """Retrieve the observation for a specific agent.
+
+        Args:
+            agent_id (str): The ID of the agent.
+        Returns:
+            np.ndarray: The observation array for the specified agent.
+        """
+        for machine in self.machine_agents_list:
+            if machine.id == int(agent_id):
+                break
+        
+        #print("travel times list is: ", travel_times_list, len(travel_times_list), "\n\n")
+        if historic_data:
+            #episode_records = historic_data[-1] if historic_data else []
+            mean_tt_before = self.historic_means_before_for_agent_all_episodes(
+                agent_id=machine.id,
+                historic_data=historic_data,   # full history is OK
+                actions=(0,1,2),
+                k_closest_before = self.time_window
+            )
+            mean_tt_before = list(mean_tt_before.values())
+            mean_tt_before = np.array(mean_tt_before) / 100
+        else:
+            mean_tt_before = [0.0, 0.0, 0.0]
+
+        ## If there are nan values -> transform them to zero
+        mean_tt_before = np.nan_to_num(mean_tt_before, nan=0.0)
+
+        #Normalize incomes over the highest agent's income        
+        richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
+
+        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance/10]))
+        #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
+
+        self.observations[str(machine.id)]["observation"] = observation
+        
+        return observation
+
+    def historic_means_before_for_agent_all_episodes(
+        self,
+        agent_id: int,
+        historic_data,
+        actions=(0, 1, 2),
+        time_key="start_time",
+        action_key="action",
+        tt_key="travel_time",
+        id_key="id",
+        fill_value=np.nan,
+        k_closest_before=20,
+    ):
+        if not historic_data:
+            return []
+
+        # If someone passes a single iteration as list[dict], wrap it
+        if isinstance(historic_data, list) and historic_data and isinstance(historic_data[0], dict):
+            historic_data = [historic_data]
+
+        stats_list = []
+
+        total_sum_tt = {a: 0.0 for a in actions}
+        total_cnt_tt = {a: 0 for a in actions}
+
+        for idx, records in enumerate(historic_data):
+            if not records:
+                stats_list.append(None)
+                continue
+
+            agent_recs = [
+                r for r in records
+                if isinstance(r, dict) and r.get(id_key) == agent_id
+            ]
+            if not agent_recs:
+                stats_list.append(None)
+                continue
+
+            def safe_time(r):
+                t = r.get(time_key)
+                try:
+                    return float(t) if t is not None else np.inf
+                except (TypeError, ValueError):
+                    return np.inf
+
+            agent_rec = min(agent_recs, key=safe_time)
+            try:
+                agent_t = float(agent_rec.get(time_key))
+            except (TypeError, ValueError):
+                stats_list.append(None)
+                continue
+
+            # --- collect valid earlier departures ---
+            earlier = []
+            for r in records:
+                if not isinstance(r, dict):
+                    continue
+
+                t = r.get(time_key)
+                a = r.get(action_key)
+                tt = r.get(tt_key)
+                rid = r.get(id_key)
+
+                if t is None or tt is None or rid is None:
+                    continue
+
+                try:
+                    t = float(t)
+                    tt = float(tt)
+                except (TypeError, ValueError):
+                    continue
+
+                if t < agent_t and a in actions:
+                    earlier.append((t, a, tt, rid))
+
+            # pick k closest earlier
+            if k_closest_before is not None:
+                earlier.sort(key=lambda x: x[0], reverse=True)
+                earlier = earlier[:k_closest_before]
+
+            # compute stats
+            sum_tt = {a: 0.0 for a in actions}
+            cnt_tt = {a: 0 for a in actions}
+            selected_agent_ids = []
+
+            for t, a, tt, rid in earlier:
+                sum_tt[a] += tt
+                cnt_tt[a] += 1
+                selected_agent_ids.append(rid)
+
+            mean_tt_before = {
+                a: (sum_tt[a] / cnt_tt[a]) if cnt_tt[a] > 0 else fill_value
+                for a in actions
+            }
+
+            for a in actions:
+                total_sum_tt[a] += sum_tt[a]
+                total_cnt_tt[a] += cnt_tt[a]
+
+            stats_list.append({
+                "index": idx,
+                "agent_start_time": agent_t,
+                "counts_before": dict(cnt_tt),
+                "mean_tt_before": mean_tt_before,
+                "k_closest_before": k_closest_before,
+                "selected_agent_ids": selected_agent_ids,  # ⭐ NEW
+            })
+
+        overall_mean_tt_before = {
+            a: (total_sum_tt[a] / total_cnt_tt[a]) if total_cnt_tt[a] > 0 else fill_value
+            for a in actions
+        }
+        overall_counts_before = dict(total_cnt_tt)
+
+        for entry in stats_list:
+            if entry is None:
+                continue
+            entry["overall_counts_before"] = overall_counts_before
+            entry["overall_mean_tt_before"] = overall_mean_tt_before
+
+        return entry["overall_mean_tt_before"]
 
 
 class PreviousAgentStartPlusStartTimeDetectorData(Observations):
