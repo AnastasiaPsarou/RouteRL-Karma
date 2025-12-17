@@ -256,8 +256,16 @@ class MachineAgent(BaseAgent):
         self.monetary_pricing = None
         self.route_0_fee = params[kc.ROUTE_0_FEE]
         self.urgency = None
-        self.karma_balance = None
+        self.karma_balance = params[kc.MAXIMUM_ALLOWED_BID]
+        self.bid = None
         #self.marginal_cost_beta = marginal_cost_beta
+
+        self.w1 = params[kc.REWARD_W1]
+        self.w2 = params[kc.REWARD_W2]
+        self.w3 = params[kc.REWARD_W3]
+
+        self.travel_time_normalization_value = params[kc.TRAVEL_TIME_NORMALIZATION_VALUE]
+
 
     def __repr__(self) -> str:
         machine_id = f"Machine {self.id}"
@@ -504,13 +512,15 @@ class MachineAgent(BaseAgent):
         a, b, c, d = self.rewards_coefs
         agent_reward  = a * own_tt + b * group_tt + c * others_tt + d * all_tt
 
-        if self.monetary_pricing:
-            route_fee = self._calculate_monetary_reward(observation)
-            hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
-            travel_times_hrs = -1 * agent_reward / 60
+        
+        route_fee = self._calculate_monetary_reward(observation)
+        hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
+        daily_income = self.income / 30 # If we assume that each month has 30 days
+        travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
 
-            agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
-
+        #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
+        #agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm + self.w3 * self.urgency
+        agent_reward = self.w2 * travel_times_norm * (self.urgency)
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()

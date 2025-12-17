@@ -30,7 +30,8 @@ from .human_learning import (
     get_learning_model,
     DQN,
     MAPPO,
-    UCB
+    UCB,
+    SharedMultiDiscreteDQN
 )
 
 from .services import (

@@ -5,6 +5,7 @@ PettingZoo environment for optimal route choice using SUMO simulator.
 
 import glob
 import os
+import itertools
 
 from copy import copy
 from copy import deepcopy as dc
@@ -21,7 +22,7 @@ from routerl_aec_environment_karma.environment import generate_agents
 from routerl_aec_environment_karma.environment import SumoSimulator
 from routerl_aec_environment_karma.environment import MachineAgent
 from routerl_aec_environment_karma.environment import PreviousAgentStart, PreviousAgentStartPlusStartTime 
-from routerl_aec_environment_karma.environment import PreviousAgentStartPlusStartTimeDetectorData, PreviousAgentStartPlusStartTimeMarginalCost, Observations
+from routerl_aec_environment_karma.environment import PreviousAgentStartPlusStartTimeDetectorData, PreviousAgentStartPlusStartTimeMarginalCost, Observations, PreviousAvgTTperRoute
 from routerl_aec_environment_karma.keychain import Keychain as kc
 from routerl_aec_environment_karma.services import plotter
 from routerl_aec_environment_karma.services import Recorder
@@ -365,6 +366,7 @@ class TrafficEnvironment(AECEnv):
         self.action_space_size = self.environment_params[kc.ACTION_SPACE_SIZE]
         self._set_seed(seed)
         self.recorder = None
+        self.historic_data = []
 
         if second_sumo == False:
             self.recorder = Recorder(self.plotter_params)
@@ -374,8 +376,10 @@ class TrafficEnvironment(AECEnv):
         self.machine_agents = [agent for agent in self.all_agents if agent.kind == kc.TYPE_MACHINE]
         self.human_agents = [agent for agent in self.all_agents if agent.kind == kc.TYPE_HUMAN]
         self.possible_agents = list()
+        
+        # Urgency distribution
         self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
-        self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10)  # restrict to 1–10
+        self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
 
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag() # Initialize monetary pricing flag
@@ -428,8 +432,9 @@ class TrafficEnvironment(AECEnv):
                 agent: MultiDiscrete(np.full(self.simulation_params[kc.NUMBER_OF_PATHS], self.environment_params[kc.MAXIMUM_ALLOWED_BID])) for agent in self.possible_agents
             }
 
-            self.action_spaces = self._action_spaces
+            self.action_spaces = self._action_spaces            
             self.centrally_defined_price = self.environment_params[kc.CENTRALLY_DEFINED_PRICE]
+            self.total_karma_points_used = 0
 
             for machine in self.machine_agents:
                 machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]
@@ -474,6 +479,13 @@ class TrafficEnvironment(AECEnv):
         self.rewards_humans = {agent.id: 0 for agent in self.human_agents}
         self.travel_times_list = []
 
+        MAX_LEN = 50
+        if len(self.historic_data) > MAX_LEN:
+            del self.historic_data[:10]
+
+        if self.karma_pricing:
+            self._reinitialize_karma_balance()
+
         if len(self.machine_agents) > 0:
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
@@ -499,7 +511,6 @@ class TrafficEnvironment(AECEnv):
         Returns:
             None
         """
-        print("action is: ", machine_action, "\n")
 
         # If there are machines in the system
         if self.possible_agents:
@@ -522,6 +533,7 @@ class TrafficEnvironment(AECEnv):
             self._cumulative_rewards[agent] = 0
 
             if self.karma_pricing == True:
+                machine.bid = machine_action
                 assigned_route = self.stackelberg_auction(machine, machine_action)
                 machine_action = assigned_route
 
@@ -538,14 +550,14 @@ class TrafficEnvironment(AECEnv):
                 # Calculate the rewards
                 self._assign_rewards()
 
+                self._redistribute_karma_points()
+
                 # The episode ends when we complete episode_length days
                 self.truncations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.terminations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
                 self.infos = {agent: {} for agent in self.agents}
-                #print("\n\n\nBefore observation_obj self.observations are: ", self.observations, "\n\n")
 
                 self.observations = self.observation_obj(self.all_agents)
-                #print("\n\n\nBefore reset episode self.observations are: ", self.observations, "\n\n")
 
                 self._reset_episode()
             else:
@@ -607,10 +619,17 @@ class TrafficEnvironment(AECEnv):
 
         self._assign_urgency_level_to_an_agent(machine)
 
-        if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST:
-            return self.observation_obj.agent_observations(agent, self.all_agents, self.travel_times_list)
-        
-        return self.observation_obj.agent_observations(agent, self.all_agents)
+        action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
+
+        if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
+            obs = self.observation_obj.agent_observations(agent, self.all_agents, self.historic_data)
+        else:
+            obs = self.observation_obj.agent_observations(agent, self.all_agents)
+
+        self.observations[str(machine.id)]["observations"] = obs
+        self.observations[str(machine.id)]["action_mask"] = action_mask
+
+        return self.observations[str(machine.id)]
 
     #########################
     ### Mutation function ###
@@ -743,20 +762,21 @@ class TrafficEnvironment(AECEnv):
     
     def stackelberg_auction(self, machine, machine_action) -> int:
         
-        for route in range(self.simulation_params[kc.NUMBER_OF_PATHS] - 1):
-            print("inside stackelberg auction: ", machine_action, route, self.environment_params[kc.CENTRALLY_DEFINED_PRICE])
+        for route in range(self.simulation_params[kc.NUMBER_OF_PATHS]):
             submitted_bid = machine_action[route]
 
             if submitted_bid >= self.environment_params[kc.CENTRALLY_DEFINED_PRICE]:
                 assigned_route = route
+                
                 machine.karma_balance -= submitted_bid
-                print("assigned route is: ", assigned_route, machine.karma_balance)
+
+                self.total_karma_points_used += submitted_bid
+
                 return assigned_route
    
         # get assigned to the longest route
         assigned_route = self.simulation_params[kc.NUMBER_OF_PATHS] - 1
         
-        print("assigned route is: ", assigned_route)
         return assigned_route
 
     #########################
@@ -784,6 +804,10 @@ class TrafficEnvironment(AECEnv):
             action_dict = {kc.AGENT_ID: agent.id,
                            kc.AGENT_KIND: agent.kind,
                            kc.ACTION: action,
+                           kc.BID_ROUTE_0: agent.bid[0],
+                           kc.BID_ROUTE_1: agent.bid[1],
+                           kc.BID_ROUTE_2: agent.bid[2],
+                           kc.KARMA_BALANCE: agent.karma_balance,
                            kc.AGENT_ORIGIN: agent.origin,
                            kc.AGENT_DESTINATION: agent.destination,
                            kc.AGENT_START_TIME: agent.start_time,
@@ -842,9 +866,9 @@ class TrafficEnvironment(AECEnv):
         
         # Reset observations
         if len(self.machine_agents) > 0:
-            #print("\n\nInside reset observations\n\n")
             self.observations = self.observation_obj.reset_observation()
 
+        self.historic_data.append(self.travel_times_list)
         self.travel_times_list = []
         self.episode_actions = dict()
 
@@ -875,6 +899,60 @@ class TrafficEnvironment(AECEnv):
     def _assign_urgency_level_to_an_agent(self, machine) -> None:
 
         machine.urgency = np.random.choice(self.urgency_distribution)
+
+    def _redistribute_karma_points(self) -> None:
+        ## Distributed karma points
+        new_distributed_karma_points = self.total_karma_points_used // len(self.machine_agents)
+
+        ## Rest of the Karma points 
+        remainder_karma_points = self.total_karma_points_used % len(self.machine_agents)
+
+        # Give equal base share to all agents
+        for machine in self.machine_agents:
+            machine.karma_balance += new_distributed_karma_points
+
+        # Randomly choose 'remainder_karma_points' agents to receive +1
+        if remainder_karma_points > 0:
+            lucky_agents = random.sample(self.machine_agents, remainder_karma_points)
+            for machine in lucky_agents:
+                machine.karma_balance += 1
+
+        self.total_karma_points_used = 0
+
+    def _reinitialize_karma_balance(self) -> None:
+
+        for machine in self.machine_agents:
+                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]
+
+    def make_multidiscrete_mask(self, karma_balance: int, action_space: MultiDiscrete)  ->np.ndarray:
+        """
+        Creates a mask for a MultiDiscrete action space where the sum
+        of action components cannot exceed available karma_balance.
+
+        Args:
+            karma_balance (int): available karma_balance
+            action_space (MultiDiscrete): e.g., MultiDiscrete([10, 10, 10])
+
+        Returns:
+            np.ndarray: shape (product of action dims,), where
+                        1 = valid, 0 = invalid
+        """
+        # Extract per-dimension sizes (e.g., [10, 10, 10])
+        dims = action_space.nvec
+
+        # All possible actions: cartesian product
+        all_actions = itertools.product(*[range(n) for n in dims])
+
+        mask = np.ones(np.prod(dims), dtype=np.int32)
+
+        for i, action in enumerate(all_actions):
+
+            # Check the bids of each MultiDiscrete action
+            for bid in action:
+                if bid > karma_balance: # If at least one of the potential bids has higher value than the karma balance -> invalid action 
+                    mask[i] = 0
+
+        return mask
 
     ###################################
     #### Marginal cost calculation ####
@@ -1031,7 +1109,6 @@ class TrafficEnvironment(AECEnv):
             }
             for agent in dc_agents
         ]
-        #print("before recording observations are: ", observations)
 
         if self.recorder != None:
             self.recorder.record(dc_episode, dc_ep_observations, observations, cost_tables, dc_detectors)
@@ -1097,6 +1174,13 @@ class TrafficEnvironment(AECEnv):
                                                    self.simulation_params,
                                                    self.agent_params,
                                                    self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
+        elif observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
+            return PreviousAvgTTperRoute(self.machine_agents,
+                                                   self.human_agents,
+                                                   self.simulation_params,
+                                                   self.agent_params,
+                                                   self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
+
         elif observation_type == kc.PREVIOUS_AGENTS:
             return PreviousAgentStart(self.machine_agents,
                                       self.human_agents,
