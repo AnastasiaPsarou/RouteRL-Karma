@@ -12,3 +12,4 @@ from .dqn import DQN, ReplayBuffer
 from .shared_dqn import SharedDQN
 from .mappo import MAPPO
 from .ucb import UCB
+from .centralized_dqn import CentralizedDQN
