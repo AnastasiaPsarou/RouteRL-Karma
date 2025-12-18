@@ -31,7 +31,8 @@ from .human_learning import (
     DQN,
     MAPPO,
     UCB,
-    SharedMultiDiscreteDQN
+    SharedMultiDiscreteDQN,
+    PerResourceMultiDiscreteDQN
 )
 
 from .services import (

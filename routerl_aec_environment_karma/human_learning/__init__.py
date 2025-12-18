@@ -12,3 +12,4 @@ from .dqn import DQN
 from .mappo import MAPPO
 from .ucb import UCB
 from .shared_dqn import SharedMultiDiscreteDQN
+from .shared_dqn_factorized import PerResourceMultiDiscreteDQN
