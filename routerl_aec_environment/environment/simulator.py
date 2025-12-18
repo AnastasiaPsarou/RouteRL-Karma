@@ -161,7 +161,7 @@ class SumoSimulator():
         
         path_gen_kwargs = {
             "number_of_paths": path_gen_params[kc.NUMBER_OF_PATHS],
-            "random_seed": self.seed,
+            "random_seed": 42,
             "num_samples": path_gen_params[kc.NUM_SAMPLES],
             "beta": path_gen_params[kc.BETA],
             "weight": path_gen_params[kc.WEIGHT],
