@@ -97,6 +97,7 @@ class SumoSimulator():
         self.sumo_id = f"{random.randint(0, 1000)}"
         self.sumo_connection = None
         self.save_detectors_info = save_detectors_info
+        print("save detector's info is: ", self.save_detectors_info, "\n\n")
         self.subprocess = False
         self.randomize_sumo_seed = randomize_sumo_seed
 
@@ -485,7 +486,7 @@ class SumoSimulator():
                 self.waiting_vehicles.pop(arr, None)
             
             # Teleport vehicles that are stuck
-            teleported = list()
+            """teleported = list()
             for veh_id in self.waiting_vehicles.copy():
                 if self.sumo_connection.vehicle.getSpeed(veh_id) == 0:
                     self.waiting_vehicles[veh_id] += 1
@@ -495,13 +496,14 @@ class SumoSimulator():
                         teleported.append(veh_id)
                         self.waiting_vehicles.pop(veh_id, None)
                 else:
-                    self.waiting_vehicles[veh_id] = 0
+                self.waiting_vehicles[veh_id] = 0"""
                     
             # Advance the simulation by one timestep       
             self.sumo_connection.simulationStep()
 
             # Retrieve information about the detectors
             if self.save_detectors_info == True:
+                print("inside retrieve detector data\n\n")
                 self.retrieve_detector_data()
             else:
                 self.stopped_vehicles_info = None
@@ -514,7 +516,7 @@ class SumoSimulator():
                 self.waiting_vehicles.pop(arr, None)
             
             # Teleport vehicles that are stuck
-            teleported = list()
+            """teleported = list()
             for veh_id in self.waiting_vehicles.copy():
                 if self.sumo_subprocess_connection.vehicle.getSpeed(veh_id) == 0:
                     self.waiting_vehicles[veh_id] += 1
@@ -524,7 +526,7 @@ class SumoSimulator():
                         teleported.append(veh_id)
                         self.waiting_vehicles.pop(veh_id, None)
                 else:
-                    self.waiting_vehicles[veh_id] = 0
+                    self.waiting_vehicles[veh_id] = 0"""
                     
             # Advance the simulation by one timestep       
             self.sumo_subprocess_connection.simulationStep()
@@ -536,5 +538,7 @@ class SumoSimulator():
                 self.stopped_vehicles_info = None
 
             self.timestep += 1
+
+        teleported = list()
         
         return self.timestep, self.stopped_vehicles_info, arrivals, teleported
