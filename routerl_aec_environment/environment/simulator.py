@@ -97,7 +97,6 @@ class SumoSimulator():
         self.sumo_id = f"{random.randint(0, 1000)}"
         self.sumo_connection = None
         self.save_detectors_info = save_detectors_info
-        print("save detector's info is: ", self.save_detectors_info, "\n\n")
         self.subprocess = False
         self.randomize_sumo_seed = randomize_sumo_seed
 
@@ -503,7 +502,6 @@ class SumoSimulator():
 
             # Retrieve information about the detectors
             if self.save_detectors_info == True:
-                print("inside retrieve detector data\n\n")
                 self.retrieve_detector_data()
             else:
                 self.stopped_vehicles_info = None
