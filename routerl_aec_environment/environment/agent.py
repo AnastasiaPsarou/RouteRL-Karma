@@ -516,13 +516,15 @@ class MachineAgent(BaseAgent):
 
         if self.monetary_pricing:
             route_fee = self._calculate_monetary_reward(observation)
-            hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
             daily_income = self.income / 30 # If we assume that each month has 30 days
             travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
 
-            #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
-            agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm * (self.urgency) #+ self.w3 * self.urgency
+            component1 = (route_fee / daily_income)
+            component2 = travel_times_norm
+            component3 = self.urgency
 
+            #print("component 1", component1, "component 2", component2, "component 3", component3, "\n\n")
+            agent_reward = self.w1 * component1  + self.w2 * component2 + self.w3 * component3 #+ self.w3 * self.urgency
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()
