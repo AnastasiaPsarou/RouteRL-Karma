@@ -479,7 +479,7 @@ class TrafficEnvironment(AECEnv):
         self.rewards_humans = {agent.id: 0 for agent in self.human_agents}
         self.travel_times_list = []
 
-        MAX_LEN = 50
+        MAX_LEN = 20
         if len(self.historic_data) > MAX_LEN:
             del self.historic_data[:10]
 
