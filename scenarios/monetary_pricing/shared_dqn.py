@@ -14,8 +14,8 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 100
-testing_episodes = 10
+training_episodes = 1
+testing_episodes = 1
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
 
@@ -30,8 +30,8 @@ seed = 9
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-records_folder = f"training_records_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
-plots_folder = f"plots_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
+records_folder = f"training_records_monetary_pricing_300_agents_new_reward_{seed}_fee_5"
+plots_folder = f"plots_monetary_pricing_300_agents_new_reward_{seed}_fee_5"
 
 phases = [1, int(total_episodes)]
 phase_names = ["Mutation and AV learning", "Testing phase"]
@@ -43,7 +43,7 @@ env_params = {
         "machine_parameters": {
             "behavior": "selfish",
             "observation_type": "previous_agents_avg_tt_per_route",
-            "route_0_fee": 0.5,
+            "route_0_fee": 5,
             "travel_time_normalization_value": 100
         }
     },
@@ -55,8 +55,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 2,
-        "number_of_days": 4
+        "save_every": 5,
+        "number_of_days": 3000
     },
     "plotter_parameters": {
         "phases": phases,
@@ -134,14 +134,16 @@ agent_name_to_idx = {name: i for i, name in enumerate(mutated_agent_names)}
 last_obs = {name: None for name in mutated_agent_names}
 last_act = {name: None for name in mutated_agent_names}
 
-pbar = tqdm(total=total_episodes, desc="AV learning")
+pbar = tqdm(total=3000, desc="AV learning")
 os.makedirs("plots", exist_ok=True)
 
 # -------------------
 # TRAINING
 # -------------------
+i = 0
+
 for episode in range(training_episodes):
-    #print("episode is: ", episode, "\n\n")
+    print("episode is: ", episode, "\n\n")
     env.reset()
 
     # (optional) reset per-episode storage
@@ -150,6 +152,7 @@ for episode in range(training_episodes):
         last_act[name] = None
 
     for agent in env.agent_iter():
+        i = i + 1
         observation, reward, termination, truncation, info = env.last()
         done = termination or truncation
 
@@ -181,11 +184,15 @@ for episode in range(training_episodes):
 
         env.step(action)
 
-    # Do learning online (e.g., every step) or every k steps.
-    # With many agents, learning every few steps is often fine.
-    shared_dqn.learn(updates=10)
+        #print("day is: ", env.day, "\n\n")
+        if i % 300 == 0 and env.day % 2 == 0:
+            print("day is: ", env.day, "\n\n")
+            i = 0
+            shared_dqn.learn(updates=10)
+            print("The policy was just updated\n\n")
 
-    pbar.update()
+        if i % 300 == 0 and env.day % 1 == 0:
+            pbar.update()
 
 # Switch to eval for testing
 shared_dqn.eval()
@@ -194,10 +201,12 @@ shared_dqn.eval()
 # TESTING
 # -------------------
 pbar.set_description("Testing")
+i = 0
 for episode in range(testing_episodes):
     env.reset()
 
     for agent in env.agent_iter():
+        i = i + 1
         observation, reward, termination, truncation, info = env.last()
         done = termination or truncation
 
@@ -209,6 +218,9 @@ for episode in range(testing_episodes):
             action = None
 
         env.step(action)
+
+        if i == 3000:
+            break
 
     pbar.update()
 

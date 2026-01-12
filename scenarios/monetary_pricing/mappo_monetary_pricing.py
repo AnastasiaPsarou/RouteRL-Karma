@@ -104,14 +104,14 @@ env_params = {
         "machine_parameters" :
         {
             "behavior" : "selfish",
-            "observation_type" : "previous_agents_plus_start_time",
+            "observation_type" : "previous_agents_avg_tt_per_route",
             "route_0_fee": 2
         }
     },
     "simulator_parameters" : {
         "network_name" : "network",
         "custom_network_folder" : "../../network_analysis/network_base",
-        "sumo_type" : "sumo-gui",
+        "sumo_type" : "sumo",
         "simulation_timesteps": 100,
     },  
     "environment_parameters":
@@ -140,6 +140,8 @@ env_params = {
 # Environment initialization
 env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
 
+
+print("action space is: ", env.action_space, "\n\n")
 # Initialize the connection with SUMo
 env.start()
 env.reset()
@@ -174,7 +176,7 @@ env = TransformedEnv(
 check_env_specs(env)
 
 
-share_parameters_policy = False 
+share_parameters_policy = True 
 
 #print("value is: ", 2 * np.prod(env.action_spec["agents", "action"].shape))
 
@@ -223,7 +225,7 @@ critic_net = MultiAgentMLP(
     n_agent_outputs=1, 
     n_agents=env.n_agents,
     centralised=mappo,
-    share_params=share_parameters_critic,
+    share_params=False,
     device=device,
     depth=critic_network_depth,
     num_cells=critic_network_num_cells,
