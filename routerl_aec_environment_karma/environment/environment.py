@@ -479,10 +479,6 @@ class TrafficEnvironment(AECEnv):
         self.rewards_humans = {agent.id: 0 for agent in self.human_agents}
         self.travel_times_list = []
 
-        MAX_LEN = 20
-        if len(self.historic_data) > MAX_LEN:
-            del self.historic_data[:10]
-
         if self.karma_pricing:
             self._reinitialize_karma_balance()
 
@@ -855,20 +851,25 @@ class TrafficEnvironment(AECEnv):
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
 
-        if self.day % self.save_every == 0 & self.second_sumo == False: #In the case where we compute the marginal cost matrix we do not need to record. 
+        if (self.day % self.save_every == 0) and (self.second_sumo == False): #In the case where we compute the marginal cost matrix we do not need to record. 
             
-            """recording_task = threading.Thread(target=self._record, args=(self.day,
+            recording_task = threading.Thread(target=self._record, args=(self.day,
                                                                         self.travel_times_list,
                                                                         self.all_agents,
                                                                         detectors_dict))
-            recording_task.start()"""
-            self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
+            recording_task.start()
+            #self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
         
         # Reset observations
         if len(self.machine_agents) > 0:
             self.observations = self.observation_obj.reset_observation()
 
         self.historic_data.append(self.travel_times_list)
+
+        MAX_LEN = 20
+        if len(self.historic_data) > MAX_LEN:
+            del self.historic_data[:10]
+
         self.travel_times_list = []
         self.episode_actions = dict()
 

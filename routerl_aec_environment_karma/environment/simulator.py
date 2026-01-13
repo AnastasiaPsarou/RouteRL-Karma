@@ -342,10 +342,10 @@ class SumoSimulator():
                         "--fcd-output",
                         self.sumo_fcd,
                         "-c", self.sumo_config_path, 
-                        "--statistic-output",
-                        combined_sumo_stats_file,
-                        "--tripinfo-output",
-                        individual_sumo_stats_file,
+                        #"--statistic-output",
+                        #combined_sumo_stats_file,
+                        #"--tripinfo-output",
+                        #individual_sumo_stats_file,
                         "--no-warnings"
                         ]
             traci.start(sumo_cmd, label=self.sumo_id)
@@ -395,11 +395,11 @@ class SumoSimulator():
 
             self.runs += 1
 
-            individual_sumo_stats_file = os.path.join(self.sumo_save_path,
-                                                    f"detailed_sumo_stats_{self.runs}.xml")
+            #individual_sumo_stats_file = os.path.join(self.sumo_save_path,
+            #                                        f"detailed_sumo_stats_{self.runs}.xml")
             
-            combined_sumo_stats_file = os.path.join(self.sumo_save_path,
-                                                    f"sumo_stats_{self.runs}.xml")
+            #combined_sumo_stats_file = os.path.join(self.sumo_save_path,
+            #                                        f"sumo_stats_{self.runs}.xml")
             
             sumo_seed = random.randint(0, 1_000_000) if self.randomize_sumo_seed else self.seed # randomize sumo seed or not
 
@@ -409,10 +409,11 @@ class SumoSimulator():
                                     self.sumo_fcd,
                                     '-c',
                                     self.sumo_config_path,
-                                    "--statistic-output",
-                                    combined_sumo_stats_file,
-                                    "--tripinfo-output",
-                                    individual_sumo_stats_file])
+                                    #"--statistic-output",
+                                    #combined_sumo_stats_file,
+                                    #"--tripinfo-output",
+                                    #individual_sumo_stats_file
+                                    ])
             
 
             self.timestep = 0
