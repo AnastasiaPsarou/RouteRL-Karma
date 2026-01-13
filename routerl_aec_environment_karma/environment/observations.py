@@ -434,7 +434,7 @@ class PreviousAvgTTperRoute(Observations):
         #Normalize incomes over the highest agent's income        
         richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
 
-        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance/10]))
+        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance]))
         #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
         self.observations[str(machine.id)]["observation"] = observation
