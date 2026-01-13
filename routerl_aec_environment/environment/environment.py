@@ -463,11 +463,6 @@ class TrafficEnvironment(AECEnv):
         self.rewards = {agent: 0 for agent in self.possible_agents}
         self.rewards_humans = {agent.id: 0 for agent in self.human_agents}
         self.travel_times_list = []
-
-        MAX_LEN = 20
-
-        if len(self.historic_data) > MAX_LEN:
-            del self.historic_data[:10]
         
         if len(self.machine_agents) > 0:
             self._agent_selector = agent_selector(self.possible_agents)
@@ -816,6 +811,12 @@ class TrafficEnvironment(AECEnv):
             #self.agent_selection = self._agent_selector.next()
         
         self.historic_data.append(self.travel_times_list)
+
+        MAX_LEN = 20
+
+        if len(self.historic_data) > MAX_LEN:
+            del self.historic_data[:10]
+
         self.travel_times_list = []
         self.episode_actions = dict()
 
