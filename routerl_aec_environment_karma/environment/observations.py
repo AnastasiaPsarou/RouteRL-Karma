@@ -365,6 +365,7 @@ class PreviousAvgTTperRoute(Observations):
                     #np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
                     self.agent_vectors[agent],  # Vector as array
                     np.array([0], dtype=np.int32),  # Start time as scalar
+                    np.eye(300, dtype=np.float32)[agent.id]
                 ]
             ),
             "action_mask": np.ones(pow(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID], 3), "int8"),
@@ -384,7 +385,7 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 4 + self.simulation_params[kc.NUMBER_OF_PATHS] # including urgency & start time
+        total_size = 4 + self.simulation_params[kc.NUMBER_OF_PATHS] + 300# including urgency & start time
 
         return {
             str(agent.id): spaces.Dict(
@@ -434,7 +435,10 @@ class PreviousAvgTTperRoute(Observations):
         #Normalize incomes over the highest agent's income        
         richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
 
-        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance]))
+        one_hot_vec = np.zeros(len(self.machine_agents_list), dtype=np.float32)
+        one_hot_vec[machine.id] = 1.0
+
+        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance], one_hot_vec))
         #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
 
         self.observations[str(machine.id)]["observation"] = observation
