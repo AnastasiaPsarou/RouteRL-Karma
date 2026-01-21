@@ -15,7 +15,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 500
+training_episodes = 200
 testing_episodes = 10
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
@@ -42,7 +42,8 @@ env_params = {
             "behavior": "altruistic",
             "observation_type": "previous_agents_avg_tt_per_route",
             "route_0_fee": 0,
-            "travel_time_normalization_value": 100
+            "travel_time_normalization_value": 100,
+            "reward_w3": 0,
         }
     },
     "simulator_parameters": {
@@ -53,8 +54,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 2,
-        "number_of_days": 4
+        "save_every": 1,
+        "number_of_days": 30
     },
     "plotter_parameters": {
         "phases": phases,
@@ -75,7 +76,7 @@ env_params = {
 }
 
 # ---- Environment initialization ----
-env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, **env_params)
+env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, monetary_pricing=True, **env_params)
 
 print("Number of total agents is: ", len(env.all_agents), "\n")
 print("Number of human agents is: ", len(env.human_agents), "\n")
