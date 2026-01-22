@@ -14,7 +14,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 100
+training_episodes = 200
 testing_episodes = 10
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
@@ -30,8 +30,8 @@ seed = 9
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-records_folder = f"training_records_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
-plots_folder = f"plots_monetary_pricing_250_agents_new_reward_{seed}_fee_0_5"
+records_folder = f"training_records_monetary_pricing_300_agents_{seed}_fee_10"
+plots_folder = f"plots_monetary_pricing_300_agents_{seed}_fee_10"
 
 phases = [1, int(total_episodes)]
 phase_names = ["Mutation and AV learning", "Testing phase"]
@@ -43,7 +43,7 @@ env_params = {
         "machine_parameters": {
             "behavior": "selfish",
             "observation_type": "previous_agents_avg_tt_per_route",
-            "route_0_fee": 0.5,
+            "route_0_fee": 10,
             "travel_time_normalization_value": 100
         }
     },
@@ -55,8 +55,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 2,
-        "number_of_days": 4
+        "save_every": 5,
+        "number_of_days": 30
     },
     "plotter_parameters": {
         "phases": phases,
