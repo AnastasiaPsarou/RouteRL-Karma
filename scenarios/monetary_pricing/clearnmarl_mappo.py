@@ -32,8 +32,8 @@ class Args:
     device: str = "cpu"
 
     # episodes
-    training_episodes: int = 1
-    testing_episodes: int = 0
+    training_episodes: int = 300
+    testing_episodes: int = 10
 
     # PPO hyperparams
     gamma: float = 0.99
@@ -240,8 +240,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_ippo_300_agents_seed_{seed}"
-    plots_folder = f"plots_ippo_300_agents_seed_{seed}"
+    records_folder = f"training_records_ippo_300_agents_seed_{seed}_monetary_pricing"
+    plots_folder = f"plots_ippo_300_agents_seed_{seed}_monetary_pricing"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -266,7 +266,7 @@ def main():
         "environment_parameters": {
             "observations_time_window": 20,
             "save_every": 5,
-            "number_of_days": 3000
+            "number_of_days": 30
         },
         "plotter_parameters": {
             "phases": phases,
