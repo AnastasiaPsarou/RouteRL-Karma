@@ -15,7 +15,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 new_machines_after_mutation = 300
 human_learning_episodes = 0
-training_episodes = 500
+training_episodes = 300
 testing_episodes = 10
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
@@ -31,8 +31,8 @@ seed = 9
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-records_folder = f"training_records_karma_300_agents_{seed}"
-plots_folder = f"plots_karma_300_agents_{seed}"
+records_folder = f"training_records_karma_dqn_factorized_300_agents_{seed}"
+plots_folder = f"plots_karma_dqn_factorized_300_agents_{seed}"
 
 phases = [1, int(total_episodes)]
 phase_names = ["Mutation and AV learning", "Testing phase"]
@@ -56,8 +56,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 2,
-        "number_of_days": 4
+        "save_every": 5,
+        "number_of_days": 30
     },
     "plotter_parameters": {
         "phases": phases,
