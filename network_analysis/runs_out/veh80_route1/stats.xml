@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-12-16 18:12:24 by Eclipse SUMO sumo Version 1.19.0
+<!-- generated on 2026-02-09 11:23:13 by Eclipse SUMO sumo Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -38,20 +38,20 @@
     </tripinfo_device>
 
     <traci_server>
-        <remote-port value="53973"/>
+        <remote-port value="50941"/>
     </traci_server>
 
 </configuration>
 -->
 
 <statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
-    <performance clockBegin="198054.02" clockEnd="198058.52" clockDuration="4.50" traciDuration="0.00" realTimeFactor="333.48" vehicleUpdatesPerSecond="0.00" personUpdatesPerSecond="0.00" begin="0.00" end="1500.00" duration="1500.00"/>
+    <performance clockBegin="99415.79" clockEnd="99426.76" clockDuration="10.97" traciDuration="0.00" realTimeFactor="136.70" vehicleUpdatesPerSecond="0.00" personUpdatesPerSecond="0.00" begin="0.00" end="1500.00" duration="1500.00"/>
     <vehicles loaded="85" inserted="85" running="0" waiting="0"/>
     <teleports total="0" jam="0" yield="0" wrongLane="0"/>
     <safety collisions="0" emergencyStops="0" emergencyBraking="0"/>
     <persons loaded="0" running="0" jammed="0"/>
     <personTeleports total="0" abortWait="0" wrongDest="0"/>
-    <vehicleTripStatistics count="85" routeLength="3451.04" speed="8.42" duration="458.92" waitingTime="5.16" timeLoss="272.89" departDelay="0.00" departDelayWaiting="0.00" totalTravelTime="39008.00" totalDepartDelay="0.00"/>
+    <vehicleTripStatistics count="85" routeLength="6435.38" speed="11.77" duration="583.61" waitingTime="5.11" timeLoss="273.88" departDelay="0.00" departDelayWaiting="0.00" totalTravelTime="49607.00" totalDepartDelay="0.00"/>
     <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
     <rideStatistics number="0"/>
     <transportStatistics number="0"/>

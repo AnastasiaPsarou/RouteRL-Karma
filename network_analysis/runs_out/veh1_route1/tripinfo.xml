@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-12-16 18:12:18 by Eclipse SUMO sumo Version 1.19.0
+<!-- generated on 2026-02-09 11:23:13 by Eclipse SUMO sumo Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -38,12 +38,12 @@
     </tripinfo_device>
 
     <traci_server>
-        <remote-port value="53964"/>
+        <remote-port value="50936"/>
     </traci_server>
 
 </configuration>
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
-    <tripinfo id="flow_am_peak.0" depart="76.50" departLane="E0_0" departPos="5.10" departSpeed="28.81" departDelay="0.00" arrival="291.00" arrivalLane="E17.600_3" arrivalPos="100.00" arrivalSpeed="28.83" duration="214.50" routeLength="3452.38" waitingTime="2.00" waitingCount="4" stopTime="0.00" timeLoss="26.37" rerouteNo="0" devices="tripinfo_flow_am_peak.0" vType="AV_Aggressive" speedFactor="1.04" vaporized=""/>
+    <tripinfo id="flow_am_peak.0" depart="76.50" departLane="E0_0" departPos="5.10" departSpeed="28.82" departDelay="0.00" arrival="416.00" arrivalLane="E17.600_3" arrivalPos="100.00" arrivalSpeed="28.83" duration="339.50" routeLength="6436.72" waitingTime="2.00" waitingCount="4" stopTime="0.00" timeLoss="26.39" rerouteNo="0" devices="tripinfo_flow_am_peak.0" vType="AV_Aggressive" speedFactor="1.04" vaporized=""/>
 </tripinfos>
