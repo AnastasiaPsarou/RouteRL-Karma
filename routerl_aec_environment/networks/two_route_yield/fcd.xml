@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-12-12 17:50:32 by Eclipse SUMO sumo Version 1.19.0
+<!-- generated on 2026-02-10 14:04:47 by Eclipse SUMO sumo Version 1.19.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -12,8 +12,7 @@
     <output>
         <fcd-output value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\routerl_aec_environment\environment\../networks/two_route_yield/fcd.xml"/>
         <summary-output value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\routerl_aec_environment\environment\../networks/two_route_yield/summary.xml"/>
-        <tripinfo-output value="training_records_monetary_pricing_300_agents_new_reward_9_fee_2\SUMO_output\detailed_sumo_stats_36.xml"/>
-        <statistic-output value="training_records_monetary_pricing_300_agents_new_reward_9_fee_2\SUMO_output\sumo_stats_36.xml"/>
+        <tripinfo-output value="C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\routerl_aec_environment\environment\../networks/two_route_yield/tripinfo.xml"/>
     </output>
 
     <processing>
@@ -32,61 +31,4 @@
 -->
 
 <fcd-export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/fcd_file.xsd">
-    <timestep time="0.00"/>
-    <timestep time="1.00"/>
-    <timestep time="2.00"/>
-    <timestep time="3.00"/>
-    <timestep time="4.00"/>
-    <timestep time="5.00"/>
-    <timestep time="6.00"/>
-    <timestep time="7.00"/>
-    <timestep time="8.00"/>
-    <timestep time="9.00"/>
-    <timestep time="10.00"/>
-    <timestep time="11.00"/>
-    <timestep time="12.00"/>
-    <timestep time="13.00"/>
-    <timestep time="14.00"/>
-    <timestep time="15.00"/>
-    <timestep time="16.00"/>
-    <timestep time="17.00"/>
-    <timestep time="18.00"/>
-    <timestep time="19.00"/>
-    <timestep time="20.00"/>
-    <timestep time="21.00"/>
-    <timestep time="22.00">
-        <vehicle id="3" x="5.10" y="98.40" angle="90.00" type="AV" speed="0.00" pos="5.10" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="23.00">
-        <vehicle id="3" x="6.82" y="98.40" angle="90.00" type="AV" speed="1.72" pos="6.82" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="24.00">
-        <vehicle id="3" x="10.72" y="98.40" angle="90.00" type="AV" speed="3.90" pos="10.72" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="25.00">
-        <vehicle id="3" x="17.16" y="98.40" angle="90.00" type="AV" speed="6.44" pos="17.16" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="26.00">
-        <vehicle id="3" x="25.53" y="98.40" angle="90.00" type="AV" speed="8.38" pos="25.53" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="27.00">
-        <vehicle id="3" x="36.06" y="98.40" angle="90.00" type="AV" speed="10.53" pos="36.06" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="28.00">
-        <vehicle id="3" x="47.97" y="98.40" angle="90.00" type="AV" speed="11.90" pos="47.97" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="29.00">
-        <vehicle id="3" x="61.63" y="98.40" angle="90.00" type="AV" speed="13.67" pos="61.63" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="30.00">
-        <vehicle id="3" x="76.49" y="98.40" angle="90.00" type="AV" speed="14.86" pos="76.49" lane="E0_0" slope="0.00"/>
-        <vehicle id="5" x="5.10" y="98.40" angle="90.00" type="AV" speed="0.00" pos="5.10" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="31.00">
-        <vehicle id="3" x="91.69" y="98.40" angle="90.00" type="AV" speed="15.20" pos="91.69" lane="E0_0" slope="0.00"/>
-        <vehicle id="5" x="6.45" y="98.40" angle="90.00" type="AV" speed="1.35" pos="6.45" lane="E0_0" slope="0.00"/>
-    </timestep>
-    <timestep time="32.00">
-        <vehicle id="3" x="106.03" y="98.40" angle="90.00" type="AV" speed="14.34" pos="2.03" lane="E1_0" slope="0.00"/>
-        <vehicle id="5" x="9.74" y="98.40" angle="90.00" type="AV" speed="3.29" pos="9.74" lane="E0_0" slope="0.00"/>
-    </timestep>
+</fcd-export>
