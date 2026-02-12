@@ -524,7 +524,7 @@ class MachineAgent(BaseAgent):
             component3 = self.urgency
 
             #print("component 1", component1, "component 2", component2, "component 3", component3, "\n\n")
-            agent_reward = self.w1 * component1  + self.w2 * component2 + self.w3 * component3 #+ self.w3 * self.urgency
+            agent_reward = self.w1 * component1  + self.w2 * component2 * component3 #+ self.w3 * self.urgency
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()

@@ -13,3 +13,4 @@ from .shared_dqn import SharedDQN
 from .mappo import MAPPO
 from .ucb import UCB
 from .centralized_dqn import CentralizedDQN
+from .mfq import MeanFieldQLearning

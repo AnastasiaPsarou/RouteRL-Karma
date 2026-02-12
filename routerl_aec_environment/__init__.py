@@ -33,7 +33,8 @@ from .human_learning import (
     ReplayBuffer,
     MAPPO,
     UCB,
-    CentralizedDQN
+    CentralizedDQN,
+    MeanFieldQLearning
 )
 
 from .services import (
