@@ -53,7 +53,7 @@ env_params = {
         "simulation_timesteps": 100,
     },
     "environment_parameters": {
-        "observations_time_window": 20,
+        "observations_time_window": 10,
         "save_every": 5,
         "number_of_days": 30
     },
@@ -101,10 +101,12 @@ for machine in machines:
 mutated_agent_names = list(mutated_humans.keys())
 mutated_set = set(mutated_agent_names)
 
-def choose_min_tt_route(observation, action_size=3):
+def choose_min_tt_route(observation, action_size=3, epsilon=0.10):
     """
-    observation[:3] = [tt_route0, tt_route1, tt_route2]
-    Returns action in {0,1,2} selecting the smallest travel time.
+    observation[:action_size] = travel times per route
+    Returns action in {0,1,...,action_size-1}.
+    
+    With probability epsilon, chooses a different route than the minimum.
     Handles NaN/inf by treating them as very large.
     """
     if observation is None:
@@ -112,19 +114,24 @@ def choose_min_tt_route(observation, action_size=3):
 
     tt = np.asarray(observation, dtype=np.float32)[:action_size]
     if tt.shape[0] < action_size:
-        # fallback: if observation shorter than expected, choose 0
         return 0
 
-    # Replace NaN with +inf; clip -inf to +inf as well
+    # Replace NaN and ±inf with +inf
     tt = np.nan_to_num(tt, nan=np.inf, posinf=np.inf, neginf=np.inf)
 
-    # If everything is inf (degenerate), just pick 0
+    # If everything is inf, just pick 0
     if np.all(np.isinf(tt)):
         return 0
-    
-    #print("observation is: ", observation, "I choose route ", int(np.argmin(tt)))
 
-    return int(np.argmin(tt))
+    best = int(np.argmin(tt))
+
+    # With probability epsilon, choose a different valid action
+    if np.random.rand() < epsilon:
+        other_actions = [a for a in range(action_size) if a != best]
+        if other_actions:
+            return int(np.random.choice(other_actions))
+
+    return best
 
 pbar = tqdm(total=total_episodes, desc="Min-TT policy")
 os.makedirs("plots", exist_ok=True)
