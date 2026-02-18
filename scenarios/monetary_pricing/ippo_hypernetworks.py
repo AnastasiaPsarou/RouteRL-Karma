@@ -40,7 +40,7 @@ from routerl_aec_environment import TrafficEnvironment
 # ------------------------------------------------------------
 @dataclass
 class Args:
-    seed: int = 9
+    seed: int = 10
     device: str = "cpu"
 
     training_episodes: int = 34
@@ -488,7 +488,7 @@ def main():
                 "behavior": "selfish",
                 "observation_type": "previous_agents_avg_tt_per_route",
                 "route_0_fee": 10,
-                "travel_time_normalization_value": 100,
+                "travel_time_normalization_value": 1,
             },
         },
         "simulator_parameters": {
@@ -711,10 +711,18 @@ def main():
                 obs_t = torch.from_numpy(obs_np).to(device=device, dtype=torch.float32).unsqueeze(0)
                 aidx_t = torch.tensor([aidx], device=device, dtype=torch.long)
                 logits, _ = model(obs_t, aidx_t)
-                action = int(torch.argmax(logits, dim=-1).item())
+                dist = torch.distributions.Categorical(logits=logits)
+                action = int(dist.sample().item())
+
+                #action = int(torch.argmax(logits, dim=-1).item())
 
             pending[agent] = {"dummy": True}
             env.step(action)
+
+        # Close leftover pending steps conservatively (if agent never revisited at end)
+        for agent in learning_agents:
+            if pending[agent] is not None:
+                pending[agent] = None
 
         mean_return = float(np.mean(list(ep_return.values())))
         print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
