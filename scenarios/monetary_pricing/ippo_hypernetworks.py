@@ -658,13 +658,16 @@ def main():
             if pending[agent] is not None:
                 prev = pending[agent]
 
+                # In AEC: reward/termination/truncation you see now correspond to the *previous action* of this agent.
+                done_for_transition = float(termination or truncation)
+
                 if obs_np is not None:
                     next_obs_np = obs_np
-                    done_for_transition = 0.0   # we observed a valid next state → not terminal
+                    if done_for_transition == 1.0:
+                        next_obs_np = np.zeros_like(prev["obs"], dtype=np.float32)
                 else:
                     next_obs_np = np.zeros_like(prev["obs"], dtype=np.float32)
-                    done_for_transition = 1.0   # no next_obs → episode ended
-                #next_obs_np = obs_np if obs_np is not None else np.zeros_like(prev["obs"], dtype=np.float32)
+                    done_for_transition = 1.0  # if no obs, it must be terminal for our purposes
 
                 buf.add(
                     agent_idx=aidx,
