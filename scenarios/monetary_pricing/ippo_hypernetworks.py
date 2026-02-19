@@ -487,7 +487,7 @@ def main():
             "machine_parameters": {
                 "behavior": "selfish",
                 "observation_type": "previous_agents_avg_tt_per_route",
-                "route_0_fee": 10,
+                "route_0_fee": 0,
                 "travel_time_normalization_value": 1,
             },
         },
@@ -573,6 +573,20 @@ def main():
     Optimizer = getattr(optim, args.optimizer)
     optimizer = Optimizer(model.parameters(), lr=args.lr)
 
+    # ---- LR annealing (linear decay) ----
+    total_updates = args.training_episodes  # one PPO update per episode
+
+    """scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer,
+        lr_lambda=lambda step: max(0.0, 1.0 - step / total_updates)
+    )"""
+    scheduler = torch.optim.lr_scheduler.LinearLR(
+        optimizer,
+        start_factor=1.0,
+        end_factor=0.01,
+        total_iters=total_updates
+    )
+
     buf = RolloutBuffer()
 
     # Pending per agent (AEC): store last (obs, act, logp, val) until next visit provides reward + next_obs
@@ -656,6 +670,7 @@ def main():
                 pending[agent] = None
 
         metrics = ppo_update(model, optimizer, buf, args)
+        scheduler.step()
 
         mean_return = float(np.mean(list(ep_return.values())))
         running_returns.append(mean_return)
