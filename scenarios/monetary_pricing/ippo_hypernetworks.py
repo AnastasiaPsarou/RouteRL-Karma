@@ -531,7 +531,7 @@ def main():
         "environment_parameters": {
             "observations_time_window": 10,
             "save_every": 5,
-            "number_of_days": 30,
+            "number_of_days": 3,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -643,6 +643,7 @@ def main():
         for agent in env.agent_iter():
             obs, reward, termination, truncation, info = env.last()
             done = bool(termination or truncation)
+            print("env.day is: ", env.day, done)
 
             # skip non-learning agents
             if agent not in agent_to_idx:
@@ -656,7 +657,14 @@ def main():
             # Close previous step for this agent: reward corresponds to previous action, current obs is next_obs
             if pending[agent] is not None:
                 prev = pending[agent]
-                next_obs_np = obs_np if obs_np is not None else np.zeros_like(prev["obs"], dtype=np.float32)
+
+                if obs_np is not None:
+                    next_obs_np = obs_np
+                    done_for_transition = 0.0   # we observed a valid next state → not terminal
+                else:
+                    next_obs_np = np.zeros_like(prev["obs"], dtype=np.float32)
+                    done_for_transition = 1.0   # no next_obs → episode ended
+                #next_obs_np = obs_np if obs_np is not None else np.zeros_like(prev["obs"], dtype=np.float32)
 
                 buf.add(
                     agent_idx=aidx,
@@ -665,7 +673,7 @@ def main():
                     logp=prev["logp"],
                     val=prev["val"],
                     rew=float(reward),
-                    done=done,
+                    done=done_for_transition,
                     next_obs=next_obs_np,
                 )
                 ep_return[agent] += float(reward)
@@ -686,7 +694,9 @@ def main():
 
         # Close leftover pending steps conservatively (if agent never revisited at end)
         for agent in learning_agents:
-            if pending[agent] is not None:
+            # don't invent terminal transitions
+            pending[agent] = None
+            """if pending[agent] is not None:
                 prev = pending[agent]
                 buf.add(
                     agent_idx=agent_to_idx[agent],
@@ -698,7 +708,7 @@ def main():
                     done=True,
                     next_obs=np.zeros_like(prev["obs"], dtype=np.float32),
                 )
-                pending[agent] = None
+                pending[agent] = None"""
         
         ent_coef = entropy_coef_at_episode(ep, training_episodes, args)
         metrics = ppo_update(model, optimizer, buf, args, entropy_coef=ent_coef)
