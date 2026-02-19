@@ -73,6 +73,11 @@ class Args:
     # Discrete action space size
     action_dim: int = 3  # <-- set to your env action size
 
+    # Entropy scheduling
+    entropy_schedule: str = "linear"   # "linear" | "exp" | "constant"
+    entropy_start: float = 0.01        # higher early exploration
+    entropy_end: float = 0.0           # near-deterministic late
+
 
 # ------------------------------------------------------------
 # Utilities
@@ -95,6 +100,32 @@ def activation_fn(name: str):
     if name == "tanh":
         return torch.tanh
     raise ValueError(f"Unsupported activation: {name}")
+
+
+def entropy_coef_at_episode(ep: int, total_eps: int, args: Args) -> float:
+    if args.entropy_schedule == "constant":
+        return args.entropy_coef
+
+    frac = min(max(ep / max(total_eps - 1, 1), 0.0), 1.0)
+
+    if args.entropy_schedule == "linear":
+        return args.entropy_start + frac * (args.entropy_end - args.entropy_start)
+
+    if args.entropy_schedule == "exp":
+        # exponential decay from start -> end
+        # choose a decay rate so that at the end we are close to entropy_end
+        if args.entropy_end <= 0:
+            # if you want to end at 0, use a small floor
+            end = 1e-6
+        else:
+            end = args.entropy_end
+        start = max(args.entropy_start, 1e-8)
+        # alpha(t) = start * r^t with r chosen so alpha(T)=end
+        r = (end / start) ** (1.0 / max(total_eps - 1, 1))
+        return start * (r ** ep)
+
+    raise ValueError(f"Unknown entropy_schedule: {args.entropy_schedule}")
+
 
 
 # ------------------------------------------------------------
@@ -384,7 +415,7 @@ def compute_gae_from_transitions(
     return adv, ret
 
 
-def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer, args: Args):
+def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer, args: Args, entropy_coef: float):
     device = torch.device(args.device)
     N = len(buf)
     if N == 0:
@@ -429,7 +460,7 @@ def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer,
             ratio = torch.exp(logp - mb_logp_old)
             pg1 = ratio * mb_adv
             pg2 = torch.clamp(ratio, 1.0 - args.ppo_clip, 1.0 + args.ppo_clip) * mb_adv
-            actor_loss = -(torch.min(pg1, pg2)).mean() - args.entropy_coef * entropy
+            actor_loss = -(torch.min(pg1, pg2)).mean() - entropy_coef * entropy
 
             value = value.squeeze(-1)
             critic_loss = F.mse_loss(value, mb_ret) * args.value_coef
@@ -474,8 +505,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_hyperippo_mlp_300_agents_seed_{seed}_monetary_pricing"
-    plots_folder = f"plots_hyperippo_mlp_300_agents_seed_{seed}_monetary_pricing"
+    records_folder = f"training_records_hyperippo_mlp_300_agents_seed_{seed}_monetary_pricing_dd_sched"
+    plots_folder = f"plots_hyperippo_mlp_300_agents_seed_{seed}_monetary_pricing_dd_sched"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -668,8 +699,12 @@ def main():
                     next_obs=np.zeros_like(prev["obs"], dtype=np.float32),
                 )
                 pending[agent] = None
+        
+        ent_coef = entropy_coef_at_episode(ep, training_episodes, args)
+        metrics = ppo_update(model, optimizer, buf, args, entropy_coef=ent_coef)
 
-        metrics = ppo_update(model, optimizer, buf, args)
+
+        #metrics = ppo_update(model, optimizer, buf, args)
         scheduler.step()
 
         mean_return = float(np.mean(list(ep_return.values())))
