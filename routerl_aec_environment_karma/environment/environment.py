@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import random
 import threading
+import math
 
 from routerl_aec_environment_karma.environment import generate_agents
 from routerl_aec_environment_karma.environment import SumoSimulator
@@ -756,7 +757,7 @@ class TrafficEnvironment(AECEnv):
 
         self._initialize_machine_agents()
     
-    def stackelberg_auction(self, machine, machine_action) -> int:
+    """def stackelberg_auction(self, machine, machine_action) -> int:
         
         for route in range(self.simulation_params[kc.NUMBER_OF_PATHS]):
             submitted_bid = machine_action[route]
@@ -773,7 +774,40 @@ class TrafficEnvironment(AECEnv):
         # get assigned to the longest route
         assigned_route = self.simulation_params[kc.NUMBER_OF_PATHS] - 1
         
-        return assigned_route
+        return assigned_route"""
+    
+    def stackelberg_auction(self, machine, machine_action) -> int:
+        price = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE])
+
+        floor_price = math.floor(price)
+        decimal_part = price - floor_price  # e.g. 0.3 if price=4.3
+
+        print("floor price is: ", floor_price, "\n\n")
+
+        for route in range(self.simulation_params[kc.NUMBER_OF_PATHS]):
+            bid = int(machine_action[route])
+
+            # --- probability rule ---
+            if bid < floor_price:
+                win_prob = 0.0
+
+            elif bid == floor_price:
+                # probability = decimal part of price
+                # (if price is integer, this becomes 1.0)
+                win_prob = decimal_part if decimal_part > 0 else 1.0
+                print("win prob is: ", win_prob, "\n\n")
+
+            else:  # bid >= ceil_price
+                win_prob = 1.0
+
+            # --- lottery draw ---
+            if random.random() < win_prob:
+                machine.karma_balance -= bid
+                self.total_karma_points_used += bid
+                return route
+
+        # fallback: longest route
+        return self.simulation_params[kc.NUMBER_OF_PATHS] - 1
 
     #########################
     ##### Help functions ####
