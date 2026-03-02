@@ -68,7 +68,7 @@ W_TOTAL_TT: float = 0.0  # set >0 to include travel-time matching
 TOTAL_TT_STAR: Optional[float] = None  # set if you want to match a target total travel time
 
 # If your simulation is noisy, consider larger reps than 5
-REPS_PER_FEE: int = 5  # you asked for at least 5; keep at 5 unless needed
+REPS_PER_FEE: int = len(SEEDS)  # you asked for at least 5; keep at 5 unless needed
 
 # Output file for results
 RESULTS_JSON_PATH: str = "fee_search_results.json"
@@ -89,8 +89,6 @@ class FeeEvaluation:
     total_tt_std: Optional[float]
     # Keep raw per-seed results if you want to debug
     per_seed: List[Dict]
-
-import numpy as np
 
 def compute_shares_and_total_tt_from_records(records):
     """
@@ -148,6 +146,11 @@ def compute_shares_and_total_tt_from_records(records):
 
     total_tt = float(np.sum(travel_times))
     return shares.astype(float), total_tt
+
+def choose_action_from_utility(tt_per_route, income, F):
+    fees = np.array([F, 0.0, 0.0])
+    C = np.array(tt_per_route) + fees / income
+    return int(np.argmin(C))
 
 
 # -------------------------------------
@@ -240,12 +243,20 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     ##################### Mutation #####################
     env.mutation(mutation_start_percentile=0)
 
-    actions = ([0] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[0]) + ([1] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[1]) + ([2] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[2])
-    np.random.shuffle(actions)
+    """actions = ([0] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[0]) + ([1] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[1]) + ([2] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[2])
+    np.random.shuffle(actions)"""
 
     env.reset()
-    for action in actions:
+    
+    for i in range(num_agents):
+        # get travel-time estimates for each route (from env observation)
+        obs = env.get_observation_for_next_agent()   # <-- you must map this to your env
+        tt_per_route = obs["tt_per_route"]           # length 3
+        income = obs["income"] / 30                      # scalar
+        action = choose_action_from_utility(tt_per_route, income, F)
         env.step(action)
+        """for action in actions:
+            env.step(action)"""
 
     shares, total_tt = compute_shares_and_total_tt_from_records(env.historic_data)
     env.stop_simulation()
