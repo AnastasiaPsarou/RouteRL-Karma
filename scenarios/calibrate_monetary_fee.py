@@ -50,16 +50,18 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 # -----------------------------
 
 # 5 different seeds (you can change these)
-SEEDS: List[int] = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+SEEDS: List[int] = [9, 10, 11, 12, 13]#, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 # Candidate fees to test (edit to your preferred range / spacing)
 # Example: 0 to 20 in steps of 1
-FEE_VALUES: np.ndarray = np.linspace(0, 30, 31)
+FEE_VALUES: np.ndarray = np.linspace(0, 2, 31)
 
 # System-optimum target shares (must sum to 1)
 S_STAR: np.ndarray = np.array([0.1325, 0.5875, 0.28], dtype=float)
 
 NUMBER_OF_INDIVIDUALS_EACH_ROUTE: np.ndarray = np.array([40, 176, 84], dtype=int)
+
+TT_PER_ROUTE = [21.468, 26.1609, 34.08]
 
 
 # Loss weights: share mismatch always included; travel-time term optional.
@@ -208,7 +210,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
         "simulator_parameters": {
             "network_name": "network",
             "custom_network_folder": "../network_analysis/network_base",
-            "sumo_type": "sumo",
+            "sumo_type": "sumo-gui",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
@@ -243,21 +245,15 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     ##################### Mutation #####################
     env.mutation(mutation_start_percentile=0)
 
-    """actions = ([0] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[0]) + ([1] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[1]) + ([2] * NUMBER_OF_INDIVIDUALS_EACH_ROUTE[2])
-    np.random.shuffle(actions)"""
-
     env.reset()
-    
-    for i in range(num_agents):
-        # get travel-time estimates for each route (from env observation)
-        obs = env.get_observation_for_next_agent()   # <-- you must map this to your env
-        tt_per_route = obs["tt_per_route"]           # length 3
-        income = obs["income"] / 30                      # scalar
-        action = choose_action_from_utility(tt_per_route, income, F)
-        env.step(action)
-        """for action in actions:
-            env.step(action)"""
 
+    for agent in env.agent_iter():
+        machine_agent = next((a for a in env.machine_agents if str(a.id) == agent), None)
+
+        action = choose_action_from_utility(TT_PER_ROUTE, machine_agent.income, F)
+        env.step(action)
+
+    
     shares, total_tt = compute_shares_and_total_tt_from_records(env.historic_data)
     env.stop_simulation()
 
