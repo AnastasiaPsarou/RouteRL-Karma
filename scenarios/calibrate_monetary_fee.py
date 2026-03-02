@@ -50,11 +50,10 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 # -----------------------------
 
 # 5 different seeds (you can change these)
-SEEDS: List[int] = [9, 10, 11, 12, 13]#, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+SEEDS: List[int] = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 # Candidate fees to test (edit to your preferred range / spacing)
-# Example: 0 to 20 in steps of 1
-FEE_VALUES: np.ndarray = np.linspace(0, 2, 31)
+FEE_VALUES: np.ndarray = np.linspace(10, 50, 10)
 
 # System-optimum target shares (must sum to 1)
 S_STAR: np.ndarray = np.array([0.1325, 0.5875, 0.28], dtype=float)
@@ -151,7 +150,10 @@ def compute_shares_and_total_tt_from_records(records):
 
 def choose_action_from_utility(tt_per_route, income, F):
     fees = np.array([F, 0.0, 0.0])
+    #tt_per_route = tt_per_route / 16.5
+    tt_per_route = [travel_time / 16.5 for travel_time in tt_per_route]
     C = np.array(tt_per_route) + fees / income
+    print("C is: ", C, fees, income, "\n\n")
     return int(np.argmin(C))
 
 
@@ -176,6 +178,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     - You can compute total travel time from tripinfo.xml (sum of durations),
       or any other metric you prefer.
     """
+    print("fee is: ", F, "\n\n")
     new_machines_after_mutation = 300
     human_learning_episodes = 0
     training_episodes = 200
@@ -210,7 +213,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
         "simulator_parameters": {
             "network_name": "network",
             "custom_network_folder": "../network_analysis/network_base",
-            "sumo_type": "sumo-gui",
+            "sumo_type": "sumo",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
@@ -248,9 +251,16 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     env.reset()
 
     for agent in env.agent_iter():
+        obs, reward, termination, truncation, info = env.last()
+
+        if termination or truncation:
+            # agent is dead -> only valid action is None
+            env.step(None)
+            continue
+
         machine_agent = next((a for a in env.machine_agents if str(a.id) == agent), None)
 
-        action = choose_action_from_utility(TT_PER_ROUTE, machine_agent.income, F)
+        action = choose_action_from_utility(TT_PER_ROUTE, machine_agent.income / 30, F)
         env.step(action)
 
     
