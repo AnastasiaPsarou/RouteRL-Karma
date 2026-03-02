@@ -54,7 +54,7 @@ SEEDS: List[int] = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 2
 
 # Candidate fees to test (edit to your preferred range / spacing)
 # Example: 0 to 20 in steps of 1
-FEE_VALUES: np.ndarray = np.linspace(0, 1, 2)
+FEE_VALUES: np.ndarray = np.linspace(0, 30, 31)
 
 # System-optimum target shares (must sum to 1)
 S_STAR: np.ndarray = np.array([0.1325, 0.5875, 0.28], dtype=float)
@@ -150,9 +150,9 @@ def compute_shares_and_total_tt_from_records(records):
     return shares.astype(float), total_tt
 
 
-# -----------------------------
-# SUMO adapter (YOU implement)
-# -----------------------------
+# -------------------------------------
+# Run a TrafficEnvironment() simulation
+# -------------------------------------
 
 def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]]:
     """
@@ -171,7 +171,6 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     - You can compute total travel time from tripinfo.xml (sum of durations),
       or any other metric you prefer.
     """
-    print("f is: ", F, "\n\n")
     new_machines_after_mutation = 300
     human_learning_episodes = 0
     training_episodes = 200
@@ -254,8 +253,6 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     return shares, total_tt
 
 
-
-
 # -----------------------------
 # Evaluation & loss
 # -----------------------------
@@ -268,17 +265,9 @@ def compute_loss(
     w_total_tt: float,
     total_tt_star: Optional[float],
 ) -> float:
-    """
-    Loss = w_shares * ||shares - s_star||^2 + w_total_tt * (total_tt - total_tt_star)^2 (optional)
-    """
-    loss = w_shares * float(np.sum((shares - s_star) ** 2))
-    if w_total_tt > 0.0:
-        if total_tt is None:
-            raise ValueError("w_total_tt > 0 but total_tt is None. Provide total_tt from simulation.")
-        if total_tt_star is None:
-            raise ValueError("w_total_tt > 0 but total_tt_star is None. Set TOTAL_TT_STAR.")
-        loss += w_total_tt * float((total_tt - total_tt_star) ** 2)
-    return loss
+    if total_tt is None:
+        raise ValueError("total_tt is None, but travel-time-only loss requires total_tt.")
+    return float(total_tt)
 
 
 def evaluate_fee(
