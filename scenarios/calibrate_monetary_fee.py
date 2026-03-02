@@ -19,8 +19,6 @@ This script:
 IMPORTANT:
 - You must implement `run_one_simulation(F, seed)` for your SUMO setup.
 - Everything else is plug-and-play.
-
-Author: ChatGPT
 """
 
 from __future__ import annotations
@@ -53,7 +51,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 SEEDS: List[int] = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 # Candidate fees to test (edit to your preferred range / spacing)
-FEE_VALUES: np.ndarray = np.linspace(10, 50, 10)
+FEE_VALUES: np.ndarray = np.linspace(10, 50, 9)
 
 # System-optimum target shares (must sum to 1)
 S_STAR: np.ndarray = np.array([0.1325, 0.5875, 0.28], dtype=float)
@@ -153,7 +151,7 @@ def choose_action_from_utility(tt_per_route, income, F):
     #tt_per_route = tt_per_route / 16.5
     tt_per_route = [travel_time / 16.5 for travel_time in tt_per_route]
     C = np.array(tt_per_route) + fees / income
-    print("C is: ", C, fees, income, "\n\n")
+    #print("C is: ", C, fees, income, "\n\n")
     return int(np.argmin(C))
 
 
@@ -206,8 +204,8 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
             "machine_parameters": {
                 "behavior": "selfish",
                 "observation_type": "previous_agents_avg_tt_per_route",
-                "route_0_fee": F,
-                "travel_time_normalization_value": 100
+                "route_0_fee": 0,
+                "travel_time_normalization_value": 1
             }
         },
         "simulator_parameters": {
@@ -219,7 +217,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
         "environment_parameters": {
             "observations_time_window": 10,
             "save_every": 5,
-            "number_of_days": 30
+            "number_of_days": 1
         },
         "plotter_parameters": {
             "phases": phases,
@@ -249,7 +247,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
     env.mutation(mutation_start_percentile=0)
 
     env.reset()
-
+    
     for agent in env.agent_iter():
         obs, reward, termination, truncation, info = env.last()
 
@@ -258,7 +256,7 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
             env.step(None)
             continue
 
-        machine_agent = next((a for a in env.machine_agents if str(a.id) == agent), None)
+        machine_agent = next((a for a in env.machine_agents if str(a.id) == agent))
 
         action = choose_action_from_utility(TT_PER_ROUTE, machine_agent.income / 30, F)
         env.step(action)
