@@ -1,0 +1,1486 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+[1/21] Testing fee F=40 ...
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9515.39 (std=136) | shares_mean=[0.25392157 0.74607843 0.        ] | total_tt_mean=9515.387254901962
+[2/21] Testing fee F=40.5 ...
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+fee is:  40.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9467.32 (std=116) | shares_mean=[0.24764706 0.75235294 0.        ] | total_tt_mean=9467.318627450979
+[3/21] Testing fee F=41 ...
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+fee is:  41.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9447.75 (std=78.6) | shares_mean=[0.24588235 0.75411765 0.        ] | total_tt_mean=9447.748039215687
+[4/21] Testing fee F=41.5 ...
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+fee is:  41.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9453.25 (std=113) | shares_mean=[0.24392157 0.75607843 0.        ] | total_tt_mean=9453.246078431372
+[5/21] Testing fee F=42 ...
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+fee is:  42.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9430.53 (std=119) | shares_mean=[0.23803922 0.76196078 0.        ] | total_tt_mean=9430.526470588235
+[6/21] Testing fee F=42.5 ...
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+fee is:  42.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9372.65 (std=87.3) | shares_mean=[0.23392157 0.76607843 0.        ] | total_tt_mean=9372.652941176471
+[7/21] Testing fee F=43 ...
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+fee is:  43.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9411.97 (std=97.5) | shares_mean=[0.23176471 0.76823529 0.        ] | total_tt_mean=9411.973529411764
+[8/21] Testing fee F=43.5 ...
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+fee is:  43.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9324.5 (std=95.7) | shares_mean=[0.22117647 0.77882353 0.        ] | total_tt_mean=9324.499019607843
+[9/21] Testing fee F=44 ...
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+fee is:  44.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9315.84 (std=106) | shares_mean=[0.21490196 0.78509804 0.        ] | total_tt_mean=9315.844117647057
+[10/21] Testing fee F=44.5 ...
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+fee is:  44.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9287.44 (std=104) | shares_mean=[0.20411765 0.79588235 0.        ] | total_tt_mean=9287.439215686274
+[11/21] Testing fee F=45 ...
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+fee is:  45.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9306.39 (std=80.4) | shares_mean=[0.19843137 0.80156863 0.        ] | total_tt_mean=9306.390196078433
+[12/21] Testing fee F=45.5 ...
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+fee is:  45.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9249.82 (std=92.6) | shares_mean=[0.19529412 0.80470588 0.        ] | total_tt_mean=9249.820588235294
+[13/21] Testing fee F=46 ...
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+fee is:  46.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9277.59 (std=75.6) | shares_mean=[0.19235294 0.80764706 0.        ] | total_tt_mean=9277.5931372549
+[14/21] Testing fee F=46.5 ...
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+fee is:  46.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9262.14 (std=64.5) | shares_mean=[0.18980392 0.81019608 0.        ] | total_tt_mean=9262.138235294118
+[15/21] Testing fee F=47 ...
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+fee is:  47.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9246.98 (std=89.3) | shares_mean=[0.18215686 0.81784314 0.        ] | total_tt_mean=9246.976470588235
+[16/21] Testing fee F=47.5 ...
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+fee is:  47.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9254.47 (std=80.5) | shares_mean=[0.17392157 0.82607843 0.        ] | total_tt_mean=9254.467647058824
+[17/21] Testing fee F=48 ...
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+fee is:  48.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9225.57 (std=88.4) | shares_mean=[0.17254902 0.82745098 0.        ] | total_tt_mean=9225.573529411764
+[18/21] Testing fee F=48.5 ...
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+fee is:  48.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9251.6 (std=72.5) | shares_mean=[0.17137255 0.82862745 0.        ] | total_tt_mean=9251.60294117647
+[19/21] Testing fee F=49 ...
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+fee is:  49.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9262.39 (std=82.5) | shares_mean=[0.16901961 0.83098039 0.        ] | total_tt_mean=9262.385294117648
+[20/21] Testing fee F=49.5 ...
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+fee is:  49.5 
+
+
+ Retrying in 1 seconds
+    loss_mean=9257.27 (std=70.8) | shares_mean=[0.16686275 0.83313725 0.        ] | total_tt_mean=9257.267647058823
+[21/21] Testing fee F=50 ...
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9257.71 (std=66.6) | shares_mean=[0.16686275 0.83313725 0.        ] | total_tt_mean=9257.709803921569
+
+=== BEST FEE (by mean loss) ===
+Fee: 48.0
+Mean shares: [0.17254901960784316, 0.8274509803921567, 0.0]  (std: [0.013310245292923243, 0.01331024529292325, 0.0])
+Mean loss: 9225.573529411764 (std: 88.39653548404716)
+Mean total travel time: 9225.573529411764 (std: 88.39653548404716)
+Saved results to: fee_search_results.json
