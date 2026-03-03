@@ -1,0 +1,7016 @@
+--- Installing dependencies ---
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+WARNING: Ignoring invalid distribution ~ (/home/psarou/.local/lib/python3.12/site-packages)
+
+[notice] A new release of pip is available: 25.0.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+--- Running main.py ---
+[1/100] Testing fee F=10 ...
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+fee is:  10.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=27662.7 (std=1.15e+03) | shares_mean=[0.80137255 0.19862745 0.        ] | total_tt_mean=27662.734313725487
+[2/100] Testing fee F=10.9091 ...
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+fee is:  10.909090909090908 
+
+
+ Retrying in 1 seconds
+    loss_mean=25951.5 (std=1.05e+03) | shares_mean=[0.77137255 0.22862745 0.        ] | total_tt_mean=25951.498039215683
+[3/100] Testing fee F=11.8182 ...
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  11.818181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=25443.9 (std=1.05e+03) | shares_mean=[0.75980392 0.24019608 0.        ] | total_tt_mean=25443.85098039216
+[4/100] Testing fee F=12.7273 ...
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  12.727272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=24077.5 (std=1.03e+03) | shares_mean=[0.73411765 0.26588235 0.        ] | total_tt_mean=24077.463725490194
+[5/100] Testing fee F=13.6364 ...
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  13.636363636363637 
+
+
+ Retrying in 1 seconds
+    loss_mean=23278.2 (std=1.2e+03) | shares_mean=[0.71784314 0.28215686 0.        ] | total_tt_mean=23278.195098039218
+[6/100] Testing fee F=14.5455 ...
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  14.545454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=21694.2 (std=1.15e+03) | shares_mean=[0.6854902 0.3145098 0.       ] | total_tt_mean=21694.209803921567
+[7/100] Testing fee F=15.4545 ...
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  15.454545454545453 
+
+
+ Retrying in 1 seconds
+    loss_mean=20250 (std=1.24e+03) | shares_mean=[0.6554902 0.3445098 0.       ] | total_tt_mean=20250.020588235293
+[8/100] Testing fee F=16.3636 ...
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  16.363636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=19350.8 (std=1.23e+03) | shares_mean=[0.63313725 0.36686275 0.        ] | total_tt_mean=19350.763725490197
+[9/100] Testing fee F=17.2727 ...
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  17.272727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=18788.5 (std=1.07e+03) | shares_mean=[0.62039216 0.37960784 0.        ] | total_tt_mean=18788.483333333334
+[10/100] Testing fee F=18.1818 ...
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  18.18181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=17895 (std=1.1e+03) | shares_mean=[0.59921569 0.40078431 0.        ] | total_tt_mean=17894.95588235294
+[11/100] Testing fee F=19.0909 ...
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  19.09090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=17183.1 (std=1.04e+03) | shares_mean=[0.58058824 0.41941176 0.        ] | total_tt_mean=17183.14607843137
+[12/100] Testing fee F=20 ...
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+fee is:  20.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=16350.6 (std=928) | shares_mean=[0.56019608 0.43980392 0.        ] | total_tt_mean=16350.56274509804
+[13/100] Testing fee F=20.9091 ...
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+fee is:  20.909090909090907 
+
+
+ Retrying in 1 seconds
+    loss_mean=15698.2 (std=891) | shares_mean=[0.54117647 0.45882353 0.        ] | total_tt_mean=15698.16568627451
+[14/100] Testing fee F=21.8182 ...
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  21.81818181818182 
+
+
+ Retrying in 1 seconds
+    loss_mean=14952.1 (std=887) | shares_mean=[0.52098039 0.47901961 0.        ] | total_tt_mean=14952.075490196077
+[15/100] Testing fee F=22.7273 ...
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  22.727272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=14466.4 (std=856) | shares_mean=[0.50470588 0.49529412 0.        ] | total_tt_mean=14466.359803921569
+[16/100] Testing fee F=23.6364 ...
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+fee is:  23.636363636363637 
+
+
+ Retrying in 1 seconds
+    loss_mean=13796.6 (std=758) | shares_mean=[0.48372549 0.51627451 0.        ] | total_tt_mean=13796.646078431373
+[17/100] Testing fee F=24.5455 ...
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+fee is:  24.545454545454547 
+
+
+ Retrying in 1 seconds
+    loss_mean=13257.2 (std=710) | shares_mean=[0.46647059 0.53352941 0.        ] | total_tt_mean=13257.201960784312
+[18/100] Testing fee F=25.4545 ...
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+fee is:  25.454545454545453 
+
+
+ Retrying in 1 seconds
+    loss_mean=13001.4 (std=660) | shares_mean=[0.45686275 0.54313725 0.        ] | total_tt_mean=13001.387254901962
+[19/100] Testing fee F=26.3636 ...
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  26.363636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=12580.7 (std=550) | shares_mean=[0.44156863 0.55843137 0.        ] | total_tt_mean=12580.661764705883
+[20/100] Testing fee F=27.2727 ...
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  27.272727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=12191.1 (std=625) | shares_mean=[0.42372549 0.57627451 0.        ] | total_tt_mean=12191.086274509804
+[21/100] Testing fee F=28.1818 ...
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  28.18181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=11675.2 (std=551) | shares_mean=[0.40215686 0.59784314 0.        ] | total_tt_mean=11675.152941176471
+[22/100] Testing fee F=29.0909 ...
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  29.09090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=11283.1 (std=457) | shares_mean=[0.3845098 0.6154902 0.       ] | total_tt_mean=11283.09019607843
+[23/100] Testing fee F=30 ...
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+fee is:  30.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=11080.6 (std=374) | shares_mean=[0.3745098 0.6254902 0.       ] | total_tt_mean=11080.55980392157
+[24/100] Testing fee F=30.9091 ...
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  30.90909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=10793.8 (std=343) | shares_mean=[0.35882353 0.64117647 0.        ] | total_tt_mean=10793.783333333335
+[25/100] Testing fee F=31.8182 ...
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  31.818181818181817 
+
+
+ Retrying in 1 seconds
+    loss_mean=10679.5 (std=310) | shares_mean=[0.35078431 0.64921569 0.        ] | total_tt_mean=10679.498039215687
+[26/100] Testing fee F=32.7273 ...
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  32.72727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=10393.8 (std=293) | shares_mean=[0.33431373 0.66568627 0.        ] | total_tt_mean=10393.814705882352
+[27/100] Testing fee F=33.6364 ...
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  33.63636363636364 
+
+
+ Retrying in 1 seconds
+    loss_mean=10147.5 (std=298) | shares_mean=[0.31823529 0.68176471 0.        ] | total_tt_mean=10147.488235294117
+[28/100] Testing fee F=34.5455 ...
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  34.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=10075.3 (std=251) | shares_mean=[0.30921569 0.69078431 0.        ] | total_tt_mean=10075.282352941176
+[29/100] Testing fee F=35.4545 ...
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  35.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=9996.59 (std=245) | shares_mean=[0.30490196 0.69509804 0.        ] | total_tt_mean=9996.589215686274
+[30/100] Testing fee F=36.3636 ...
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  36.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=9846.51 (std=227) | shares_mean=[0.28960784 0.71039216 0.        ] | total_tt_mean=9846.507843137253
+[31/100] Testing fee F=37.2727 ...
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  37.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=9752.14 (std=190) | shares_mean=[0.28058824 0.71941176 0.        ] | total_tt_mean=9752.138235294116
+[32/100] Testing fee F=38.1818 ...
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  38.18181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=9662.8 (std=169) | shares_mean=[0.26823529 0.73176471 0.        ] | total_tt_mean=9662.800980392156
+[33/100] Testing fee F=39.0909 ...
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  39.09090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=9567.02 (std=184) | shares_mean=[0.26058824 0.73941176 0.        ] | total_tt_mean=9567.023529411765
+[34/100] Testing fee F=40 ...
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+fee is:  40.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9532.67 (std=134) | shares_mean=[0.25392157 0.74607843 0.        ] | total_tt_mean=9532.674509803923
+[35/100] Testing fee F=40.9091 ...
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  40.90909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=9453.45 (std=108) | shares_mean=[0.24588235 0.75411765 0.        ] | total_tt_mean=9453.45294117647
+[36/100] Testing fee F=41.8182 ...
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  41.81818181818181 
+
+
+ Retrying in 1 seconds
+    loss_mean=9431.58 (std=99.7) | shares_mean=[0.24235294 0.75764706 0.        ] | total_tt_mean=9431.576470588234
+[37/100] Testing fee F=42.7273 ...
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  42.72727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=9384.52 (std=96.9) | shares_mean=[0.23176471 0.76823529 0.        ] | total_tt_mean=9384.517647058825
+[38/100] Testing fee F=43.6364 ...
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  43.63636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=9323.81 (std=74.1) | shares_mean=[0.22117647 0.77882353 0.        ] | total_tt_mean=9323.814705882352
+[39/100] Testing fee F=44.5455 ...
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  44.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=9293.79 (std=103) | shares_mean=[0.20411765 0.79588235 0.        ] | total_tt_mean=9293.79411764706
+[40/100] Testing fee F=45.4545 ...
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  45.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=9277.14 (std=73.3) | shares_mean=[0.19529412 0.80470588 0.        ] | total_tt_mean=9277.137254901962
+[41/100] Testing fee F=46.3636 ...
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  46.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=9253.82 (std=58.7) | shares_mean=[0.18980392 0.81019608 0.        ] | total_tt_mean=9253.82156862745
+[42/100] Testing fee F=47.2727 ...
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  47.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=9237.86 (std=78) | shares_mean=[0.17784314 0.82215686 0.        ] | total_tt_mean=9237.856862745099
+[43/100] Testing fee F=48.1818 ...
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  48.18181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=9270.63 (std=76.6) | shares_mean=[0.17137255 0.82862745 0.        ] | total_tt_mean=9270.628431372548
+[44/100] Testing fee F=49.0909 ...
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  49.090909090909086 
+
+
+ Retrying in 1 seconds
+    loss_mean=9270.61 (std=97.2) | shares_mean=[0.16764706 0.83235294 0.        ] | total_tt_mean=9270.611764705882
+[45/100] Testing fee F=50 ...
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+fee is:  50.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9256.82 (std=63.6) | shares_mean=[0.16686275 0.83313725 0.        ] | total_tt_mean=9256.81862745098
+[46/100] Testing fee F=50.9091 ...
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  50.90909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=9260.26 (std=103) | shares_mean=[0.16196078 0.83803922 0.        ] | total_tt_mean=9260.25588235294
+[47/100] Testing fee F=51.8182 ...
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+fee is:  51.81818181818182 
+
+
+ Retrying in 1 seconds
+    loss_mean=9243.43 (std=81.2) | shares_mean=[0.15568627 0.84431373 0.        ] | total_tt_mean=9243.427450980393
+[48/100] Testing fee F=52.7273 ...
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  52.72727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=9300.21 (std=121) | shares_mean=[0.14980392 0.85019608 0.        ] | total_tt_mean=9300.207843137254
+[49/100] Testing fee F=53.6364 ...
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  53.63636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=9329.34 (std=124) | shares_mean=[0.14411765 0.85588235 0.        ] | total_tt_mean=9329.339215686274
+[50/100] Testing fee F=54.5455 ...
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  54.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=9303.37 (std=95.6) | shares_mean=[0.13980392 0.86019608 0.        ] | total_tt_mean=9303.369607843137
+[51/100] Testing fee F=55.4545 ...
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  55.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=9348.55 (std=116) | shares_mean=[0.13509804 0.86490196 0.        ] | total_tt_mean=9348.546078431373
+[52/100] Testing fee F=56.3636 ...
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  56.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=9410.61 (std=131) | shares_mean=[0.12568627 0.87431373 0.        ] | total_tt_mean=9410.611764705884
+[53/100] Testing fee F=57.2727 ...
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  57.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=9450.24 (std=126) | shares_mean=[0.11823529 0.88176471 0.        ] | total_tt_mean=9450.237254901962
+[54/100] Testing fee F=58.1818 ...
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+fee is:  58.18181818181818 
+
+
+ Retrying in 1 seconds
+    loss_mean=9461.28 (std=117) | shares_mean=[0.11392157 0.88607843 0.        ] | total_tt_mean=9461.275490196076
+[55/100] Testing fee F=59.0909 ...
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+fee is:  59.090909090909086 
+
+
+ Retrying in 1 seconds
+    loss_mean=9466.82 (std=128) | shares_mean=[0.11215686 0.88784314 0.        ] | total_tt_mean=9466.822549019607
+[56/100] Testing fee F=60 ...
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+fee is:  60.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9493.79 (std=110) | shares_mean=[0.11019608 0.88980392 0.        ] | total_tt_mean=9493.793137254903
+[57/100] Testing fee F=60.9091 ...
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  60.90909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=9474.08 (std=93.2) | shares_mean=[0.11019608 0.88980392 0.        ] | total_tt_mean=9474.083333333332
+[58/100] Testing fee F=61.8182 ...
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  61.81818181818181 
+
+
+ Retrying in 1 seconds
+    loss_mean=9534.36 (std=126) | shares_mean=[0.10686275 0.89313725 0.        ] | total_tt_mean=9534.356862745097
+[59/100] Testing fee F=62.7273 ...
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+fee is:  62.72727272727273 
+
+
+ Retrying in 1 seconds
+    loss_mean=9504.62 (std=148) | shares_mean=[0.1054902 0.8945098 0.       ] | total_tt_mean=9504.623529411765
+[60/100] Testing fee F=63.6364 ...
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  63.63636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=9532.52 (std=121) | shares_mean=[0.10411765 0.89588235 0.        ] | total_tt_mean=9532.51862745098
+[61/100] Testing fee F=64.5455 ...
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  64.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=9543.24 (std=131) | shares_mean=[0.10235294 0.89764706 0.        ] | total_tt_mean=9543.24019607843
+[62/100] Testing fee F=65.4545 ...
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  65.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=9530.13 (std=128) | shares_mean=[0.10235294 0.89764706 0.        ] | total_tt_mean=9530.130392156863
+[63/100] Testing fee F=66.3636 ...
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  66.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=9572.55 (std=136) | shares_mean=[0.09862745 0.90137255 0.        ] | total_tt_mean=9572.545098039216
+[64/100] Testing fee F=67.2727 ...
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+fee is:  67.27272727272728 
+
+
+ Retrying in 1 seconds
+    loss_mean=9594.75 (std=179) | shares_mean=[0.09607843 0.90392157 0.        ] | total_tt_mean=9594.753921568628
+[65/100] Testing fee F=68.1818 ...
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+fee is:  68.18181818181819 
+
+
+ Retrying in 1 seconds
+    loss_mean=9644.46 (std=141) | shares_mean=[0.09058824 0.90941176 0.        ] | total_tt_mean=9644.460784313724
+[66/100] Testing fee F=69.0909 ...
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  69.0909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=9665.5 (std=163) | shares_mean=[0.09058824 0.90941176 0.        ] | total_tt_mean=9665.50294117647
+[67/100] Testing fee F=70 ...
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+fee is:  70.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9709.1 (std=157) | shares_mean=[0.08529412 0.91470588 0.        ] | total_tt_mean=9709.10294117647
+[68/100] Testing fee F=70.9091 ...
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  70.9090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=9681.2 (std=163) | shares_mean=[0.08529412 0.91470588 0.        ] | total_tt_mean=9681.202941176469
+[69/100] Testing fee F=71.8182 ...
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  71.81818181818181 
+
+
+ Retrying in 1 seconds
+    loss_mean=9719.47 (std=162) | shares_mean=[0.08333333 0.91666667 0.        ] | total_tt_mean=9719.46862745098
+[70/100] Testing fee F=72.7273 ...
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  72.72727272727272 
+
+
+ Retrying in 1 seconds
+    loss_mean=9758.84 (std=134) | shares_mean=[0.07960784 0.92039216 0.        ] | total_tt_mean=9758.844117647059
+[71/100] Testing fee F=73.6364 ...
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+fee is:  73.63636363636363 
+
+
+ Retrying in 1 seconds
+    loss_mean=9729.84 (std=131) | shares_mean=[0.07960784 0.92039216 0.        ] | total_tt_mean=9729.843137254902
+[72/100] Testing fee F=74.5455 ...
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  74.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=9730.87 (std=122) | shares_mean=[0.07960784 0.92039216 0.        ] | total_tt_mean=9730.872549019608
+[73/100] Testing fee F=75.4545 ...
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  75.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=9789.83 (std=147) | shares_mean=[0.07607843 0.92392157 0.        ] | total_tt_mean=9789.82745098039
+[74/100] Testing fee F=76.3636 ...
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  76.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=9850.72 (std=128) | shares_mean=[0.07058824 0.92941176 0.        ] | total_tt_mean=9850.71568627451
+[75/100] Testing fee F=77.2727 ...
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  77.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=9866.85 (std=162) | shares_mean=[0.06823529 0.93176471 0.        ] | total_tt_mean=9866.851960784314
+[76/100] Testing fee F=78.1818 ...
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  78.18181818181817 
+
+
+ Retrying in 1 seconds
+    loss_mean=9870.36 (std=149) | shares_mean=[0.06823529 0.93176471 0.        ] | total_tt_mean=9870.364705882352
+[77/100] Testing fee F=79.0909 ...
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  79.0909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=9910.33 (std=127) | shares_mean=[0.0645098 0.9354902 0.       ] | total_tt_mean=9910.331372549019
+[78/100] Testing fee F=80 ...
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+fee is:  80.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=9939.25 (std=159) | shares_mean=[0.06098039 0.93901961 0.        ] | total_tt_mean=9939.245098039217
+[79/100] Testing fee F=80.9091 ...
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  80.9090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=9990.56 (std=155) | shares_mean=[0.05803922 0.94196078 0.        ] | total_tt_mean=9990.555882352943
+[80/100] Testing fee F=81.8182 ...
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  81.81818181818181 
+
+
+ Retrying in 1 seconds
+    loss_mean=9974.12 (std=177) | shares_mean=[0.05803922 0.94196078 0.        ] | total_tt_mean=9974.124509803922
+[81/100] Testing fee F=82.7273 ...
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  82.72727272727272 
+
+
+ Retrying in 1 seconds
+    loss_mean=9993.85 (std=156) | shares_mean=[0.05568627 0.94431373 0.        ] | total_tt_mean=9993.849999999999
+[82/100] Testing fee F=83.6364 ...
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  83.63636363636364 
+
+
+ Retrying in 1 seconds
+    loss_mean=10025.6 (std=147) | shares_mean=[0.05470588 0.94529412 0.        ] | total_tt_mean=10025.606862745097
+[83/100] Testing fee F=84.5455 ...
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  84.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=10053.5 (std=144) | shares_mean=[0.05470588 0.94529412 0.        ] | total_tt_mean=10053.549019607843
+[84/100] Testing fee F=85.4545 ...
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  85.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=10066.6 (std=132) | shares_mean=[0.04882353 0.95117647 0.        ] | total_tt_mean=10066.643137254903
+[85/100] Testing fee F=86.3636 ...
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  86.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=10086.7 (std=122) | shares_mean=[0.04647059 0.95352941 0.        ] | total_tt_mean=10086.699019607842
+[86/100] Testing fee F=87.2727 ...
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  87.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=10090.4 (std=129) | shares_mean=[0.04647059 0.95352941 0.        ] | total_tt_mean=10090.390196078431
+[87/100] Testing fee F=88.1818 ...
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  88.18181818181817 
+
+
+ Retrying in 1 seconds
+    loss_mean=10120.8 (std=119) | shares_mean=[0.04490196 0.95509804 0.        ] | total_tt_mean=10120.769607843138
+[88/100] Testing fee F=89.0909 ...
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  89.0909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=10138.7 (std=118) | shares_mean=[0.04490196 0.95509804 0.        ] | total_tt_mean=10138.685294117648
+[89/100] Testing fee F=90 ...
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+fee is:  90.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=10124.8 (std=113) | shares_mean=[0.04490196 0.95509804 0.        ] | total_tt_mean=10124.755882352942
+[90/100] Testing fee F=90.9091 ...
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+fee is:  90.9090909090909 
+
+
+ Retrying in 1 seconds
+    loss_mean=10138.9 (std=106) | shares_mean=[0.04490196 0.95509804 0.        ] | total_tt_mean=10138.918627450981
+[91/100] Testing fee F=91.8182 ...
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+fee is:  91.81818181818181 
+
+
+ Retrying in 1 seconds
+    loss_mean=10155.8 (std=120) | shares_mean=[0.04294118 0.95705882 0.        ] | total_tt_mean=10155.834313725489
+[92/100] Testing fee F=92.7273 ...
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+fee is:  92.72727272727272 
+
+
+ Retrying in 1 seconds
+    loss_mean=10145.9 (std=134) | shares_mean=[0.04294118 0.95705882 0.        ] | total_tt_mean=10145.874509803922
+[93/100] Testing fee F=93.6364 ...
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+fee is:  93.63636363636364 
+
+
+ Retrying in 1 seconds
+    loss_mean=10151.3 (std=123) | shares_mean=[0.04294118 0.95705882 0.        ] | total_tt_mean=10151.320588235292
+[94/100] Testing fee F=94.5455 ...
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+fee is:  94.54545454545455 
+
+
+ Retrying in 1 seconds
+    loss_mean=10155.3 (std=129) | shares_mean=[0.04215686 0.95784314 0.        ] | total_tt_mean=10155.3068627451
+[95/100] Testing fee F=95.4545 ...
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+fee is:  95.45454545454545 
+
+
+ Retrying in 1 seconds
+    loss_mean=10170.1 (std=109) | shares_mean=[0.04215686 0.95784314 0.        ] | total_tt_mean=10170.099019607842
+[96/100] Testing fee F=96.3636 ...
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+fee is:  96.36363636363636 
+
+
+ Retrying in 1 seconds
+    loss_mean=10151.1 (std=148) | shares_mean=[0.04156863 0.95843137 0.        ] | total_tt_mean=10151.06274509804
+[97/100] Testing fee F=97.2727 ...
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+fee is:  97.27272727272727 
+
+
+ Retrying in 1 seconds
+    loss_mean=10151.7 (std=118) | shares_mean=[0.04098039 0.95901961 0.        ] | total_tt_mean=10151.716666666667
+[98/100] Testing fee F=98.1818 ...
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+fee is:  98.18181818181817 
+
+
+ Retrying in 1 seconds
+    loss_mean=10181.7 (std=130) | shares_mean=[0.04098039 0.95901961 0.        ] | total_tt_mean=10181.71176470588
+[99/100] Testing fee F=99.0909 ...
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+fee is:  99.0909090909091 
+
+
+ Retrying in 1 seconds
+    loss_mean=10193.8 (std=142) | shares_mean=[0.03843137 0.96156863 0.        ] | total_tt_mean=10193.832352941177
+[100/100] Testing fee F=100 ...
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+fee is:  100.0 
+
+
+ Retrying in 1 seconds
+    loss_mean=10207.1 (std=112) | shares_mean=[0.03843137 0.96156863 0.        ] | total_tt_mean=10207.097058823529
+
+=== BEST FEE (by mean loss) ===
+Fee: 47.27272727272727
+Mean shares: [0.17784313725490197, 0.8221568627450982, 0.0]  (std: [0.014139416766525451, 0.01413941676652543, 0.0])
+Mean loss: 9237.856862745099 (std: 77.96924000875755)
+Mean total travel time: 9237.856862745099 (std: 77.96924000875755)
+Saved results to: fee_search_results.json
