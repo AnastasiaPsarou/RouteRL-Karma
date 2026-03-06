@@ -470,6 +470,31 @@ class MachineAgent(BaseAgent):
         total_impact = col_values.sum()
 
         return total_impact
+    
+    def get_agent_action_and_bid(self, obs_list, agent_id: int):
+        """
+        obs_list: list[dict] like the one you pasted
+        agent_id: the 'id' field to search for
+
+        Returns: (agent_dict, action, bid_used)
+        """
+        agent = next((d for d in obs_list if int(d.get("id", -1)) == int(agent_id)), None)
+        if agent is None:
+            raise KeyError(f"Agent with id={agent_id} not found.")
+
+        action = int(agent["action"])
+        bid_key = f"bid_route_{action}"
+        bid_used = int(agent[bid_key])
+
+        return agent, action, bid_used
+    
+    def was_assigned_action_0(self, travel_times_list, agent_id):
+        agent = next((a for a in travel_times_list if a["id"] == agent_id), None)
+
+        if agent is None:
+            return None  # agent not found
+
+        return agent["action"] == 0
 
 
     def get_reward(self, observation: list[dict], group_vicinity: bool = False) -> float:
@@ -482,6 +507,7 @@ class MachineAgent(BaseAgent):
         Returns:
             float: The reward of the agent.
         """
+        #print("observation is: ", observation, "\n\n")
         vicinity_obs = list()
         if group_vicinity == True:
 
@@ -512,7 +538,9 @@ class MachineAgent(BaseAgent):
         a, b, c, d = self.rewards_coefs
         agent_reward  = a * own_tt + b * group_tt + c * others_tt + d * all_tt
 
-        
+        #agent, action, bid_used = self.get_agent_action_and_bid(observation, self.id)
+        #print("agent, action, bid_used: ", agent, action, bid_used, "\n\n")
+
         route_fee = self._calculate_monetary_reward(observation)
         hourly_income = self.income / 160 # If we assume that the person works 160hrs/month
         daily_income = self.income / 30 # If we assume that each month has 30 days
@@ -520,7 +548,11 @@ class MachineAgent(BaseAgent):
 
         #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
         #agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm + self.w3 * self.urgency
-        agent_reward = self.w2 * travel_times_norm + self.w3 * (self.urgency)
+        #agent_reward = self.w2 * travel_times_norm * (self.urgency)
+        if self.was_assigned_action_0(observation, self.id):
+            agent_reward = 0
+        else:
+            agent_reward = self.w2 * self.urgency
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()
