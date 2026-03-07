@@ -516,6 +516,9 @@ class MachineAgent(BaseAgent):
 
         if self.monetary_pricing:
             route_fee = self._calculate_monetary_reward(observation)
+            route_length = self._compute_routes_length(observation)
+            print("route length is: ", route_length, "\n\n")
+            route_length_km = route_length / 1000
             daily_income = self.income / 30 # If we assume that each month has 30 days
             travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
 
@@ -523,8 +526,11 @@ class MachineAgent(BaseAgent):
             component2 = travel_times_norm
             component3 = self.urgency
 
+            fuel_fee = 0.094 # euros/km
+
             #print("component 1", component1, "component 2", component2, "component 3", component3, "\n\n")
-            agent_reward = self.w1 * component1  + self.w2 * component2 * component3 #+ self.w3 * self.urgency
+            #agent_reward = self.w1 * component1  + self.w2 * component2 #* component3 #+ self.w3 * self.urgency
+            agent_reward = self.w1 * route_fee + self.w2 * travel_times_norm * self.urgency * (daily_income / 8) + self.w3 * route_length_km * fuel_fee
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()
@@ -545,6 +551,26 @@ class MachineAgent(BaseAgent):
             route_fee = 0
 
         return route_fee
+    
+    def _compute_routes_length(self, observation):
+        agent_info = next((entry for entry in observation if entry["id"] == self.id), None)
+
+        distance0 = 3423.24
+        distance1 = 6403.34
+        distance2 = 11603.34
+
+        if agent_info['action'] == np.int64(0):
+            distance = distance0
+            print("distnace is", distance0)
+        if agent_info['action'] == np.int64(1):
+            distance = distance1
+            print("distnace is", distance1)
+        if agent_info['action'] == np.int64(2):
+            distance = distance2
+            print("distnace is", distance2)
+
+        return distance
+
 
     def _get_reward_coefs(self) -> tuple:
         a, b, c, d = 0, 0, 0, 0
