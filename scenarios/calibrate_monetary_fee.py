@@ -51,7 +51,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 SEEDS: List[int] = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 # Candidate fees to test (edit to your preferred range / spacing)
-FEE_VALUES: np.ndarray = np.linspace(10, 50, 9)
+FEE_VALUES: np.ndarray = np.linspace(0, 50, 100)
 
 # System-optimum target shares (must sum to 1)
 S_STAR: np.ndarray = np.array([0.1325, 0.5875, 0.28], dtype=float)
@@ -60,6 +60,8 @@ NUMBER_OF_INDIVIDUALS_EACH_ROUTE: np.ndarray = np.array([40, 176, 84], dtype=int
 
 TT_PER_ROUTE = [21.468, 26.1609, 34.08]
 
+ROUTE_LENGTHS_M = np.array([3423.24, 6403.34, 11603.34], dtype=float)
+FUEL_FEE_EUR_PER_KM = 0.094
 
 # Loss weights: share mismatch always included; travel-time term optional.
 W_SHARES: float = 1.0
@@ -146,14 +148,37 @@ def compute_shares_and_total_tt_from_records(records):
     total_tt = float(np.sum(travel_times))
     return shares.astype(float), total_tt
 
-def choose_action_from_utility(tt_per_route, income, F):
-    fees = np.array([F, 0.0, 0.0])
-    #tt_per_route = tt_per_route / 16.5
-    tt_per_route = [travel_time / 16.5 for travel_time in tt_per_route]
-    C = np.array(tt_per_route) + fees / income
-    #print("C is: ", C, fees, income, "\n\n")
-    return int(np.argmin(C))
+def choose_action_from_utility(
+    tt_per_route,
+    monthly_income,
+    urgency,
+    F,
+    w1,
+    w2,
+    w3,
+    travel_time_normalization_value=1.0,
+):
+    # fee only on route 0
+    route_fees = np.array([F, 0.0, 0.0], dtype=float)
 
+    # convert income to daily income, consistent with your agent code
+    daily_income = monthly_income / 30.0
+
+    # route lengths in km
+    route_lengths_km = ROUTE_LENGTHS_M / 1000.0
+
+    # normalized travel time term
+    travel_times_norm = np.array(tt_per_route, dtype=float) / travel_time_normalization_value
+
+    # cost/objective per route
+    C = (
+        w1 * (route_fees / daily_income)
+        + w2 * travel_times_norm * urgency * (daily_income / 8.0)
+        + w3 * route_lengths_km * FUEL_FEE_EUR_PER_KM
+    )
+    print("travel times norm are: ", travel_times_norm, "\n\n")
+
+    return int(np.argmin(C))
 
 # -------------------------------------
 # Run a TrafficEnvironment() simulation
@@ -258,7 +283,16 @@ def run_one_simulation(F: float, seed: int) -> Tuple[np.ndarray, Optional[float]
 
         machine_agent = next((a for a in env.machine_agents if str(a.id) == agent))
 
-        action = choose_action_from_utility(TT_PER_ROUTE, machine_agent.income / 30, F)
+        action = choose_action_from_utility(
+            tt_per_route=TT_PER_ROUTE,
+            monthly_income=machine_agent.income,
+            urgency=machine_agent.urgency,
+            F=F,
+            w1=-1,
+            w2=-1,
+            w3=-1,
+            travel_time_normalization_value=16.5,
+        )        
         env.step(action)
 
     
