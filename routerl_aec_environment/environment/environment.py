@@ -588,6 +588,7 @@ class TrafficEnvironment(AECEnv):
         observation_type = params[kc.OBSERVATION_TYPE]
 
         self._assign_urgency_level_to_an_agent(machine)
+        self._assign_start_time_to_an_agent(machine)
 
         if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
             return self.observation_obj.agent_observations(agent, self.all_agents, self.historic_data)
@@ -847,6 +848,10 @@ class TrafficEnvironment(AECEnv):
     def _assign_urgency_level_to_an_agent(self, machine) -> None:
 
         machine.urgency = np.random.choice(self.urgency_distribution)
+
+    def _assign_start_time_to_an_agent(self, machine) -> None:
+        
+        machine.start_time = random.randint(0, self.simulation_params[kc.SIMULATION_TIMESTEPS])
 
     ###################################
     #### Marginal cost calculation ####
