@@ -604,6 +604,8 @@ class TrafficEnvironment(AECEnv):
             if str(machine.id) == agent:
                 break
 
+        print("machine .start time is: ", machine.start_time, machine.id, "\n", self.possible_agents, "\n")
+
         # If the agent's turn hasn't come and the start time is bigger than the simulator timestep return an "empty observation"
         # The agent hasn't acted yet so only the start time is meaningful
         if agent != self.agent_selection:# and machine.start_time > self.simulator.timestep:
@@ -615,6 +617,7 @@ class TrafficEnvironment(AECEnv):
         observation_type = params[kc.OBSERVATION_TYPE]
 
         self._assign_urgency_level_to_an_agent(machine)
+        #self._assign_start_time_to_an_agent(machine)
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
 
@@ -782,8 +785,6 @@ class TrafficEnvironment(AECEnv):
         floor_price = math.floor(price)
         decimal_part = price - floor_price  # e.g. 0.3 if price=4.3
 
-        print("floor price is: ", floor_price, "\n\n")
-
         for route in range(self.simulation_params[kc.NUMBER_OF_PATHS]):
             bid = int(machine_action[route])
 
@@ -795,7 +796,6 @@ class TrafficEnvironment(AECEnv):
                 # probability = decimal part of price
                 # (if price is integer, this becomes 1.0)
                 win_prob = decimal_part if decimal_part > 0 else 1.0
-                print("win prob is: ", win_prob, "\n\n")
 
             else:  # bid >= ceil_price
                 win_prob = 1.0
@@ -881,28 +881,49 @@ class TrafficEnvironment(AECEnv):
     def _reset_episode(self) -> None:
         detectors_dict, self.sumo_seed = self.simulator.reset()
 
-        if self.possible_agents:
-            self._agent_selector = agent_selector(self.possible_agents)
-            self.agent_selection = self._agent_selector.next()
-
         if (self.day % self.save_every == 0) and (self.second_sumo == False): #In the case where we compute the marginal cost matrix we do not need to record. 
-            
-            recording_task = threading.Thread(target=self._record, args=(self.day,
-                                                                        self.travel_times_list,
-                                                                        self.all_agents,
-                                                                        detectors_dict))
+            record_day = dc(self.day)
+            record_travel_times = dc(self.travel_times_list)
+            record_agents = dc(self.all_agents)
+            record_detectors = dc(detectors_dict)
+
+            recording_task = threading.Thread(
+                target=self._record,
+                args=(record_day, record_travel_times, record_agents, record_detectors)
+            )
             recording_task.start()
             #self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
         
         # Reset observations
         if len(self.machine_agents) > 0:
             self.observations = self.observation_obj.reset_observation()
-
+            #self._agent_selector = agent_selector(self.possible_agents)
+            #self.agent_selection = self._agent_selector.next()
+        
         self.historic_data.append(self.travel_times_list)
 
         MAX_LEN = 20
+
         if len(self.historic_data) > MAX_LEN:
             del self.historic_data[:10]
+
+
+        """Change the start times of the vehicles"""
+        for machine in self.machine_agents:
+            self._assign_start_time_to_an_agent(machine)
+
+        machine_by_id = {str(machine.id): machine for machine in self.machine_agents}
+
+        self.possible_agents = sorted(
+            self.possible_agents,
+            key=lambda agent_id: machine_by_id[agent_id].start_time
+        )
+
+        if self.possible_agents:
+            self._agent_selector = agent_selector(self.possible_agents)
+            self.agent_selection = self._agent_selector.next()
+
+        self.agents = copy(self.possible_agents)
 
         self.travel_times_list = []
         self.episode_actions = dict()
@@ -934,6 +955,11 @@ class TrafficEnvironment(AECEnv):
     def _assign_urgency_level_to_an_agent(self, machine) -> None:
 
         machine.urgency = np.random.choice(self.urgency_distribution)
+
+        
+    def _assign_start_time_to_an_agent(self, machine) -> None:
+        
+        machine.start_time = random.randint(0, self.simulation_params[kc.SIMULATION_TIMESTEPS])
 
     def _redistribute_karma_points(self) -> None:
         ## Distributed karma points
