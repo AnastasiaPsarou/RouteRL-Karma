@@ -604,8 +604,6 @@ class TrafficEnvironment(AECEnv):
             if str(machine.id) == agent:
                 break
 
-        print("machine .start time is: ", machine.start_time, machine.id, "\n", self.possible_agents, "\n")
-
         # If the agent's turn hasn't come and the start time is bigger than the simulator timestep return an "empty observation"
         # The agent hasn't acted yet so only the start time is meaningful
         if agent != self.agent_selection:# and machine.start_time > self.simulator.timestep:
