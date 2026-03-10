@@ -588,7 +588,6 @@ class TrafficEnvironment(AECEnv):
         observation_type = params[kc.OBSERVATION_TYPE]
 
         self._assign_urgency_level_to_an_agent(machine)
-        self._assign_start_time_to_an_agent(machine)
 
         if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
             return self.observation_obj.agent_observations(agent, self.all_agents, self.historic_data)
@@ -792,16 +791,16 @@ class TrafficEnvironment(AECEnv):
     def _reset_episode(self) -> None:
         detectors_dict, self.sumo_seed = self.simulator.reset()
 
-        if self.possible_agents:
-            self._agent_selector = agent_selector(self.possible_agents)
-            self.agent_selection = self._agent_selector.next()
-
         if (self.day % self.save_every == 0) and (self.second_sumo == False): #In the case where we compute the marginal cost matrix we do not need to record. 
-            
-            recording_task = threading.Thread(target=self._record, args=(self.day,
-                                                                        self.travel_times_list,
-                                                                        self.all_agents,
-                                                                        detectors_dict))
+            record_day = dc(self.day)
+            record_travel_times = dc(self.travel_times_list)
+            record_agents = dc(self.all_agents)
+            record_detectors = dc(detectors_dict)
+
+            recording_task = threading.Thread(
+                target=self._record,
+                args=(record_day, record_travel_times, record_agents, record_detectors)
+            )
             recording_task.start()
             #self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
         
@@ -817,6 +816,24 @@ class TrafficEnvironment(AECEnv):
 
         if len(self.historic_data) > MAX_LEN:
             del self.historic_data[:10]
+
+
+        """Change the start times of the vehicles"""
+        for machine in self.machine_agents:
+            self._assign_start_time_to_an_agent(machine)
+
+        machine_by_id = {str(machine.id): machine for machine in self.machine_agents}
+
+        self.possible_agents = sorted(
+            self.possible_agents,
+            key=lambda agent_id: machine_by_id[agent_id].start_time
+        )
+
+        if self.possible_agents:
+            self._agent_selector = agent_selector(self.possible_agents)
+            self.agent_selection = self._agent_selector.next()
+
+        self.agents = copy(self.possible_agents)
 
         self.travel_times_list = []
         self.episode_actions = dict()
@@ -852,6 +869,7 @@ class TrafficEnvironment(AECEnv):
     def _assign_start_time_to_an_agent(self, machine) -> None:
         
         machine.start_time = random.randint(0, self.simulation_params[kc.SIMULATION_TIMESTEPS])
+
 
     ###################################
     #### Marginal cost calculation ####
