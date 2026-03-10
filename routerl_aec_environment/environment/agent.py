@@ -517,7 +517,6 @@ class MachineAgent(BaseAgent):
         if self.monetary_pricing:
             route_fee = self._calculate_monetary_reward(observation)
             route_length = self._compute_routes_length(observation)
-            print("route length is: ", route_length, "\n\n")
             route_length_km = route_length / 1000
             daily_income = self.income / 30 # If we assume that each month has 30 days
             travel_times_norm = -1 * agent_reward / self.travel_time_normalization_value
@@ -561,13 +560,10 @@ class MachineAgent(BaseAgent):
 
         if agent_info['action'] == np.int64(0):
             distance = distance0
-            print("distnace is", distance0)
         if agent_info['action'] == np.int64(1):
             distance = distance1
-            print("distnace is", distance1)
         if agent_info['action'] == np.int64(2):
             distance = distance2
-            print("distnace is", distance2)
 
         return distance
 
