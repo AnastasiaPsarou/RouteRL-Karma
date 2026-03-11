@@ -184,6 +184,9 @@ class MeanFieldQLearning:
         return int(np.random.choice(self.n_actions, p=probs))
 
     def learn(self, updates=1):
+        if not self._is_train:
+            return
+    
         if len(self.replay) < self.batch_size:
             return
 
