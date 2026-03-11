@@ -102,23 +102,29 @@ class Recorder:
         Returns:
             None
         """
-        
         ep_observations_df = pl.from_dicts(ep_observations)
 
+        # only keep the observation array, not action_mask / observations
+        obs_rows = []
         for entry in observations:
-            entry['observation'] = ','.join(map(str, entry['observation']))
+            obs_container = entry["observation"]   # this is a list
+            obs = obs_container[0]["observation"]  # first item, then the array
 
-        observations_df = pl.from_dicts(observations)
+            obs_rows.append({
+                kc.AGENT_ID: entry[kc.AGENT_ID],
+                "observation": ",".join(map(str, obs)),
+            })
+
+        observations_df = pl.from_dicts(obs_rows)
 
         for entry in cost_tables:
-            entry['cost_table'] = ','.join(map(str, entry['cost_table']))
+            entry["cost_table"] = ",".join(map(str, entry["cost_table"]))
 
         cost_tables_df = pl.from_dicts(cost_tables)
-        
+
         merged_df = ep_observations_df.join(observations_df, on=kc.AGENT_ID)
         merged_df = merged_df.join(cost_tables_df, on=kc.AGENT_ID)
         merged_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
-        #ep_observations_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
 
 
     def remember_detector(self, episode, det_dict) -> None:
