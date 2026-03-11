@@ -792,7 +792,7 @@ class TrafficEnvironment(AECEnv):
         detectors_dict, self.sumo_seed = self.simulator.reset()
 
         if (self.day % self.save_every == 0) and (self.second_sumo == False): #In the case where we compute the marginal cost matrix we do not need to record. 
-            record_day = dc(self.day)
+            """record_day = dc(self.day)
             record_travel_times = dc(self.travel_times_list)
             record_agents = dc(self.all_agents)
             record_detectors = dc(detectors_dict)
@@ -801,7 +801,18 @@ class TrafficEnvironment(AECEnv):
                 target=self._record,
                 args=(record_day, record_travel_times, record_agents, record_detectors)
             )
-            recording_task.start()
+            recording_task.start()"""
+            record_day = dc(self.day)
+            record_travel_times = dc(self.travel_times_list)
+            record_agents = dc(self.all_agents)
+            record_detectors = dc(detectors_dict)
+
+            self._record(
+                record_day,
+                record_travel_times,
+                record_agents,
+                record_detectors,
+            )
             #self._record(self.day, self.travel_times_list, self.all_agents, detectors_dict)
         
         # Reset observations
