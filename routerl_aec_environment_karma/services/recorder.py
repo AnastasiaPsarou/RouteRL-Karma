@@ -105,7 +105,7 @@ class Recorder:
         
         ep_observations_df = pl.from_dicts(ep_observations)
 
-        """for entry in observations:
+        for entry in observations:
             entry['observation'] = ','.join(map(str, entry['observation']))
 
         observations_df = pl.from_dicts(observations)
@@ -113,12 +113,12 @@ class Recorder:
         for entry in cost_tables:
             entry['cost_table'] = ','.join(map(str, entry['cost_table']))
 
-        cost_tables_df = pl.from_dicts(cost_tables)"""
+        cost_tables_df = pl.from_dicts(cost_tables)
         
-        #merged_df = ep_observations_df.join(observations_df, on=kc.AGENT_ID)
-        #merged_df = merged_df.join(cost_tables_df, on=kc.AGENT_ID)
-        #merged_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
-        ep_observations_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
+        merged_df = ep_observations_df.join(observations_df, on=kc.AGENT_ID)
+        merged_df = merged_df.join(cost_tables_df, on=kc.AGENT_ID)
+        merged_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
+        #ep_observations_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
 
 
     def remember_detector(self, episode, det_dict) -> None:
