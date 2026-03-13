@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-03-13 12:04:53 by Eclipse SUMO netconvert Version 1.19.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="network.net.xml"/>
+    </input>
+
+    <output>
+        <plain-output-prefix value="network"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="0"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.50"/>
+        <rectangular-lane-cut value="0"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="0"/>
+    </pedestrian>
+
+</configuration>
+-->
+
+<edges version="1.16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/edges_file.xsd">
+    <edge id="E0" from="J0" to="J1" priority="-1" numLanes="5" speed="27.78" length="2000.00"/>
+    <edge id="E10" from="J8" to="J9" priority="-1" numLanes="5" speed="16.67" length="600.00"/>
+    <edge id="E11" from="J9" to="J10" priority="-1" numLanes="5" speed="16.67" length="250.00"/>
+    <edge id="E12" from="J10" to="J11" priority="-1" numLanes="5" speed="16.67" length="250.00"/>
+    <edge id="E13" from="J11" to="J12" priority="-1" numLanes="5" speed="16.67" length="600.00"/>
+    <edge id="E14" from="J12" to="J13" priority="-1" numLanes="5" speed="16.67" length="2400.00"/>
+    <edge id="E15" from="J13" to="J14" priority="-1" numLanes="5" speed="16.67" length="600.00"/>
+    <edge id="E16" from="J14" to="J15" priority="-1" numLanes="5" speed="16.67" shape="2200.00,-300.00 2396.53,-213.45 2396.66,-201.27" length="600.00"/>
+    <edge id="E17" from="J15" to="J19" priority="-1" numLanes="8" speed="27.78"/>
+    <edge id="E17.200" from="J19" to="J20" priority="-1" numLanes="7" speed="27.78"/>
+    <edge id="E17.400" from="J20" to="J21" priority="-1" numLanes="6" speed="27.78"/>
+    <edge id="E17.600" from="J21" to="J16" priority="-1" numLanes="5" speed="27.78" length="100.00"/>
+    <edge id="E18" from="J3" to="J4" priority="-1" numLanes="1" speed="4.17" shape="1591.63,13.15 1780.20,12.69 1895.51,12.41" length="300.00"/>
+    <edge id="E18.118" from="J4" to="J18" priority="-1" numLanes="2" speed="22.22" shape="1895.51,12.41 2139.81,6.64 2023.62,11.36" length="4000.00"/>
+    <edge id="E19" from="J18" to="J15" priority="-1" numLanes="2" speed="22.22" shape="2023.62,11.36 2390.01,-199.55 2396.66,-201.27" length="1000.00"/>
+    <edge id="E2" from="J1" to="J3" priority="-1" numLanes="2" speed="22.22" shape="1199.69,-199.82 1392.02,-90.72 1588.18,12.17 1591.63,13.15" length="400.00"/>
+    <edge id="E20" from="J1" to="J2" priority="-1" numLanes="1" speed="27.78" length="20.00"/>
+    <edge id="E20.444" from="J2" to="J5" priority="-1" numLanes="1" speed="13.89" length="50.00"/>
+    <edge id="E20.444.91" from="J5" to="J15" priority="-1" numLanes="1" speed="27.78" shape="1735.29,-203.98 2390.71,-208.23 2396.66,-201.27" length="50.00"/>
+    <edge id="E7" from="J1" to="J6" priority="-1" numLanes="5" speed="16.67" length="400.00"/>
+    <edge id="E8" from="J6" to="J7" priority="-1" numLanes="5" speed="16.67" length="600.00"/>
+    <edge id="E9" from="J7" to="J8" priority="-1" numLanes="5" speed="16.67" length="2400.00"/>
+</edges>

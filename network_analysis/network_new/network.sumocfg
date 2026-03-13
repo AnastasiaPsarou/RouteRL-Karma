@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2023-12-13 09:41:00 by Eclipse SUMO sumo Version 1.19.0
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="network.net.xml"/>
+        <route-files value='route.rou.xml'/>
+    </input>
+
+    <report>
+        <no-step-log value="true"/>
+        <duration-log.disable value="true"/>      <!-- hides the final Performance/Statistics block -->
+        <no-warnings value="true"/>               <!-- hides warnings -->
+        <message-log value="NUL"/>                <!-- hides 'Loading ... done.' etc. -->
+        <error-log value="NUL"/>                  <!-- hides errors (use with care) -->
+    </report>
+
+   <output>
+        <summary-output value="summary.xml"/>
+        <tripinfo-output value="tripinfo.xml"/>
+        <tripinfo-output.write-unfinished value="true"/>
+        <tripinfo-output.write-undeparted value="true"/>
+        
+    </output>
+
+    <processing>
+        <step-length value="0.5"/>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+
+</configuration>
