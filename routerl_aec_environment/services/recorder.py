@@ -118,7 +118,7 @@ class Recorder:
         merged_df = ep_observations_df.join(observations_df, on=kc.AGENT_ID)
         merged_df = merged_df.join(cost_tables_df, on=kc.AGENT_ID)
 
-        print("merged df is: ", merged_df, "\n\n")
+        #print("merged df is: ", merged_df, "\n\n")
         merged_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
         #ep_observations_df.write_csv(make_dir(self.episodes_folder, f"ep{episode}.csv"))
 
