@@ -1,0 +1,58 @@
+<routes>
+
+    <!-- ===== Vehicle Type Distribution (probabilities sum to 1) ===== -->
+    <vTypeDistribution id="distDrivers">
+
+        <!-- Human-driven -->
+        <!--<vType id="Human_Cautious" color="0,0,255" guiShape="passenger/sedan"
+            carFollowModel="Krauss" accel="1.2" decel="5.0" tau="1.8" minGap="3.0"
+            sigma="0.6" speedFactor="0.90" speedDev="0.05" impatience="0.1"
+            lcStrategic="0.3" lcSpeedGain="0.2" lcCooperative="0.9"
+            probability="0.20"/>
+
+        <vType id="Human_Normal" color="255,0,0" guiShape="passenger/sedan"
+            carFollowModel="Krauss" accel="1.8" decel="4.5" tau="1.4" minGap="2.5"
+            sigma="0.5" speedFactor="0.95" speedDev="0.05" impatience="0.2"
+            lcStrategic="0.4" lcSpeedGain="0.3" lcCooperative="0.8"
+            probability="0.25"/>-->
+
+        <!--<vType id="Human_Aggressive" color="139,0,0" guiShape="passenger/sedan"
+            carFollowModel="Krauss" accel="2.5" decel="4.0" tau="1.0" minGap="1.5"
+            sigma="0.7" speedFactor="1.10" speedDev="0.08" impatience="0.6"
+            lcStrategic="0.6" lcSpeedGain="0.5" lcCooperative="0.5"
+            probability="0.10"/>-->
+
+        <!-- Autonomous -->
+        <!--<vType id="AV_Cautious" color="255,255,153" guiShape="passenger/sedan"
+            carFollowModel="IDM" accel="1.5" decel="4.5" desiredTimeHeadway="1.8"
+            minGap="2.5" speedFactor="0.95" speedDev="0.01" impatience="0.05"
+            lcStrategic="0.3" lcSpeedGain="0.2" lcCooperative="0.95"
+            probability="0.15"/>
+
+        <vType id="AV_Normal" color="255,255,0" guiShape="passenger/sedan"
+            carFollowModel="IDM" accel="2.0" decel="4.0" desiredTimeHeadway="1.4"
+            minGap="2.0" speedFactor="0.98" speedDev="0.02" impatience="0.1"
+            lcStrategic="0.4" lcSpeedGain="0.3" lcCooperative="0.9"
+            probability="0.20"/>-->
+
+        <vType id="AV_Aggressive" color="255,165,0" guiShape="passenger/sedan"
+            carFollowModel="IDM" accel="2.8" decel="3.5" desiredTimeHeadway="1.0"
+            minGap="1.2" speedFactor="1.05" speedDev="0.02" impatience="0.3"
+            lcStrategic="0.6" lcSpeedGain="0.5" lcCooperative="0.8"
+            probability="0.10"/>
+
+    </vTypeDistribution>
+
+    <!-- ===== Route(s) ===== -->
+    <!--<route id="0_0_0" edges="E0 E20 E17 E17.200 E17.400 E17.600"/>-->
+    <!--<route id="0_0_0" edges="E0 E2 E18 E19 E17 E17.200 E17.400 E17.600"/>-->
+
+    <route id="0_0_0" edges="E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600"/>
+
+    <!-- ===== Flows using the distribution ===== -->
+     <!-- ADJUST PROB!!! ===== -->
+    <flow id="flow_am_peak" route="0_0_0" type="distDrivers"
+          begin="0" end="100" probability="2.7"  
+          departLane="free" departSpeed="max"/>
+
+</routes>

@@ -1,0 +1,13 @@
+<routes>
+<vType id="Human" color="red" guiShape="passenger/sedan"/>
+<vType id="AV" color="yellow"/>
+<route id="0_0_0" edges="
+E0 E20 E20.444 E20.444.91 E17 E17.200 E17.400 E17.600
+" />
+<route id="0_0_1" edges="
+E0 E2 E18 E18.118 E19 E17 E17.200 E17.400 E17.600
+" />
+<route id="0_0_2" edges="
+E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600
+" />
+</routes>
