@@ -259,6 +259,7 @@ class MachineAgent(BaseAgent):
         self.marginal_calculation = False
         self.monetary_pricing = None
         self.route_0_fee = params[kc.ROUTE_0_FEE]
+        self.route_1_fee = params[kc.ROUTE_1_FEE]
 
         self.w1 = params[kc.REWARD_W1]
         self.w2 = params[kc.REWARD_W2]
@@ -546,6 +547,9 @@ class MachineAgent(BaseAgent):
 
         if agent_info['action'] == np.int64(0):
             route_fee = self.route_0_fee
+        if agent_info['action'] == np.int64(1):
+            print("route 1 fee is: ", agent_info['action'], self.route_1_fee)
+            route_fee = self.route_1_fee
         else:
             route_fee = 0
 
