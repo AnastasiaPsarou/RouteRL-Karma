@@ -51,6 +51,7 @@ class Keychain:
     MARGINAL_COST_COEFFICIENT_BETA = "marginal_cost_coefficient_beta"
     MARGINAL_MATRICES_FOLDER = "marginal_matrices_folder"
     ROUTE_0_FEE = "route_0_fee"
+    ROUTE_1_FEE = "route_1_fee"
     URGENCY = "urgency"
     OBSERVATION = "observation"
     REWARD_W1 = "reward_w1"

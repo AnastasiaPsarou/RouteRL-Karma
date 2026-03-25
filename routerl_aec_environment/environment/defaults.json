@@ -17,6 +17,7 @@
             "marginal_matrices_folder": "marginal_cost_matrices",
             "marginal_cost_coefficient_beta": 0.5,
             "route_0_fee": 0.1,
+            "route_1_fee": 0.1,
 
             "reward_w1": -1,
             "reward_w2": -1,
