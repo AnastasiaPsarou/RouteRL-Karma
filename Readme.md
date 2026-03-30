@@ -34,7 +34,7 @@ The `routerl_aec_environment_karma` directory contains an updated version of the
 
 `scenarios` folder the different scenarios that are going to be tested during the work. Specifically, 
 
-- [`monetary_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/monetary_pricing) contains scripts where agents choose routes aiming to minimize their cost, which consists of route fees and their VoT.
+- [`monetary_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/monetary_pricing) contains the MARL training of agents operating under the monetary pricing scheme, where they choose routes aiming to minimize their cost, which consists of route fees and their VoT.
 - [`karma_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/karma_pricing) contains scripts where agents learn optimal bidding strategies in Karma economies.
 
   
