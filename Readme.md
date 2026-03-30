@@ -1,6 +1,6 @@
-# Overview
+# Learning Bidding Strategies for Karma Economies in Realistic Traffic Settings with Multi-Agent Reinforcement Learning
 
-Building on previous work showing that Karma can contribute to fairer traffic networks in systems composed exclusively of human drivers, a research question emerges: **Can Karma serve as an effective resource allocation mechanism in systems composed solely of autonomous vehicles?**
+Karma is a non-monetary resource-allocation mechanism that prioritizes users' needs rather than their financial power. Monetary pricing can effectively reduce congestion by imposing charges on specific road segments, but it may be unfair by favoring higher-income individuals. Prior work has shown that in this context, Karma can achieve similar efficiency while yielding fairer outcomes; however, demonstrated only in a deterministic setting. Demonstrating Karma's applicability under more realistic traffic conditions is therefore important for real-world implementation. Additionally, experimental evidence suggests that humans may struggle to execute optimal bidding strategies in Karma economies. In this paper, we demonstrate the use of Multi-Agent Reinforcement Learning (MARL) to train automated bidding agents for travelers. In a microscopic traffic simulation case study, we show that MARL agents learn effective bidding strategies that yield fairer travel outcomes for drivers than those achieved under monetary pricing schemes 
 
 # Contents
 
@@ -15,7 +15,7 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
 │   └── ...
 ├── routerl_aec_environment/
 │    └── ...
-├── routerl_karma_parallel_env/
+├── routerl_aec_environment_karma/
 │    └── ...
 ├── scenarios/
 │   └── ...
@@ -27,17 +27,15 @@ Building on previous work showing that Karma can contribute to fairer traffic ne
 `network_analysis` directory contains the selected network, along with analyses of its key characteristics, as well as scripts and plots that illustrate the reasoning behind its selection. The network was chosen because it effectively demonstrates the trade-off between route length and capacity: **Route 0** is the shortest but becomes congested quickly, **Route 1** is slightly longer yet offers greater capacity with two lanes, and **Route 2** is significantly longer, however provides the highest capacity with five lanes.
 
 
-The `routerl_karma_parallel_env` directory contains an updated version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, in which each agent’s actions involve selecting both a **route** and a **departure time**. To accommodate this MultiDiscrete action space, this version employs the **Parallel API** from the PettingZoo library instead of the **AEC API** used in the original RouteRL implementation. Furthermore, it introduces **monetary pricing** and **karma-based mechanisms** within the route choice context.
-
-
 The `routerl_aec_environment` contains a version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, where agents are assigned an income value, and travel route costs are incorporated into the agent's reward function based on each agent’s Value of Time (VoT).
+
+The `routerl_aec_environment_karma` directory contains an updated version of the [RouteRL](https://github.com/COeXISTENCE-PROJECT/RouteRL) framework, which we extend by modifying agents’ reward functions and introducing bidding and auction mechanisms. 
 
 
 `scenarios` folder the different scenarios that are going to be tested during the work. Specifically, 
 
-- [`google maps`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/google_maps) contains scripts where AV agents act independently, learn optimal routes and departure times. Each agent acts selfishly, aiming to minimize its own travel time.
-- [`benevolent_dictator`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/benevolent_dictator) contains the implementation of the **benevolent dictator**, a centralized multi-agent reinforcement learning (MARL) scenario where the agents aim to minimize the system travel time.
-- [`monetary_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/benevolent_dictator) contains scripts where agents choose routes aiming to minimize their cost, which consists of route fees and their VoT.
+- [`monetary_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/monetary_pricing) contains the MARL training of agents operating under the monetary pricing scheme, where they choose routes aiming to minimize their cost, which consists of route fees and their VoT.
+- [`karma_pricing`](https://github.com/AnastasiaPsarou/RouteRL-Karma/tree/main/scenarios/karma_pricing) contains scripts where agents learn optimal bidding strategies in Karma economies.
 
   
 The `server_scripts` folder contains scripts for running experiments using the GMUM servers.
@@ -49,10 +47,6 @@ The `server_scripts` folder contains scripts for running experiments using the G
 
 ```pip3 install git+https://github.com/COeXISTENCE-PROJECT/Janux.git@dev ``` -->
 
-## Path generation
-
-
-Check the paths generated [here](benevolent_dictator/plots_simple_network_mappo_benevolent_dictator_10_agents).
 
 ## References
 ```
