@@ -7,8 +7,6 @@ Karma is a non-monetary resource-allocation mechanism that prioritizes users' ne
 
 ```
 ./
-├── evaluation/ 
-│   └── ...
 ├── income_data/ 
 │   └── ...
 ├── network_analysis/ 
