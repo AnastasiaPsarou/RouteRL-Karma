@@ -4,6 +4,7 @@ import os
 import sys
 import numpy as np
 import itertools
+import pandas as pd
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
@@ -12,21 +13,21 @@ from routerl_aec_environment import Keychain as kc
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-new_machines_after_mutation = 300
+new_machines_after_mutation = 1
 human_learning_episodes = 0
-training_episodes = 300
+training_episodes = 1
 testing_episodes = 10
 
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
 
 # Number of agents
-num_agents = 300
+num_agents = 1
 
 # Origins and destination points in the network
 origins = ["E0"]
 destinations = ["E17.600"]
 
-seed = 9
+seed = 13
 torch.manual_seed(seed)
 np.random.seed(seed)
 
@@ -49,7 +50,7 @@ env_params = {
     },
     "simulator_parameters": {
         "network_name": "network",
-        "custom_network_folder": "../network_analysis/network_base",
+        "custom_network_folder": "../network_analysis/network_new",
         "sumo_type": "sumo",
         "simulation_timesteps": 100,
     },
@@ -102,14 +103,46 @@ print("\n\n\n")
 
 env.reset()
 
-actions = [0, 1, 2]
+def joint_action_from_csv(csv_path, tie_breaker="id"):
+    """
+    Returns a list of actions ordered by departure (start_time ascending).
+    If multiple agents have the same start_time, break ties by `tie_breaker`
+    (default: id) to make the ordering deterministic.
+    """
+    df = pd.read_csv(csv_path)
 
-for combination in itertools.product(actions, repeat=len(env.possible_agents)):
-    print(combination)
+    # Drop fully empty rows (like ",,,,,,,,,")
+    df = df.dropna(how="all")
 
-    for action in combination:
-        env.step(action)
+    # Ensure numeric types where needed
+    df["start_time"] = pd.to_numeric(df["start_time"], errors="coerce")
+    df["action"] = pd.to_numeric(df["action"], errors="coerce")
 
-    env.reset()
+    # Drop rows missing start_time or action
+    df = df.dropna(subset=["start_time", "action"])
 
-env.stop()
+    # Sort by departure time, then by tie_breaker (optional)
+    sort_cols = ["start_time"]
+    if tie_breaker in df.columns:
+        sort_cols.append(tie_breaker)
+
+    df_sorted = df.sort_values(sort_cols, ascending=True)
+
+    # Joint action as a list (in departure order)
+    joint_action = df_sorted["action"].astype(int).tolist()
+    return joint_action
+
+#joint_action = joint_action_from_csv("../training_records_monetary_pricing_300_agents_9_fee_15/episodes/ep6165.csv")
+"""actions = [0, 1, 2]"""
+combinations = [0]#*300
+
+for action in combinations:#itertools.product(actions, repeat=len(env.possible_agents)):
+    print(action)
+
+    #for action in joint_action:
+    #print("action is: ", action, "\n\n")
+    env.step(action)
+
+env.reset()
+
+env.stop_simulation()

@@ -585,9 +585,9 @@ def main():
         },
         "environment_parameters": {
             "observations_time_window": 10,
-            "save_every": 5,
+            "save_every": 1,
             "number_of_days": 30,
-            "centrally_defined_price": 5
+            "centrally_defined_price": 4.8
         },
         "plotter_parameters": {
             "phases": phases,
@@ -701,6 +701,7 @@ def main():
     running_turns: List[int] = []
 
     for ep in range(training_episodes):
+        print("training episode is: ", ep, "\n\n")
         env.reset()
         buf.clear()
         for a in learning_agents:
@@ -737,6 +738,7 @@ def main():
                     next_obs_np = np.zeros_like(prev["obs"], dtype=np.float32)
                     done_for_transition = 1.0  # if no obs, it must be terminal for our purposes
 
+                #print("action is: ", aidx, "\n\n")
                 buf.add(
                     agent_idx=aidx,
                     obs=prev["obs"],

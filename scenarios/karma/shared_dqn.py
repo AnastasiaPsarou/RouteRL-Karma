@@ -12,7 +12,7 @@ from routerl_aec_environment_karma import SharedMultiDiscreteDQN
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-new_machines_after_mutation = 300
+new_machines_after_mutation = 50
 human_learning_episodes = 0
 training_episodes = 200
 testing_episodes = 10
@@ -20,7 +20,7 @@ testing_episodes = 10
 total_episodes = human_learning_episodes + training_episodes + testing_episodes
 
 # Number of agents
-num_agents = 300
+num_agents = 50
 
 # Origins and destination points in the network
 origins = ["E0"]
@@ -55,8 +55,8 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 1,
-        "number_of_days": 4
+        "save_every": 5,
+        "number_of_days": 30
     },
     "plotter_parameters": {
         "phases": phases,
@@ -187,7 +187,7 @@ for episode in range(training_episodes):
 
     # Do learning online (e.g., every step) or every k steps.
     # With many agents, learning every few steps is often fine.
-    shared_dqn.learn(updates=10)
+    shared_dqn.learn(updates=500)
 
     pbar.update()
 

@@ -32,7 +32,7 @@ class Args:
     device: str = "cpu"
 
     # episodes
-    training_episodes: int = 1
+    training_episodes: int = 100
     testing_episodes: int = 1
 
     # PPO hyperparams
@@ -373,8 +373,8 @@ def main():
         },
         "environment_parameters": {
             "observations_time_window": 20,
-            "save_every": 5,
-            "number_of_days": 3000,
+            "save_every": 1,
+            "number_of_days": 30,
         },
         "plotter_parameters": {
             "phases": phases,

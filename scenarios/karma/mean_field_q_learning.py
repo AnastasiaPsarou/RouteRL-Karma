@@ -99,9 +99,10 @@ env_params = {
         "simulation_timesteps": 100,
     },
     "environment_parameters": {
-        "observations_time_window": 20,
+        "observations_time_window": 10,
         "save_every": 5,
         "number_of_days": 30,
+        "centrally_defined_price": 8
     },
     "plotter_parameters": {
         "phases": phases,

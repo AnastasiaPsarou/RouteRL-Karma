@@ -260,7 +260,7 @@ def main():
         "simulator_parameters": {
             "network_name": "network",
             "custom_network_folder": "../../network_analysis/network_base",
-            "sumo_type": "sumo",
+            "sumo_type": "sumo-gui",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
@@ -356,6 +356,7 @@ def main():
         for agent in env.agent_iter():
             obs, reward, termination, truncation, info = env.last()
             done = termination or truncation
+            print("reward is: ", reward, "\n\n")
 
             # Only for controlled agents
             if agent in agent_name_to_idx:
@@ -366,7 +367,7 @@ def main():
                     traj[agent]["act"].append(prev["act"])
                     traj[agent]["logp"].append(prev["logp"])
                     traj[agent]["val"].append(prev["val"])
-                    traj[agent]["rew"].append(float(reward))          # reward for prev action
+                    traj[agent]["rew"].append(float(reward))
                     traj[agent]["done"].append(float(done))
                     ep_return[agent] += float(reward)
                     pending[agent] = None
@@ -376,6 +377,7 @@ def main():
                     action = None
                 else:
                     obs_np = flatten_obs(obs)
+                    print("obs_np is: ", obs_np, "\n\n")
                     act, logp, val = select_action(actor, critic, obs_np, device)
                     action = act
                     pending[agent] = {"obs": obs_np, "act": act, "logp": logp, "val": val}

@@ -50,11 +50,11 @@ env_params = {
     "simulator_parameters": {
         "network_name": "network",
         "custom_network_folder": "../network_analysis/network_base",
-        "sumo_type": "sumo-gui",
+        "sumo_type": "sumo",
         "simulation_timesteps": 100,
     },
     "environment_parameters": {
-        "observations_time_window": 20,
+        "observations_time_window": 10,
         "save_every": 1,
         "number_of_days": 1
     },

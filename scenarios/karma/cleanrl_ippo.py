@@ -32,8 +32,8 @@ class Args:
     device: str = "cpu"
 
     # episodes
-    training_episodes: int = 400
-    testing_episodes: int = 10
+    training_episodes: int = 10
+    testing_episodes: int = 1
 
     # PPO hyperparams
     gamma: float = 0.99
@@ -351,8 +351,8 @@ def main():
         },
         "environment_parameters": {
             "observations_time_window": 20,
-            "save_every": 1,
-            "number_of_days": 4,
+            "save_every": 5,
+            "number_of_days": 2,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -470,6 +470,7 @@ def main():
                     action = None
                 else:
                     obs_vec, mask_arr = extract_obs_and_mask(obs)
+                    print("obs_vec is: ", obs_vec, "\n\n")
 
                     # Ensure mask is present and correct length
                     if mask_arr is None:
@@ -532,6 +533,7 @@ def main():
 
             rews = np.asarray(traj[a]["rew"], dtype=np.float32)
             vals = np.asarray(traj[a]["val"], dtype=np.float32)
+            print("vals is: ", vals, "\n\n")
             dones = np.asarray(traj[a]["done"], dtype=np.float32)
             adv, ret = compute_gae(rews, vals, dones, args.gamma, args.gae_lambda)
 
@@ -632,6 +634,8 @@ def main():
 
             env.step(action)
 
+        if ep == 1:
+            return
         mean_return = float(np.mean(list(ep_return.values())))
         print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
         pbar.update(1)

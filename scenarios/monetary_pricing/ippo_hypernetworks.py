@@ -524,13 +524,13 @@ def main():
         },
         "simulator_parameters": {
             "network_name": "network",
-            "custom_network_folder": "../../network_analysis/network_base",
+            "custom_network_folder": "../../network_analysis/network_new",
             "sumo_type": "sumo",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
             "observations_time_window": 10,
-            "save_every": 5,
+            "save_every": 1,
             "number_of_days": 3,
         },
         "plotter_parameters": {
@@ -632,6 +632,7 @@ def main():
     running_turns: List[int] = []
 
     for ep in range(training_episodes):
+        print("training episodes are: ", ep, "\n\n")
         env.reset()
         buf.clear()
         for a in learning_agents:
@@ -642,8 +643,8 @@ def main():
 
         for agent in env.agent_iter():
             obs, reward, termination, truncation, info = env.last()
+            #print("obs is: ", obs, "\n\n")
             done = bool(termination or truncation)
-            print("env.day is: ", env.day, done)
 
             # skip non-learning agents
             if agent not in agent_to_idx:
