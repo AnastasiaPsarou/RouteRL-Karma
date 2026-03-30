@@ -4,6 +4,6 @@ route_edges=E0 E7 E8 E9 E10 E11 E12 E13 E14 E15 E16 E17 E17.200 E17.400 E17.600
 spawned_total=1  (tripinfo incl. unfinished)
 loaded_total=1      (summary.xml)
 steps=3000
-duration_s=6.75
+duration_s=5.294
 per_run_sumocfg=C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\runs_out\veh1_route2\handmade_simulation_1_route2.sumocfg
 base_sumocfg_copy=C:\Users\Anastasia\Documents\ETH research visit\RouteRL-Karma\network_analysis\runs_out\veh1_route2\simulation_base.sumocfg

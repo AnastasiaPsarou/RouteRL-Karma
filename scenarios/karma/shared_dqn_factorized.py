@@ -56,7 +56,7 @@ env_params = {
     },
     "environment_parameters": {
         "observations_time_window": 20,
-        "save_every": 5,
+        "save_every": 1,
         "number_of_days": 30
     },
     "plotter_parameters": {
@@ -175,7 +175,9 @@ for episode in range(training_episodes):
             if done:
                 action = None
             else:
+
                 action = shared_dqn.act(agent_idx, observation)
+                #print("I am agent: ", agent, action, "\n")
                 last_obs[agent] = observation
                 last_act[agent] = action
         else:

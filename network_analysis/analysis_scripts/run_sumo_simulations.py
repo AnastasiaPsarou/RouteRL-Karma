@@ -29,11 +29,11 @@ ROU_TEMPLATE = "../network_base/handmade_routes.rou.xml"
 FLOW_ID = "flow_am_peak"
 
 # Vehicle counts for each run (cycled if fewer than RUNS)
-COUNTS = [1, 10, 20, 50, 70, 80, 100, 150, 180, 200, 220, 230, 240, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000]
+COUNTS = [1, 10, 20, 50, 70, 80, 100, 150, 180, 200, 220, 230, 240, 250, 300]#, 400, 500, 600, 700, 800, 900, 1000, 2000, 5000]
 
 # SUMO / execution settings
-RUNS = 23           # how many total runs
-PARALLEL = 23       # how many in parallel
+RUNS = 15           # how many total runs
+PARALLEL = 15       # how many in parallel
 STEP_LIMIT = None  # optional cap on simulation steps (None = until finished)
 USE_GUI = False     # False = headless (recommended)
 SEED_START = None  # None = SUMO default seed

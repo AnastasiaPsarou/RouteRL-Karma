@@ -124,13 +124,15 @@ def choose_min_tt_route(observation, action_size=3, epsilon=0.10):
         return 0
 
     best = int(np.argmin(tt))
+    print("tt is: ", tt, "\n\n")
 
     # With probability epsilon, choose a different valid action
     if np.random.rand() < epsilon:
         other_actions = [a for a in range(action_size) if a != best]
         if other_actions:
+            print("random choice is: ", other_actions, "\n\n")
             return int(np.random.choice(other_actions))
-
+    print("best is: ", best)
     return best
 
 pbar = tqdm(total=total_episodes, desc="Min-TT policy")

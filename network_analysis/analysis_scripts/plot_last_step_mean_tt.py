@@ -154,48 +154,97 @@ def route_key_sort(route_key: str):
 # ===========================
 #         PLOT
 # ===========================
+def set_paper_style():
+    """Matplotlib settings for cleaner, paper-ready figures."""
+    plt.rcParams.update({
+        "figure.dpi": 150,
+        "savefig.dpi": 300,
+        "font.size": 11,
+        "axes.titlesize": 12,
+        "axes.labelsize": 11,
+        "legend.fontsize": 10,
+        "legend.title_fontsize": 10,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 10,
+        "axes.linewidth": 0.8,
+        "lines.linewidth": 1.8,
+        "lines.markersize": 4.5,
+        "grid.linewidth": 0.5,
+        "grid.alpha": 0.35,
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
+    })
+
+
 def plot_data(data, path_full: Path, path_zoom: Path):
     if not data:
         print("[WARN] No data to plot.")
         return
+
+    set_paper_style()
 
     # Group by route
     grouped = defaultdict(list)
     for veh, route, mean_tt in data:
         grouped[route].append((veh, mean_tt))
 
-    # Sort by vehicle count inside each route
     for route in grouped:
         grouped[route].sort(key=lambda x: x[0])
 
     routes = sorted(grouped.keys(), key=route_key_sort)
 
-    # Create both plots: full and zoomed (xlim=200)
     def make_plot(xlim=None, save_path=None):
-        plt.figure(figsize=(7, 5))
+        fig, ax = plt.subplots(figsize=(6.6, 4.4))
+
         for i, route in enumerate(routes):
             color = CUSTOM_COLORS[i % len(CUSTOM_COLORS)]
             xs = [v for v, _ in grouped[route]]
             ys = [m for _, m in grouped[route]]
-            plt.plot(xs, ys, marker="o", label=route, color=color, markersize=2)
 
-        plt.xlabel("Number of vehicles")
-        plt.ylabel("Mean travel time of the last timestep")
-        plt.title("Mean travel time of the last timestep vs. number of vehicles (by route)")
-        plt.grid(True, linewidth=0.3)
-        plt.legend(title="Route", loc="best")
+            ax.plot(
+                xs, ys,
+                marker="o",
+                label=route,
+                color=color,
+                linewidth=1.8,
+                markersize=4.5,
+            )
+
+        ax.set_xlabel("Number of vehicles")
+        ax.set_ylabel("Mean travel time at final timestep [s]")
+        #ax.set_title("Final-step mean travel time vs. demand", pad=10)
+
+        # Cleaner grid
+        ax.grid(True, which="major")
+        ax.minorticks_on()
+        ax.grid(True, which="minor", linewidth=0.3, alpha=0.18)
+
+        # Remove top/right spines for a cleaner paper style
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+
+        # Legend
+        leg = ax.legend(
+            title="Route",
+            frameon=False,
+            loc="best",
+            ncol=1,
+            handlelength=2.2,
+        )
+
         if xlim is not None:
-            plt.xlim(0, xlim)
-        plt.tight_layout()
-        plt.savefig(save_path, dpi=150)
-        plt.close()
+            ax.set_xlim(0, xlim)
+
+        # Optional: add a small margin so points do not touch borders
+        ax.margins(x=0.02, y=0.05)
+
+        fig.tight_layout()
+        fig.savefig(save_path, bbox_inches="tight")
+        plt.close(fig)
         print(f"[OK] Plot written: {save_path}")
 
-    # Full version
     make_plot(xlim=None, save_path=path_full)
-    # Zoomed version (xlim = 2000)
-    make_plot(xlim=200, save_path=path_zoom)
-
+    make_plot(xlim=300, save_path=path_zoom)
 
 # ===========================
 #         RUN
