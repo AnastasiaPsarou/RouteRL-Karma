@@ -450,7 +450,8 @@ class RolloutBuffer:
 # Correct GAE using V(next_obs)
 # ------------------------------------------------------------
 @torch.no_grad()
-def compute_gae_from_transitions(
+def compute_gae_by_agent(
+    agent_idx: torch.Tensor,
     rew: torch.Tensor,
     done: torch.Tensor,
     val: torch.Tensor,
@@ -458,17 +459,23 @@ def compute_gae_from_transitions(
     gamma: float,
     lam: float,
 ):
-    T = rew.shape[0]
     adv = torch.zeros_like(rew)
-    last_gae = 0.0
-    for t in reversed(range(T)):
-        nonterminal = 1.0 - done[t]
-        delta = rew[t] + gamma * next_val[t] * nonterminal - val[t]
-        last_gae = delta + gamma * lam * nonterminal * last_gae
-        adv[t] = last_gae
+
+    unique_agents = torch.unique(agent_idx)
+
+    for aid in unique_agents:
+        idxs = torch.nonzero(agent_idx == aid, as_tuple=False).flatten()
+
+        last_gae = torch.zeros((), device=rew.device)
+
+        for i in reversed(idxs.tolist()):
+            nonterminal = 1.0 - done[i]
+            delta = rew[i] + gamma * next_val[i] * nonterminal - val[i]
+            last_gae = delta + gamma * lam * nonterminal * last_gae
+            adv[i] = last_gae
+
     ret = adv + val
     return adv, ret
-
 
 def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer, args: Args,  entropy_coef: float):
     device = torch.device(args.device)
@@ -490,7 +497,9 @@ def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer,
         _, next_val = model(next_obs, agent_idx)
         next_val = next_val.squeeze(-1)
 
-    adv, ret = compute_gae_from_transitions(rew, done, val, next_val, args.gamma, args.gae_lambda)
+    adv, ret = compute_gae_by_agent(
+        agent_idx, rew, done, val, next_val, args.gamma, args.gae_lambda
+    )
     adv = (adv - adv.mean()) / (adv.std() + 1e-8)
 
     metrics = {"actor_loss": 0.0, "critic_loss": 0.0, "entropy": 0.0}
