@@ -264,6 +264,11 @@ class MachineAgent(BaseAgent):
         self.w2 = params[kc.REWARD_W2]
         self.w3 = params[kc.REWARD_W3]
 
+        self.action = 0
+        self.observation = None
+        self.reward = 0
+        self.route = 0
+
         self.travel_time_normalization_value = params[kc.TRAVEL_TIME_NORMALIZATION_VALUE]
 
 

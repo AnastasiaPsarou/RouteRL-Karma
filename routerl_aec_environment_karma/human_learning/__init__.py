@@ -3,7 +3,8 @@ from .learning_model import (
     WeightedModel,
     RandomModel,
     GeneralModel,
-    AONModel
+    AONModel,
+    GeneralBiddingModel
 )
 
 from .registry import get_learning_model

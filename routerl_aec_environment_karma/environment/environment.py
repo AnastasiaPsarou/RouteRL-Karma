@@ -615,7 +615,6 @@ class TrafficEnvironment(AECEnv):
         observation_type = params[kc.OBSERVATION_TYPE]
 
         self._assign_urgency_level_to_an_agent(machine)
-        #self._assign_start_time_to_an_agent(machine)
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
 
@@ -802,9 +801,12 @@ class TrafficEnvironment(AECEnv):
             if random.random() < win_prob:
                 machine.karma_balance -= bid
                 self.total_karma_points_used += bid
+                machine.route = route
                 return route
 
         # fallback: longest route
+        machine.route = self.simulation_params[kc.NUMBER_OF_PATHS] - 1
+
         return self.simulation_params[kc.NUMBER_OF_PATHS] - 1
 
     #########################
@@ -916,6 +918,14 @@ class TrafficEnvironment(AECEnv):
         if len(self.historic_data) > MAX_LEN:
             del self.historic_data[:10]
 
+        travel_time_by_id = {
+            int(record["id"]): float(record["travel_time"])
+            for record in self.travel_times_list
+        }
+
+        for agent in self.all_agents:
+            if agent.id in travel_time_by_id:
+                agent.reward = -travel_time_by_id[agent.id]
 
         """Change the start times of the vehicles"""
         for machine in self.machine_agents:
@@ -967,7 +977,6 @@ class TrafficEnvironment(AECEnv):
 
         
     def _assign_start_time_to_an_agent(self, machine) -> None:
-        
         machine.start_time = random.randint(0, self.simulation_params[kc.SIMULATION_TIMESTEPS])
 
     def _redistribute_karma_points(self) -> None:
