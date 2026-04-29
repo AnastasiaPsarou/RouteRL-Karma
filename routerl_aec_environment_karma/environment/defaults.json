@@ -63,7 +63,8 @@
         "action_space_size" : "${path_generation_parameters.number_of_paths}",
         "observations_time_window": 80,
         "max_allowed_bid": "${agent_parameters.machine_parameters.max_allowed_bid}",
-        "centrally_defined_price": 4
+        "centrally_defined_price_route_0": 4,
+        "centrally_defined_price_route_1": 3
     },
 
     "simulator_parameters":

@@ -434,7 +434,8 @@ class TrafficEnvironment(AECEnv):
             }
 
             self.action_spaces = self._action_spaces            
-            self.centrally_defined_price = self.environment_params[kc.CENTRALLY_DEFINED_PRICE]
+            self.centrally_defined_price_route_0 = self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_0]
+            self.centrally_defined_price_route_1 = self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_1]
             self.total_karma_points_used = 0
 
             for machine in self.machine_agents:
@@ -777,32 +778,60 @@ class TrafficEnvironment(AECEnv):
         return assigned_route"""
     
     def stackelberg_auction(self, machine, machine_action) -> int:
-        price = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE])
+        price_route_0 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_0])
+        price_route_1 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_1])
 
-        floor_price = math.floor(price)
-        decimal_part = price - floor_price  # e.g. 0.3 if price=4.3
+        floor_price_route_0 = math.floor(price_route_0)
+        decimal_part_route_0 = price_route_0 - floor_price_route_0  # e.g. 0.3 if price=4.3
+
+        floor_price_route_1 = math.floor(price_route_1)
+        decimal_part_route_1 = price_route_1 - floor_price_route_1  # e.g. 0.3 if price=4.3
 
         for route in range(self.simulation_params[kc.NUMBER_OF_PATHS]):
-            bid = int(machine_action[route])
+            if route == 0:
 
-            # --- probability rule ---
-            if bid < floor_price:
-                win_prob = 0.0
+                bid = int(machine_action[route])
 
-            elif bid == floor_price:
-                # probability = decimal part of price
-                # (if price is integer, this becomes 1.0)
-                win_prob = decimal_part if decimal_part > 0 else 1.0
+                # --- probability rule ---
+                if bid < floor_price_route_0:
+                    win_prob = 0.0
 
-            else:  # bid >= ceil_price
-                win_prob = 1.0
+                elif bid == floor_price_route_0:
+                    # probability = decimal part of price
+                    # (if price is integer, this becomes 1.0)
+                    win_prob = decimal_part_route_0 if decimal_part_route_0 > 0 else 1.0
 
-            # --- lottery draw ---
-            if random.random() < win_prob:
-                machine.karma_balance -= bid
-                self.total_karma_points_used += bid
-                machine.route = route
-                return route
+                else:  # bid >= ceil_price
+                    win_prob = 1.0
+
+                # --- lottery draw ---
+                if random.random() < win_prob:
+                    machine.karma_balance -= bid
+                    self.total_karma_points_used += bid
+                    machine.route = route
+                    return route
+                
+            if route == 1:
+                bid = int(machine_action[route])
+
+                # --- probability rule ---
+                if bid < floor_price_route_1:
+                    win_prob = 0.0
+
+                elif bid == floor_price_route_1:
+                    # probability = decimal part of price
+                    # (if price is integer, this becomes 1.0)
+                    win_prob = decimal_part_route_1 if decimal_part_route_1 > 0 else 1.0
+
+                else:  # bid >= ceil_price
+                    win_prob = 1.0
+
+                # --- lottery draw ---
+                if random.random() < win_prob:
+                    machine.karma_balance -= bid
+                    self.total_karma_points_used += bid
+                    machine.route = route
+                    return route
 
         # fallback: longest route
         machine.route = self.simulation_params[kc.NUMBER_OF_PATHS] - 1

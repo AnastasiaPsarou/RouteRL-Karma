@@ -66,7 +66,8 @@ class Keychain:
     SAVE_EVERY = "save_every"
     OBSERVATIONS_TIME_WINDOW = "observations_time_window"
     MAXIMUM_ALLOWED_BID = "max_allowed_bid"
-    CENTRALLY_DEFINED_PRICE = "centrally_defined_price"
+    CENTRALLY_DEFINED_PRICE_ROUTE_0 = "centrally_defined_price_route_0"
+    CENTRALLY_DEFINED_PRICE_ROUTE_1 = "centrally_defined_price_route_1"
 
     ### Simulator
     NETWORK_NAME = "network_name"
