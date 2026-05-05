@@ -381,6 +381,7 @@ class TrafficEnvironment(AECEnv):
         # Urgency distribution
         self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
         self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
+        self.all_agents_high_urgency = False
 
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag() # Initialize monetary pricing flag
@@ -615,7 +616,10 @@ class TrafficEnvironment(AECEnv):
         params = self.agent_params[kc.MACHINE_PARAMETERS]
         observation_type = params[kc.OBSERVATION_TYPE]
 
-        self._assign_urgency_level_to_an_agent(machine)
+        if self.all_agents_high_urgency:
+            machine.urgency = np.max(self.urgency_distribution)
+        else:
+            self._assign_urgency_level_to_an_agent(machine)
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
 
@@ -852,6 +856,9 @@ class TrafficEnvironment(AECEnv):
         """
 
         return self.simulator.timestep, self.episode_actions.values()
+    
+    def all_high_urgency(self):
+        self.all_agents_high_urgency = True
     
 
     def _help_step(self, actions: list[tuple]) -> dict:
