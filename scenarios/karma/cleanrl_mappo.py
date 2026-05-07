@@ -26,11 +26,11 @@ from routerl_aec_environment_karma import TrafficEnvironment
 # ------------------------------------------------------------
 @dataclass
 class Args:
-    seed: int = 9
+    seed: int = 12
     device: str = "cpu"
 
-    training_episodes: int = 400
-    testing_episodes: int = 10
+    training_episodes: int = 54
+    testing_episodes: int = 0
 
     gamma: float = 0.99
     gae_lambda: float = 0.95
@@ -332,8 +332,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_mappo_masked_joint_300_agents_seed_{seed}"
-    plots_folder = f"plots_mappo_masked_joint_300_agents_seed_{seed}"
+    records_folder = f"training_records_mappo_masked_joint_300_agents_seed_{seed}_route_0_4_route_1_5_max_bid_10"
+    plots_folder = f"plots_mappo_masked_joint_300_agents_seed_{seed}_route_0_4_route_1_5_max_bid_10"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -346,19 +346,22 @@ def main():
                 "behavior": "selfish",
                 "observation_type": "previous_agents_avg_tt_per_route",
                 "route_0_fee": 0,
-                "travel_time_normalization_value": 100,
+                "travel_time_normalization_value": 16.5,
+                "max_allowed_bid": 10,
             }
         },
         "simulator_parameters": {
             "network_name": "network",
-            "custom_network_folder": "../../network_analysis/network_base",
+            "custom_network_folder": "network_analysis/network_base",
             "sumo_type": "sumo",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
-            "observations_time_window": 20,
-            "save_every": 1,
-            "number_of_days": 4,
+            "observations_time_window": 10,
+            "save_every": 5,
+            "number_of_days": 30,
+            "centrally_defined_price_route_0": 4,
+            "centrally_defined_price_route_1": 5,
         },
         "plotter_parameters": {
             "phases": phases,
