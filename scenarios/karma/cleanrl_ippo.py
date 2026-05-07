@@ -192,6 +192,110 @@ def select_action_masked_joint(
     return int(act.item()), float(logp.item()), float(value.item())
 
 
+@torch.no_grad()
+def compute_ippo_policy_snapshot(
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+) -> np.ndarray:
+    """
+    Computes masked-softmax policy probabilities for a fixed evaluation set.
+
+    eval_obs shape:
+        (num_agents, num_eval_states, obs_dim)
+
+    eval_masks shape:
+        (num_agents, num_eval_states, action_dim)
+
+    returns:
+        policy_probs shape:
+            (num_agents, num_eval_states, action_dim)
+    """
+    was_training = actor.training
+    actor.eval()
+
+    num_agents, num_eval_states, _obs_dim = eval_obs.shape
+    action_dim = eval_masks.shape[-1]
+
+    policy_probs = np.zeros(
+        (num_agents, num_eval_states, action_dim),
+        dtype=np.float32,
+    )
+
+    for agent_idx in range(num_agents):
+        obs_t = torch.tensor(
+            eval_obs[agent_idx],
+            device=device,
+            dtype=torch.float32,
+        )
+
+        mask_t = torch.tensor(
+            eval_masks[agent_idx],
+            device=device,
+        )
+
+        logits = actor(obs_t)
+
+        valid = mask_t != 0
+        row_has_any_valid = valid.any(dim=1)
+
+        if row_has_any_valid.all():
+            logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
+        else:
+            safe_logits = logits.clone()
+            safe_logits[row_has_any_valid] = safe_logits[row_has_any_valid].masked_fill(
+                ~valid[row_has_any_valid],
+                args.masked_logits_neg_inf,
+            )
+            logits = safe_logits
+
+        probs = torch.softmax(logits, dim=-1)
+        policy_probs[agent_idx] = probs.cpu().numpy()
+
+    if was_training:
+        actor.train()
+
+    return policy_probs
+
+
+def save_ippo_policy_checkpoint(
+    checkpoint_path: str,
+    step: int,
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+    nvec: np.ndarray,
+    strides: np.ndarray,
+):
+    """
+    Saves the current shared IPPO policy on a fixed evaluation set.
+    """
+    policy_probs = compute_ippo_policy_snapshot(
+        actor=actor,
+        eval_obs=eval_obs,
+        eval_masks=eval_masks,
+        device=device,
+        args=args,
+    )
+
+    np.savez_compressed(
+        checkpoint_path,
+        step=np.array(step, dtype=np.int64),
+        policy=policy_probs.astype(np.float32),
+        aggregate_policy=policy_probs.mean(axis=0).astype(np.float32),
+        eval_obs=eval_obs.astype(np.float32),
+        eval_action_masks=eval_masks.astype(np.int8),
+        nvec=nvec.astype(np.int64),
+        strides=strides.astype(np.int64),
+        action_dim=np.array(policy_probs.shape[-1], dtype=np.int64),
+    )
+
+
+
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
     adv = np.zeros(T, dtype=np.float32)
@@ -346,7 +450,7 @@ def main():
         },
         "simulator_parameters": {
             "network_name": "network",
-            "custom_network_folder": "network_analysis/network_base",
+            "custom_network_folder": "../../network_analysis/network_base",
             "sumo_type": "sumo",
             "simulation_timesteps": 100,
         },
@@ -430,6 +534,25 @@ def main():
     critic_opt = Optimizer(critic.parameters(), lr=args.lr_critic)
 
     # -------------------------
+    # Policy checkpoint setup
+    # -------------------------
+    checkpoint_dir = (
+        f"checkpoints_ippo_masked_joint_300_agents_seed_{seed}"
+        f"_max_bid_10_route_0_4_route_1_5_longer"
+    )
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    checkpoint_interval = 2  # save every 2 training episodes
+
+    eval_obs_by_agent: Dict[str, np.ndarray] = {}
+    eval_masks_by_agent: Dict[str, np.ndarray] = {}
+
+    eval_obs: Optional[np.ndarray] = None
+    eval_masks: Optional[np.ndarray] = None
+
+    saved_initial_policy = False
+
+    # -------------------------
     # Training loop
     # -------------------------
     pbar = tqdm(total=training_episodes + testing_episodes, desc="IPPO AEC training (masked joint)")
@@ -473,11 +596,9 @@ def main():
                     action = None
                 else:
                     obs_vec, mask_arr = extract_obs_and_mask(obs)
-                    print("obs_vec is: ", obs_vec, "\n\n")
 
                     # Ensure mask is present and correct length
                     if mask_arr is None:
-                        # If your env always has mask, you can raise here instead.
                         mask_arr = np.ones(action_dim, dtype=np.int8)
                     else:
                         mask_arr = mask_arr.reshape(-1)
@@ -486,6 +607,12 @@ def main():
                                 f"action_mask length {mask_arr.shape[0]} != action_dim {action_dim}. "
                                 f"Expected prod(nvec)={action_dim}, nvec={nvec.tolist()}"
                             )
+
+                    # Collect the first valid observation/mask for each learning agent.
+                    # These fixed states are used for policy-change diagnostics.
+                    if agent not in eval_obs_by_agent:
+                        eval_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
+                        eval_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
 
                     act_idx, logp, val = select_action_masked_joint(
                         actor, critic, obs_vec, mask_arr, device, args
@@ -519,6 +646,49 @@ def main():
                 traj[a]["rew"].append(0.0)
                 traj[a]["done"].append(1.0)
                 pending[a] = None
+
+        # -------------------------
+        # Build fixed eval set and save initial policy once
+        # -------------------------
+        if not saved_initial_policy:
+            missing_agents = [
+                agent for agent in mutated_agent_names
+                if agent not in eval_obs_by_agent
+            ]
+
+            if missing_agents:
+                print(
+                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
+                    f"Using zero observations and all-valid masks for them."
+                )
+
+            eval_obs_list = []
+            eval_masks_list = []
+
+            for agent in mutated_agent_names:
+                if agent in eval_obs_by_agent:
+                    eval_obs_list.append(eval_obs_by_agent[agent])
+                    eval_masks_list.append(eval_masks_by_agent[agent])
+                else:
+                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
+                    eval_masks_list.append(np.ones(action_dim, dtype=np.int8))
+
+            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
+            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+
+            save_ippo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, "step_00000000.npz"),
+                step=0,
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                nvec=nvec,
+                strides=strides,
+            )
+
+            saved_initial_policy = True
 
         # -------------------------
         # Build PPO batch from all agents
@@ -571,6 +741,24 @@ def main():
         for _ in range(args.epochs):
             metrics = ppo_update_masked_joint(actor, critic, actor_opt, critic_opt, batch, args)
 
+        # Save policy checkpoint after PPO update
+        if (
+            eval_obs is not None
+            and eval_masks is not None
+            and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
+        ):
+            save_ippo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, f"step_{ep + 1:08d}.npz"),
+                step=ep + 1,
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                nvec=nvec,
+                strides=strides,
+            )
+
         mean_return = float(np.mean(list(ep_return.values())))
         running_ep_returns.append(mean_return)
         running_ep_lens.append(turn_count)
@@ -588,6 +776,22 @@ def main():
             running_ep_lens.clear()
 
         pbar.update(1)
+
+    # Save final policy explicitly
+    if eval_obs is not None and eval_masks is not None:
+        save_ippo_policy_checkpoint(
+            checkpoint_path=os.path.join(checkpoint_dir, "final_policy.npz"),
+            step=training_episodes,
+            actor=actor,
+            eval_obs=eval_obs,
+            eval_masks=eval_masks,
+            device=device,
+            args=args,
+            nvec=nvec,
+            strides=strides,
+        )
+    else:
+        print("[WARNING] No fixed eval set was built, so final_policy.npz was not saved.")
 
     # -------------------------
     # Testing (greedy, masked)
