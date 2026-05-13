@@ -52,8 +52,12 @@ class Args:
     seed: int = 10
     device: str = "cpu"
 
-    training_episodes: int = 200
-    testing_episodes: int = 10
+    training_episodes: int = 44
+    testing_episodes: int = 0
+
+    # Checkpointing
+    training_checkpoint_interval: int = 2
+    testing_checkpoint_interval: int = 2
 
     # PPO
     gamma: float = 0.99
@@ -394,6 +398,131 @@ def select_action(
     return act_multi, act_joint, logp, float(value.item())
 
 
+@torch.no_grad()
+def build_fixed_eval_set(
+    env,
+    learning_agents: List[str],
+    obs_dim: int,
+    joint_action_dim: int,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Builds a fixed evaluation set with one observation/mask per learning agent.
+
+    Output shapes:
+        eval_obs:   (num_agents, 1, obs_dim)
+        eval_masks: (num_agents, 1, joint_action_dim)
+    """
+    eval_obs = []
+    eval_masks = []
+
+    for agent in learning_agents:
+        env_obs = env.observe(agent)
+        obs_np, mask_np = extract_obs_and_mask(env_obs)
+
+        if obs_np is None:
+            obs_np = np.zeros(obs_dim, dtype=np.float32)
+
+        if mask_np is None:
+            mask_np = np.ones(joint_action_dim, dtype=np.int8)
+
+        eval_obs.append(obs_np.astype(np.float32))
+        eval_masks.append(mask_np.astype(np.int8))
+
+    eval_obs = np.stack(eval_obs, axis=0)[:, None, :]
+    eval_masks = np.stack(eval_masks, axis=0)[:, None, :]
+
+    return eval_obs, eval_masks
+
+
+@torch.no_grad()
+def compute_policy_snapshot(
+    model: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+) -> np.ndarray:
+    """
+    Computes masked-softmax policy probabilities.
+
+    eval_obs shape:
+        (num_agents, num_eval_states, obs_dim)
+
+    eval_masks shape:
+        (num_agents, num_eval_states, joint_action_dim)
+
+    returns:
+        policy shape (num_agents, num_eval_states, joint_action_dim)
+    """
+    model.eval()
+
+    num_agents, num_eval_states, _obs_dim = eval_obs.shape
+    joint_action_dim = eval_masks.shape[-1]
+
+    policy_probs = np.zeros(
+        (num_agents, num_eval_states, joint_action_dim),
+        dtype=np.float32,
+    )
+
+    for agent_idx in range(num_agents):
+        obs_t = torch.tensor(
+            eval_obs[agent_idx],
+            device=device,
+            dtype=torch.float32,
+        )
+
+        agent_idx_t = torch.full(
+            (num_eval_states,),
+            agent_idx,
+            device=device,
+            dtype=torch.long,
+        )
+
+        mask_t = torch.tensor(
+            eval_masks[agent_idx],
+            device=device,
+            dtype=torch.bool,
+        )
+
+        logits, _value = model(obs_t, agent_idx_t)
+
+        masked_logits = logits.masked_fill(~mask_t, -1e9)
+        probs = torch.softmax(masked_logits, dim=-1)
+
+        policy_probs[agent_idx] = probs.cpu().numpy()
+
+    model.train()
+    return policy_probs
+
+
+def save_hyperippo_policy_checkpoint(
+    checkpoint_path: str,
+    step: int,
+    model: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    B: int,
+    D: int,
+):
+    policy_probs = compute_policy_snapshot(
+        model=model,
+        eval_obs=eval_obs,
+        eval_masks=eval_masks,
+        device=device,
+    )
+
+    np.savez_compressed(
+        checkpoint_path,
+        step=np.array(step, dtype=np.int64),
+        policy=policy_probs.astype(np.float32),
+        aggregate_policy=policy_probs.mean(axis=0).astype(np.float32),
+        eval_obs=eval_obs.astype(np.float32),
+        eval_action_masks=eval_masks.astype(np.int8),
+        B=np.array(B, dtype=np.int64),
+        D=np.array(D, dtype=np.int64),
+    )
+
+
 # ------------------------------------------------------------
 # Buffer: store AEC transitions (s, mask, a_joint, logp_old, V(s), r, done, s_next)
 # ------------------------------------------------------------
@@ -547,6 +676,78 @@ def ppo_update(model: nn.Module, optimizer: optim.Optimizer, buf: RolloutBuffer,
     return metrics
 
 
+
+@torch.no_grad()
+def build_eval_set_from_aec_iteration(
+    env,
+    learning_agents: List[str],
+    agent_to_idx: Dict[str, int],
+    obs_dim: int,
+    joint_action_dim: int,
+    B: int,
+    D: int,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Builds an evaluation set by iterating through the AEC environment
+    and collecting the first valid observation/mask for each learning agent.
+
+    This avoids calling env.observe(agent), which fails in your env when
+    observation_space.shape is None.
+    """
+    eval_obs_by_agent: Dict[str, np.ndarray] = {}
+    eval_masks_by_agent: Dict[str, np.ndarray] = {}
+
+    for agent in env.agent_iter():
+        env_obs, reward, termination, truncation, info = env.last()
+        done = bool(termination or truncation)
+
+        if agent in agent_to_idx:
+            obs_np, mask_np = extract_obs_and_mask(env_obs)
+
+            if (
+                agent not in eval_obs_by_agent
+                and obs_np is not None
+                and mask_np is not None
+            ):
+                eval_obs_by_agent[agent] = obs_np.copy().astype(np.float32)
+                eval_masks_by_agent[agent] = mask_np.copy().astype(np.int8)
+
+            if done or obs_np is None or mask_np is None:
+                env.step(None)
+            else:
+                valid_actions = np.flatnonzero(mask_np.astype(bool))
+
+                if len(valid_actions) == 0:
+                    env.step(None)
+                else:
+                    joint_action = int(valid_actions[0])
+                    multi_action = joint_index_to_action(joint_action, B=B, D=D)
+                    env.step(multi_action)
+
+        else:
+            env.step(None)
+
+        if len(eval_obs_by_agent) == len(learning_agents):
+            break
+
+    eval_obs_list = []
+    eval_masks_list = []
+
+    for agent in learning_agents:
+        if agent in eval_obs_by_agent:
+            eval_obs_list.append(eval_obs_by_agent[agent])
+            eval_masks_list.append(eval_masks_by_agent[agent])
+        else:
+            eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
+            eval_masks_list.append(np.ones(joint_action_dim, dtype=np.int8))
+
+    eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
+    eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+
+    return eval_obs, eval_masks
+
+
+
 # ------------------------------------------------------------
 # Main
 # ------------------------------------------------------------
@@ -569,8 +770,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_hyperippo_masked_300_agents_seed_{seed}_karma_pricing"
-    plots_folder = f"plots_hyperippo_masked_300_agents_seed_{seed}_karma_pricing"
+    records_folder = f"training_records_hyperippo_masked_300_agents_seed_{seed}_max_bid_10_route_0_4_route_1_5"
+    plots_folder = f"plots_hyperippo_masked_300_agents_seed_{seed}_max_bid_10_route_0_4_route_1_5"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -583,7 +784,8 @@ def main():
                 "behavior": "selfish",
                 "observation_type": "previous_agents_avg_tt_per_route",
                 "route_0_fee": 0,
-                "travel_time_normalization_value": 1,
+                "travel_time_normalization_value": 16.5,
+                "max_allowed_bid": 10,
             },
         },
         "simulator_parameters": {
@@ -594,9 +796,10 @@ def main():
         },
         "environment_parameters": {
             "observations_time_window": 10,
-            "save_every": 1,
+            "save_every": 5,
             "number_of_days": 30,
-            "centrally_defined_price": 4.8
+            "centrally_defined_price_route_0": 4,
+            "centrally_defined_price_route_1": 5,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -699,6 +902,38 @@ def main():
 
     buf = RolloutBuffer()
 
+    # -------------------------
+    # Policy checkpoint setup
+    # -------------------------
+    checkpoint_dir = f"checkpoints_hyperippo_masked_300_agents_seed_{seed}_max_bid_10_route_0_4_route_1_5"
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    #checkpoint_interval = 2  # save every 10 training episodes; adjust as needed
+    checkpoint_interval = args.training_checkpoint_interval
+    test_checkpoint_interval = args.testing_checkpoint_interval
+
+    # Build a fixed evaluation set once.
+    # This is important: policy-change metrics should compare the policy on the same states.
+    """env.reset()
+    eval_obs, eval_masks = build_fixed_eval_set(
+        env=env,
+        learning_agents=learning_agents,
+        obs_dim=obs_dim,
+        joint_action_dim=joint_action_dim,
+    )
+
+    # Save initial policy before training.
+    save_hyperippo_policy_checkpoint(
+        checkpoint_path=os.path.join(checkpoint_dir, "step_00000000.npz"),
+        step=0,
+        model=model,
+        eval_obs=eval_obs,
+        eval_masks=eval_masks,
+        device=device,
+        B=B,
+        D=D,
+    )"""
+
     # Pending per agent (AEC): store last (obs, mask, act_joint, logp, val)
     pending: Dict[str, Optional[Dict[str, Any]]] = {a: None for a in learning_agents}
 
@@ -708,6 +943,14 @@ def main():
     pbar = tqdm(total=training_episodes + testing_episodes, desc="HyperIPPO (masked MultiDiscrete) training")
     running_returns: List[float] = []
     running_turns: List[int] = []
+    eval_obs_by_agent: Dict[str, np.ndarray] = {}
+    eval_masks_by_agent: Dict[str, np.ndarray] = {}
+
+    eval_obs: Optional[np.ndarray] = None
+    eval_masks: Optional[np.ndarray] = None
+
+    saved_initial_policy = False
+
 
     for ep in range(training_episodes):
         print("training episode is: ", ep, "\n\n")
@@ -731,6 +974,16 @@ def main():
 
             aidx = agent_to_idx[agent]
             obs_np, mask_np = extract_obs_and_mask(env_obs)
+
+            # Collect the first valid observation/mask for each learning agent.
+            # This will be used as the fixed evaluation set for policy diagnostics.
+            if (
+                agent not in eval_obs_by_agent
+                and obs_np is not None
+                and mask_np is not None
+            ):
+                eval_obs_by_agent[agent] = obs_np.copy().astype(np.float32)
+                eval_masks_by_agent[agent] = mask_np.copy().astype(np.int8)
 
             # Close previous step for this agent: reward corresponds to previous action
             if pending[agent] is not None:
@@ -802,12 +1055,68 @@ def main():
                     next_obs=np.zeros_like(prev["obs"], dtype=np.float32),
                 )"""
                 
+        # Build fixed eval arrays and save initial policy once, before the first PPO update.
+        if not saved_initial_policy:
+            missing_agents = [
+                agent for agent in learning_agents
+                if agent not in eval_obs_by_agent
+            ]
+
+            if missing_agents:
+                print(
+                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
+                    f"Using zero observations and all-valid masks for them."
+                )
+
+            eval_obs_list = []
+            eval_masks_list = []
+
+            for agent in learning_agents:
+                if agent in eval_obs_by_agent:
+                    eval_obs_list.append(eval_obs_by_agent[agent])
+                    eval_masks_list.append(eval_masks_by_agent[agent])
+                else:
+                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
+                    eval_masks_list.append(np.ones(joint_action_dim, dtype=np.int8))
+
+            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
+            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+
+            save_hyperippo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, "step_00000000.npz"),
+                step=0,
+                model=model,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                B=B,
+                D=D,
+            )
+
+            saved_initial_policy = True
 
         ent_coef = entropy_coef_at_episode(ep, training_episodes, args)
         metrics = ppo_update(model, optimizer, buf, args, entropy_coef=ent_coef)
 
         #metrics = ppo_update(model, optimizer, buf, args)
         scheduler.step()
+
+        # Save policy checkpoint after PPO update.
+        if (
+            eval_obs is not None
+            and eval_masks is not None
+            and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
+        ):
+            save_hyperippo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, f"step_{ep + 1:08d}.npz"),
+                step=ep + 1,
+                model=model,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                B=B,
+                D=D,
+            )
 
         mean_return = float(np.mean(list(ep_return.values())))
         running_returns.append(mean_return)
@@ -826,11 +1135,64 @@ def main():
 
         pbar.update(1)
 
+    # Save final policy explicitly.
+    if eval_obs is not None and eval_masks is not None:
+        save_hyperippo_policy_checkpoint(
+            checkpoint_path=os.path.join(checkpoint_dir, "final_policy.npz"),
+            step=training_episodes,
+            model=model,
+            eval_obs=eval_obs,
+            eval_masks=eval_masks,
+            device=device,
+            B=B,
+            D=D,
+        )
+    else:
+        print("[WARNING] No fixed eval set was built, so final_policy.npz was not saved.")
+
     # -------------------------
     # Testing (greedy wrt masked logits)
     # -------------------------
+    env.reset()
+    env.all_high_urgency()
+
+    high_urgency_eval_obs, high_urgency_eval_masks = build_eval_set_from_aec_iteration(
+        env=env,
+        learning_agents=learning_agents,
+        agent_to_idx=agent_to_idx,
+        obs_dim=obs_dim,
+        joint_action_dim=joint_action_dim,
+        B=B,
+        D=D,
+    )
+
+    save_hyperippo_policy_checkpoint(
+        checkpoint_path=os.path.join(checkpoint_dir, "high_urgency_policy.npz"),
+        step=training_episodes,
+        model=model,
+        eval_obs=high_urgency_eval_obs,
+        eval_masks=high_urgency_eval_masks,
+        device=device,
+        B=B,
+        D=D,
+    )
     model.eval()
     pbar.set_description("HyperIPPO (masked MultiDiscrete) testing")
+
+    # Save policy at the start of testing.
+    if high_urgency_eval_obs is not None and high_urgency_eval_masks is not None:
+        save_hyperippo_policy_checkpoint(
+            checkpoint_path=os.path.join(checkpoint_dir, "test_step_00000000.npz"),
+            step=training_episodes,
+            model=model,
+            eval_obs=high_urgency_eval_obs,
+            eval_masks=high_urgency_eval_masks,
+            device=device,
+            B=B,
+            D=D,
+        )
+    else:
+        print("[WARNING] No fixed eval set was built, so testing policy checkpoints will not be saved.")
 
     for ep in range(testing_episodes):
         env.reset()
@@ -879,6 +1241,24 @@ def main():
 
         mean_return = float(np.mean(list(ep_return.values())))
         print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
+
+        # Save policy checkpoint during testing.
+        if (
+            high_urgency_eval_obs is not None
+            and high_urgency_eval_masks is not None
+            and ((ep + 1) % test_checkpoint_interval == 0 or (ep + 1) == testing_episodes)
+        ):
+            save_hyperippo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, f"test_step_{ep + 1:08d}.npz"),
+                step=training_episodes + ep + 1,
+                model=model,
+                eval_obs=high_urgency_eval_obs,
+                eval_masks=high_urgency_eval_masks,
+                device=device,
+                B=B,
+                D=D,
+            )
+
         pbar.update(1)
 
     pbar.close()
