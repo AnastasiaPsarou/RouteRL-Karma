@@ -1,0 +1,24 @@
+<additional>
+<laneAreaDetector id="E0_det" lane="E0_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E1_det" lane="E1_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E17_det" lane="E17_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E17.200_det" lane="E17.200_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E17.400_det" lane="E17.400_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E17.600_det" lane="E17.600_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E18_det" lane="E18_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E18.118_det" lane="E18.118_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E18.258_det" lane="E18.258_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E19_det" lane="E19_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E19.287_det" lane="E19.287_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E2_det" lane="E2_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E20_det" lane="E20_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E20.444_det" lane="E20.444_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E21_det" lane="E21_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E22_det" lane="E22_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E25_det" lane="E25_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E26_det" lane="E26_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E3_det" lane="E3_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E4_det" lane="E4_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E5_det" lane="E5_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+<laneAreaDetector id="E6_det" lane="E6_0" pos="0.05" length="0.11" file="NUL" friendlyPos="True"/>
+</additional>
