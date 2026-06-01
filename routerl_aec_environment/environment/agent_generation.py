@@ -143,7 +143,9 @@ def generate_agent_data(params, seed=23423) -> pd.DataFrame:
         agent_type = kc.TYPE_HUMAN
 
         # Randomly assign origin & destination
-        origin, destination = random.randrange(num_origins), random.randrange(num_destinations)
+        #origin, destination = random.randrange(num_origins), random.randrange(num_destinations)
+        origin = random.randrange(num_origins)
+        destination = origin
 
         # Registering to the dataframe
         agent_features = [id, origin, destination, start_time, income, agent_type]
