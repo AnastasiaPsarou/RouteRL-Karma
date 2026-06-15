@@ -47,6 +47,8 @@ env_params = {
             "route_0_fee": 0,
             "travel_time_normalization_value": 100,
             "reward_w3": 0,
+            "max_allowed_bid": 5,
+
         }
     },
     "simulator_parameters": {
@@ -56,10 +58,11 @@ env_params = {
         "simulation_timesteps": 100,
     },
     "environment_parameters": {
-        "observations_time_window": 20,
-        "save_every": 1,
+        "observations_time_window": 10,
+        "save_every": 5,
         "number_of_days": 30,
-        "centrally_defined_price": 4
+        "centrally_defined_price_route_0": 4,
+        "centrally_defined_price_route_1": 3,
     },
     "plotter_parameters": {
         "phases": phases,
