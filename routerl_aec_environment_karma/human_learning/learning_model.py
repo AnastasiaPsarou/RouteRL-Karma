@@ -165,14 +165,57 @@ class GeneralBiddingModel(BaseLearningModel):
     def __init__(self, params, initial_knowledge):
         super().__init__()
 
-        self.costs = -np.array(initial_knowledge, dtype=float)
-        self.num_routes = len(self.costs)
-        self.mean_time = abs(np.mean(self.costs))
+        # ------------------------------------------------------------------
+        # Bidding-specific parameters
+        # ------------------------------------------------------------------
+        self.num_bid_levels = params.get("num_bid_levels", 10)
 
-        # noise weights
+        self.bid_values = np.array(
+            params.get("bid_values", list(range(self.num_bid_levels))),
+            dtype=int
+        )
+
+        assert len(self.bid_values) == self.num_bid_levels, (
+            "bid_values must have length num_bid_levels"
+        )
+
+        # Map actual bid values to column indices in the route-bid cost table
+        self.bid_value_to_col = {
+            int(bid): idx for idx, bid in enumerate(self.bid_values)
+        }
+
+        self.bid_exploration = params.get("bid_exploration", 0.1)
+
+        # If True, enforce monotone ranking:
+        # better utility => bid no smaller than worse utility
+        self.enforce_rank_consistency = params.get(
+            "enforce_rank_consistency",
+            True
+        )
+
+        # ------------------------------------------------------------------
+        # Route information and initial route-bid cost table
+        # ------------------------------------------------------------------
+        base_costs = -np.array(initial_knowledge, dtype=float)
+
+        self.num_routes = len(base_costs)
+        self.mean_time = abs(np.mean(base_costs))
+
+        # self.costs[k, j] = expected cost/value of submitting bid_values[j]
+        # for route k
+        self.costs = np.repeat(
+            base_costs[:, None],
+            self.num_bid_levels,
+            axis=1
+        )
+
+        # ------------------------------------------------------------------
+        # Noise weights
+        # ------------------------------------------------------------------
         self.noise_weight_agent = params[kc.NOISE_WEIGHT_AGENT]
         self.noise_weight_path = params[kc.NOISE_WEIGHT_PATH]
         self.noise_weight_day = params[kc.NOISE_WEIGHT_DAY]
+
         assert abs(
             self.noise_weight_agent
             + self.noise_weight_path
@@ -180,16 +223,31 @@ class GeneralBiddingModel(BaseLearningModel):
             - 1
         ) < 1e-8, "Relative weights in error terms do not sum to 1."
 
-        # utility parameters
+        # ------------------------------------------------------------------
+        # Utility parameters
+        # ------------------------------------------------------------------
         self.beta_k_i = params[kc.BETA] * np.random.normal(
-            1, params[kc.BETA_K_I_VARIABILITY], size=self.num_routes
+            1,
+            params[kc.BETA_K_I_VARIABILITY],
+            size=self.num_routes
         )
-        self.random_term_agent = np.random.normal(0, params[kc.EPSILON_I_VARIABILITY])
+
+        self.random_term_agent = np.random.normal(
+            0,
+            params[kc.EPSILON_I_VARIABILITY]
+        )
+
         self.random_term_path = np.random.normal(
-            0, params[kc.EPSILON_K_I_VARIABILITY], size=self.num_routes
+            0,
+            params[kc.EPSILON_K_I_VARIABILITY],
+            size=self.num_routes
         )
+
         self.random_term_day = params[kc.EPSILON_K_I_T_VARIABILITY]
 
+        # ------------------------------------------------------------------
+        # Learning parameters
+        # ------------------------------------------------------------------
         self.greedy = params[kc.GREEDY]
         self.gamma_c = params[kc.GAMMA_C]
         self.gamma_u = params[kc.GAMMA_U]
@@ -197,57 +255,55 @@ class GeneralBiddingModel(BaseLearningModel):
         self.alpha_zero = params[kc.ALPHA_ZERO]
 
         self.alphas = list(params[kc.ALPHAS])
+
         assert len(self.alphas) == self.remember, (
             "weights of history in 'alphas' and 'remember' do not match"
         )
+
         assert abs(self.alpha_zero + sum(self.alphas) - 1) < 0.01, (
             "weights for weighted average do not sum up to 1"
         )
 
-        self.memory = [deque([cost], maxlen=self.remember) for cost in self.costs]
-        self.first_day = True
+        # ------------------------------------------------------------------
+        # Route-bid memory
+        # ------------------------------------------------------------------
+        self.memory = [
+            [
+                deque([self.costs[k, j]], maxlen=self.remember)
+                for j in range(self.num_bid_levels)
+            ]
+            for k in range(self.num_routes)
+        ]
 
-        # ---- bidding-specific parameters ----
-        # number of discrete bid levels per route, e.g. 5 -> bids in {0,1,2,3,4}
-        self.num_bid_levels = params.get("num_bid_levels", 10)
-
-        # optional actual bid values, e.g. [0, 1, 2, 4, 8]
-        # if not provided, uses [0, 1, 2, ..., num_bid_levels-1]
-        self.bid_values = np.array(
-            params.get("bid_values", list(range(self.num_bid_levels))),
-            dtype=int
+        # ------------------------------------------------------------------
+        # Karma feasibility parameters
+        # ------------------------------------------------------------------
+        self.karma_balance_key = params.get(
+            "karma_balance_key",
+            "karma_balance"
         )
-        assert len(self.bid_values) == self.num_bid_levels, (
-            "bid_values must have length num_bid_levels"
-        )
 
-        # exploration for bids
-        self.bid_exploration = params.get("bid_exploration", 0.1)
-
-        # if True, enforce monotone ranking:
-        # better utility => bid no smaller than worse utility
-        self.enforce_rank_consistency = params.get("enforce_rank_consistency", True)
-
-        # last action storage
-        self.last_action = None
-
-
-         # ---- karma feasibility parameters ----
-        self.karma_balance_key = params.get("karma_balance_key", "karma_balance")
-
-        # Optional fixed karma cost per route. Usually zeros unless the mechanism charges
-        # a route-specific fixed karma fee in addition to the bid.
         self.route_fixed_karma_costs = np.array(
-            params.get("route_fixed_karma_costs", [0.0] * self.num_routes),
+            params.get(
+                "route_fixed_karma_costs",
+                [0.0] * self.num_routes
+            ),
             dtype=float
         )
 
         assert len(self.route_fixed_karma_costs) == self.num_routes
 
+        # ------------------------------------------------------------------
+        # Last-action storage
+        # ------------------------------------------------------------------
+        self.first_day = True
+        self.last_action = None
+
+
 
     def learn(self, state, action, reward, chosen_route=None):
         """
-        Update expected cost estimates.
+        Update expected route-bid cost estimates.
 
         Parameters
         ----------
@@ -258,25 +314,53 @@ class GeneralBiddingModel(BaseLearningModel):
         reward : float
             Observed reward/cost signal.
         chosen_route : int or None
-            Route actually realized/assigned by the mechanism.
-            If None, we fall back to the highest bid route.
+            Route actually assigned by the mechanism.
+            If None, we fall back to the route with the highest submitted bid.
         """
+        action = np.asarray(action, dtype=int)
 
-        self.memory[chosen_route].append(reward)
+        if chosen_route is None:
+            chosen_route = int(np.argmax(action))
 
-        if abs((self.costs[chosen_route] - reward) / self.costs[chosen_route]) >= self.gamma_c:
+        chosen_bid_value = int(action[chosen_route])
+
+        if chosen_bid_value not in self.bid_value_to_col:
+            raise ValueError(
+                f"Bid value {chosen_bid_value} is not in bid_values: {self.bid_values}"
+            )
+
+        chosen_bid_col = self.bid_value_to_col[chosen_bid_value]
+
+        self.memory[chosen_route][chosen_bid_col].append(reward)
+
+        current_estimate = self.costs[chosen_route, chosen_bid_col]
+
+        relative_change = abs(
+            (current_estimate - reward) / (abs(current_estimate) + 1e-8)
+        )
+
+        if relative_change >= self.gamma_c:
+            relevant_memory = self.memory[chosen_route][chosen_bid_col]
+
             weight_normalization_factor = 1 / (
                 self.alpha_zero
-                + sum(self.alphas[i] for i, _ in enumerate(self.memory[chosen_route]))
+                + sum(self.alphas[i] for i, _ in enumerate(relevant_memory))
             )
 
-            self.costs[chosen_route] = (
-                weight_normalization_factor * self.alpha_zero * self.costs[chosen_route]
+            updated_cost = (
+                weight_normalization_factor
+                * self.alpha_zero
+                * current_estimate
             )
-            self.costs[chosen_route] += sum(
-                weight_normalization_factor * self.alphas[i] * self.memory[chosen_route][i]
-                for i, _ in enumerate(self.memory[chosen_route])
+
+            updated_cost += sum(
+                weight_normalization_factor
+                * self.alphas[i]
+                * relevant_memory[i]
+                for i, _ in enumerate(relevant_memory)
             )
+
+            self.costs[chosen_route, chosen_bid_col] = updated_cost
 
     def act(self, state):
         """
@@ -285,10 +369,7 @@ class GeneralBiddingModel(BaseLearningModel):
         """
         karma_balance = self.get_karma_balance_from_state(state)
 
-        utilities = np.array([
-            self.beta_k_i[i] * (self.costs[i] + self.mean_time * noise)
-            for i, noise in enumerate(self.get_noises())
-        ], dtype=float)
+        utilities = self.compute_route_bid_utilities()
 
         # exploration: random feasible bids for all routes
         if np.random.random() < self.bid_exploration:
@@ -318,9 +399,34 @@ class GeneralBiddingModel(BaseLearningModel):
             "utilities": utilities.copy(),
             "karma_balance": karma_balance,
         }
-
+        
         return np.array(bids, dtype=int)
     
+
+    def compute_route_bid_utilities(self):
+        """
+        Compute utility estimates for every route-bid pair.
+
+        Returns
+        -------
+        utilities : np.ndarray
+            Array of shape (num_routes, num_bid_levels).
+        """
+
+        noises = np.array(self.get_noises(), dtype=float)
+
+        utilities = np.zeros(
+            (self.num_routes, self.num_bid_levels),
+            dtype=float
+        )
+
+        for k in range(self.num_routes):
+            for j in range(self.num_bid_levels):
+                utilities[k, j] = self.beta_k_i[k] * (
+                    self.costs[k, j] + self.mean_time * noises[k]
+                )
+
+        return utilities
 
     def get_karma_balance_from_state(self, state):
         """
@@ -344,37 +450,31 @@ class GeneralBiddingModel(BaseLearningModel):
 
     def utilities_to_bids(self, utilities, karma_balance=None):
         """
-        Map route utilities to discrete bid levels.
+        Choose one feasible bid per route using route-bid utilities.
 
-        Higher utility -> higher bid, but bids cannot exceed current karma balance.
+        utilities[k, j] is the utility of submitting bid_values[j]
+        for route k.
         """
-        u_min = np.min(utilities)
-        u_max = np.max(utilities)
-
-        if karma_balance is None:
-            feasible_bid_values = [self.bid_values for _ in range(self.num_routes)]
-        else:
-            feasible_bid_values = [
-                self.feasible_bid_values_for_route(karma_balance, k)
-                for k in range(self.num_routes)
-            ]
-
-        if np.isclose(u_min, u_max):
-            bids = []
-            for k in range(self.num_routes):
-                feasible = feasible_bid_values[k]
-                bids.append(feasible[len(feasible) // 2])
-            return np.array(bids, dtype=int)
-
-        normalized = (utilities - u_min) / (u_max - u_min)
 
         bids = np.zeros(self.num_routes, dtype=int)
 
         for k in range(self.num_routes):
-            feasible = feasible_bid_values[k]
-            idx = int(np.rint(normalized[k] * (len(feasible) - 1)))
-            idx = np.clip(idx, 0, len(feasible) - 1)
-            bids[k] = feasible[idx]
+            feasible_bid_values = self.feasible_bid_values_for_route(
+                karma_balance,
+                k
+            )
+
+            feasible_cols = [
+                self.bid_value_to_col[int(bid)]
+                for bid in feasible_bid_values
+            ]
+
+            route_utilities = utilities[k, feasible_cols]
+
+            best_local_idx = int(np.argmax(route_utilities))
+            best_col = feasible_cols[best_local_idx]
+
+            bids[k] = self.bid_values[best_col]
 
         return bids
     
@@ -391,7 +491,10 @@ class GeneralBiddingModel(BaseLearningModel):
         """
         Return bid values that do not make the karma balance negative.
         """
-        max_affordable_bid = karma_balance
+
+        max_affordable_bid = (
+            karma_balance - self.route_fixed_karma_costs[route_idx]
+        )
 
         feasible = self.bid_values[self.bid_values <= max_affordable_bid]
 
@@ -401,7 +504,6 @@ class GeneralBiddingModel(BaseLearningModel):
             return np.array([self.bid_values[0]], dtype=int)
 
         return feasible.astype(int)
-
 
     def random_feasible_bids(self, karma_balance):
         bids = np.zeros(self.num_routes, dtype=int)
