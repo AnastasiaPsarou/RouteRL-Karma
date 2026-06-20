@@ -28,22 +28,22 @@ from routerl_aec_environment_karma import TrafficEnvironment
 # ------------------------------------------------------------
 @dataclass
 class Args:
-    seed: int = 19
+    seed: int = 25
     device: str = "cpu"
 
     # episodes
-    training_episodes: int = 54
-    testing_episodes: int = 0
+    training_episodes: int = 34
+    testing_episodes: int = 10
 
     # PPO hyperparams
     gamma: float = 0.99
-    gae_lambda: float = 0.95
+    gae_lambda: float = 0.90
     ppo_clip: float = 0.2
     entropy_coef: float = 0.001
     value_coef: float = 0.5
 
-    lr_actor: float = 8e-4
-    lr_critic: float = 8e-4
+    lr_actor: float = 3e-4
+    lr_critic: float = 3e-4
     optimizer: str = "Adam"
 
     epochs: int = 4
@@ -430,8 +430,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_ippo_masked_joint_300_agents_seed_{seed}_max_bid_10_route_0_4_route_1_5_longer"
-    plots_folder = f"plots_ippo_masked_joint_300_agents_seed_{seed}_max_bid_10_route_0_4_route_1_5_longer"
+    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_ippo_{seed}_max_bid_5_route_0_4_route_1_3"
+    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_ippo_{seed}_max_bid_5_route_0_4_route_1_3"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -445,21 +445,21 @@ def main():
                 "observation_type": "previous_agents_avg_tt_per_route",
                 "route_0_fee": 0,
                 "travel_time_normalization_value": 16.5,
-                "max_allowed_bid": 10,
+                "max_allowed_bid": 5,
             }
         },
         "simulator_parameters": {
             "network_name": "network",
-            "custom_network_folder": "../../network_analysis/network_base",
+            "custom_network_folder": "network_analysis/network_base",
             "sumo_type": "sumo",
             "simulation_timesteps": 100,
         },
         "environment_parameters": {
             "observations_time_window": 10,
-            "save_every": 5,
+            "save_every": 1,
             "number_of_days": 30,
             "centrally_defined_price_route_0": 4,
-            "centrally_defined_price_route_1": 5,
+            "centrally_defined_price_route_1": 3,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -479,7 +479,6 @@ def main():
         }
     }
 
-    # IMPORTANT: karma_pricing=True for your masked bidding setup
     env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, karma_pricing=True, **env_params)
 
     print("Number of total agents is: ", len(env.all_agents), "\n")
@@ -527,7 +526,7 @@ def main():
     action_dim = int(np.prod(nvec))
 
     actor = MLPActorJoint(obs_dim, action_dim, hidden=(64, 64)).to(device)
-    critic = MLPCritic(obs_dim, hidden=(128, 128)).to(device)
+    critic = MLPCritic(obs_dim, hidden=(256, 256)).to(device)
 
     Optimizer = getattr(optim, args.optimizer)
     actor_opt = Optimizer(actor.parameters(), lr=args.lr_actor)
@@ -537,8 +536,8 @@ def main():
     # Policy checkpoint setup
     # -------------------------
     checkpoint_dir = (
-        f"checkpoints_ippo_masked_joint_300_agents_seed_{seed}"
-        f"_max_bid_10_route_0_4_route_1_5_longer"
+        f"/scratch/tmp/psarou_karma_part_c/checkpoints_ippo_{seed}"
+        f"_max_bid_5_route_0_4_route_1_3"
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -832,7 +831,9 @@ def main():
                     if valid.any():
                         logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
 
-                    act_idx = int(torch.argmax(logits).item())
+                    #act_idx = int(torch.argmax(logits).item())
+                    dist = torch.distributions.Categorical(logits=logits)
+                    act_idx = int(dist.sample().item())
                     act_vec = joint_index_to_multidiscrete(act_idx, nvec, strides)
                     action = act_vec
                     pending[agent] = {"dummy": True}
