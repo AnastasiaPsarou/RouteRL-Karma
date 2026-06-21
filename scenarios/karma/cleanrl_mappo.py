@@ -26,20 +26,20 @@ from routerl_aec_environment_karma import TrafficEnvironment
 # ------------------------------------------------------------
 @dataclass
 class Args:
-    seed: int = 12
+    seed: int = 10
     device: str = "cpu"
 
-    training_episodes: int = 54
-    testing_episodes: int = 0
+    training_episodes: int = 34
+    testing_episodes: int = 10
 
     gamma: float = 0.99
-    gae_lambda: float = 0.95
+    gae_lambda: float = 0.9
     ppo_clip: float = 0.2
-    entropy_coef: float = 0.001
+    entropy_coef: float = 0.0
     value_coef: float = 0.5
 
-    lr_actor: float = 8e-4
-    lr_critic: float = 8e-4
+    lr_actor: float = 0.0003
+    lr_critic: float = 0.0003
     optimizer: str = "Adam"
 
     epochs: int = 4
@@ -200,6 +200,111 @@ def select_action_masked_joint_mappo(
     value = critic(cobs_t).squeeze(-1)
     return int(act.item()), float(logp.item()), float(value.item())
 
+@torch.no_grad()
+def compute_mappo_policy_snapshot(
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+) -> np.ndarray:
+    """
+    Computes masked-softmax policy probabilities for a fixed evaluation set.
+
+    The MAPPO actor is decentralized, so the policy snapshot only needs
+    the local observations and action masks. The centralized critic is not
+    used for these policy-probability checkpoints.
+
+    eval_obs shape:
+        (num_agents, num_eval_states, obs_dim)
+
+    eval_masks shape:
+        (num_agents, num_eval_states, action_dim)
+
+    returns:
+        policy_probs shape:
+            (num_agents, num_eval_states, action_dim)
+    """
+    was_training = actor.training
+    actor.eval()
+
+    num_agents, num_eval_states, _obs_dim = eval_obs.shape
+    action_dim = eval_masks.shape[-1]
+
+    policy_probs = np.zeros(
+        (num_agents, num_eval_states, action_dim),
+        dtype=np.float32,
+    )
+
+    for agent_idx in range(num_agents):
+        obs_t = torch.tensor(
+            eval_obs[agent_idx],
+            device=device,
+            dtype=torch.float32,
+        )
+
+        mask_t = torch.tensor(
+            eval_masks[agent_idx],
+            device=device,
+        )
+
+        logits = actor(obs_t)
+
+        valid = mask_t != 0
+        row_has_any_valid = valid.any(dim=1)
+
+        if row_has_any_valid.all():
+            logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
+        else:
+            safe_logits = logits.clone()
+            safe_logits[row_has_any_valid] = safe_logits[row_has_any_valid].masked_fill(
+                ~valid[row_has_any_valid],
+                args.masked_logits_neg_inf,
+            )
+            logits = safe_logits
+
+        probs = torch.softmax(logits, dim=-1)
+        policy_probs[agent_idx] = probs.cpu().numpy()
+
+    if was_training:
+        actor.train()
+
+    return policy_probs
+
+
+def save_mappo_policy_checkpoint(
+    checkpoint_path: str,
+    step: int,
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+    nvec: np.ndarray,
+    strides: np.ndarray,
+):
+    """
+    Saves the current shared MAPPO actor policy on a fixed evaluation set.
+    """
+    policy_probs = compute_mappo_policy_snapshot(
+        actor=actor,
+        eval_obs=eval_obs,
+        eval_masks=eval_masks,
+        device=device,
+        args=args,
+    )
+
+    np.savez_compressed(
+        checkpoint_path,
+        step=np.array(step, dtype=np.int64),
+        policy=policy_probs.astype(np.float32),
+        aggregate_policy=policy_probs.mean(axis=0).astype(np.float32),
+        eval_obs=eval_obs.astype(np.float32),
+        eval_action_masks=eval_masks.astype(np.int8),
+        nvec=nvec.astype(np.int64),
+        strides=strides.astype(np.int64),
+        action_dim=np.array(policy_probs.shape[-1], dtype=np.int64),
+    )
 
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
@@ -332,8 +437,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_mappo_masked_joint_300_agents_seed_{seed}_route_0_4_route_1_5_max_bid_10"
-    plots_folder = f"plots_mappo_masked_joint_300_agents_seed_{seed}_route_0_4_route_1_5_max_bid_10"
+    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5"
+    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -347,7 +452,7 @@ def main():
                 "observation_type": "previous_agents_avg_tt_per_route",
                 "route_0_fee": 0,
                 "travel_time_normalization_value": 16.5,
-                "max_allowed_bid": 10,
+                "max_allowed_bid": 5,
             }
         },
         "simulator_parameters": {
@@ -361,7 +466,7 @@ def main():
             "save_every": 5,
             "number_of_days": 30,
             "centrally_defined_price_route_0": 4,
-            "centrally_defined_price_route_1": 5,
+            "centrally_defined_price_route_1": 3,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -437,6 +542,25 @@ def main():
 
     # AEC steps are agent-by-agent, so this is just a normalization hint
     max_steps_hint = max(1, int(num_agents * env_params["environment_parameters"]["number_of_days"]))
+    
+    # -------------------------
+    # Policy checkpoint setup
+    # -------------------------
+    checkpoint_dir = (
+        f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{seed}"
+        f"_route_0_4_route_1_3_max_bid_5"
+    )
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    checkpoint_interval = 2  # save every 2 training episodes
+
+    eval_obs_by_agent: Dict[str, np.ndarray] = {}
+    eval_masks_by_agent: Dict[str, np.ndarray] = {}
+
+    eval_obs: Optional[np.ndarray] = None
+    eval_masks: Optional[np.ndarray] = None
+
+    saved_initial_policy = False
 
     # -------------------------
     # Training loop
@@ -496,6 +620,12 @@ def main():
                                 f"Expected prod(nvec)={action_dim}, nvec={nvec.tolist()}"
                             )
 
+                    # Collect the first valid observation/mask for each learning agent.
+                    # These fixed states are used for policy-change diagnostics.
+                    if agent not in eval_obs_by_agent:
+                        eval_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
+                        eval_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
+
                     gfeats = build_global_features(
                         args=args,
                         step_in_episode=step_in_episode,
@@ -543,6 +673,51 @@ def main():
                 traj[a]["rew"].append(0.0)
                 traj[a]["done"].append(1.0)
                 pending[a] = None
+
+        # -------------------------
+        # Build fixed eval set and save initial policy once
+        # -------------------------
+        if not saved_initial_policy:
+            missing_agents = [
+                agent for agent in mutated_agent_names
+                if agent not in eval_obs_by_agent
+            ]
+
+            if missing_agents:
+                print(
+                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
+                    f"Using zero observations and all-valid masks for them."
+                )
+
+            eval_obs_list = []
+            eval_masks_list = []
+
+            for agent in mutated_agent_names:
+                if agent in eval_obs_by_agent:
+                    eval_obs_list.append(eval_obs_by_agent[agent])
+                    eval_masks_list.append(eval_masks_by_agent[agent])
+                else:
+                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
+                    eval_masks_list.append(np.ones(action_dim, dtype=np.int8))
+
+            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
+            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+
+            save_mappo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, "step_00000000.npz"),
+                step=0,
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                nvec=nvec,
+                strides=strides,
+            )
+
+            saved_initial_policy = True
+
+
 
         # -------------------------
         # Build PPO batch from all agents
@@ -598,6 +773,24 @@ def main():
         for _ in range(args.epochs):
             metrics = ppo_update_masked_joint_mappo(actor, critic, actor_opt, critic_opt, batch, args)
 
+        # Save policy checkpoint after PPO update
+        if (
+            eval_obs is not None
+            and eval_masks is not None
+            and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
+        ):
+            save_mappo_policy_checkpoint(
+                checkpoint_path=os.path.join(checkpoint_dir, f"step_{ep + 1:08d}.npz"),
+                step=ep + 1,
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                nvec=nvec,
+                strides=strides,
+            )
+
         mean_return = float(np.mean(list(ep_return.values())))
         running_ep_returns.append(mean_return)
         running_ep_lens.append(turn_count)
@@ -621,6 +814,22 @@ def main():
     # -------------------------
     actor.eval()
     critic.eval()
+
+    # Save final policy explicitly
+    if eval_obs is not None and eval_masks is not None:
+        save_mappo_policy_checkpoint(
+            checkpoint_path=os.path.join(checkpoint_dir, "final_policy.npz"),
+            step=training_episodes,
+            actor=actor,
+            eval_obs=eval_obs,
+            eval_masks=eval_masks,
+            device=device,
+            args=args,
+            nvec=nvec,
+            strides=strides,
+        )
+    else:
+        print("[WARNING] No fixed eval set was built, so final_policy.npz was not saved.")
     pbar.set_description("MAPPO AEC testing (masked joint)")
 
     for ep in range(testing_episodes):
@@ -659,7 +868,9 @@ def main():
                     if valid.any():
                         logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
 
-                    act_idx = int(torch.argmax(logits).item())
+                    dist = torch.distributions.Categorical(logits=logits)
+                    act_idx = int(dist.sample().item())
+                    #act_idx = int(torch.argmax(logits).item())
                     act_vec = joint_index_to_multidiscrete(act_idx, nvec, strides)
                     action = act_vec
 
