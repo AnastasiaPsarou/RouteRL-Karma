@@ -12,6 +12,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from pathlib import Path
+import argparse
 
 # ------------------------------------------------------------
 # Your imports
@@ -53,7 +55,38 @@ class Args:
     num_routes: int = 3                 # number_of_paths
     route_action_index: int = 0         # which component of act_vec corresponds to route choice
     include_timestep_feature: bool = True
+    checkpoint_dir: str = f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_seed_{seed}"
 
+def parse_args() -> Args:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=Args.seed,
+        help="Random seed for the experiment.",
+    )
+
+    parser.add_argument(
+        "--device",
+        type=str,
+        default=Args.device,
+        help="Device to use, e.g. cpu or cuda.",
+    )
+
+    parsed = parser.parse_args()
+
+    args = Args()
+    args.seed = parsed.seed
+    args.device = parsed.device
+
+    # Important: update checkpoint_dir after changing the seed.
+    args.checkpoint_dir = (
+        f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{args.seed}"
+        f"_route_0_4_route_1_3_max_bid_5"
+    )
+
+    return args
 
 # ------------------------------------------------------------
 # Networks
@@ -273,20 +306,31 @@ def compute_mappo_policy_snapshot(
 
 
 def save_mappo_policy_checkpoint(
-    checkpoint_path: str,
-    step: int,
+    *,
     actor: nn.Module,
     eval_obs: np.ndarray,
     eval_masks: np.ndarray,
     device: torch.device,
     args: Args,
-    nvec: np.ndarray,
-    strides: np.ndarray,
-):
+    checkpoint_dir: str | Path,
+    step: int,
+    phase: str,
+) -> None:
     """
-    Saves the current shared MAPPO actor policy on a fixed evaluation set.
+    Saves a MAPPO policy-probability checkpoint.
+
+    The saved .npz has the same structure expected by your diagnostics script:
+        step
+        policy
+        eval_action_masks
+
+    policy shape:
+        agents x eval_states x joint_actions
     """
-    policy_probs = compute_mappo_policy_snapshot(
+    checkpoint_dir = Path(checkpoint_dir)
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    policy = compute_mappo_policy_snapshot(
         actor=actor,
         eval_obs=eval_obs,
         eval_masks=eval_masks,
@@ -294,17 +338,18 @@ def save_mappo_policy_checkpoint(
         args=args,
     )
 
+    output_path = checkpoint_dir / f"step_{step:08d}.npz"
+
     np.savez_compressed(
-        checkpoint_path,
+        output_path,
         step=np.array(step, dtype=np.int64),
-        policy=policy_probs.astype(np.float32),
-        aggregate_policy=policy_probs.mean(axis=0).astype(np.float32),
-        eval_obs=eval_obs.astype(np.float32),
-        eval_action_masks=eval_masks.astype(np.int8),
-        nvec=nvec.astype(np.int64),
-        strides=strides.astype(np.int64),
-        action_dim=np.array(policy_probs.shape[-1], dtype=np.int64),
+        policy=policy.astype(np.float32),
+        eval_action_masks=eval_masks.astype(bool),
+        phase=np.array(phase),
     )
+
+    print(f"[checkpoint] Saved {phase} policy checkpoint: {output_path}")
+
 
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
@@ -420,7 +465,8 @@ def ppo_update_masked_joint_mappo(
 # Main
 # ------------------------------------------------------------
 def main():
-    args = Args()
+    
+    args = parse_args()
     set_seed(args.seed)
     device = torch.device(args.device)
 
@@ -704,15 +750,14 @@ def main():
             eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
 
             save_mappo_policy_checkpoint(
-                checkpoint_path=os.path.join(checkpoint_dir, "step_00000000.npz"),
-                step=0,
                 actor=actor,
                 eval_obs=eval_obs,
                 eval_masks=eval_masks,
                 device=device,
                 args=args,
-                nvec=nvec,
-                strides=strides,
+                checkpoint_dir=args.checkpoint_dir,
+                step=0,
+                phase="training",
             )
 
             saved_initial_policy = True
@@ -780,15 +825,14 @@ def main():
             and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
         ):
             save_mappo_policy_checkpoint(
-                checkpoint_path=os.path.join(checkpoint_dir, f"step_{ep + 1:08d}.npz"),
-                step=ep + 1,
                 actor=actor,
                 eval_obs=eval_obs,
                 eval_masks=eval_masks,
                 device=device,
                 args=args,
-                nvec=nvec,
-                strides=strides,
+                checkpoint_dir=args.checkpoint_dir,
+                step=ep+1,
+                phase="training",
             )
 
         mean_return = float(np.mean(list(ep_return.values())))
@@ -815,21 +859,7 @@ def main():
     actor.eval()
     critic.eval()
 
-    # Save final policy explicitly
-    if eval_obs is not None and eval_masks is not None:
-        save_mappo_policy_checkpoint(
-            checkpoint_path=os.path.join(checkpoint_dir, "final_policy.npz"),
-            step=training_episodes,
-            actor=actor,
-            eval_obs=eval_obs,
-            eval_masks=eval_masks,
-            device=device,
-            args=args,
-            nvec=nvec,
-            strides=strides,
-        )
-    else:
-        print("[WARNING] No fixed eval set was built, so final_policy.npz was not saved.")
+
     pbar.set_description("MAPPO AEC testing (masked joint)")
 
     for ep in range(testing_episodes):
@@ -885,6 +915,19 @@ def main():
                 action = None
 
             env.step(action)
+
+        global_step = args.training_episodes + ep + 1
+
+        save_mappo_policy_checkpoint(
+            actor=actor,
+            eval_obs=eval_obs,
+            eval_masks=eval_masks,
+            device=device,
+            args=args,
+            checkpoint_dir=args.checkpoint_dir,
+            step=global_step,
+            phase="testing",
+        )
 
         mean_return = float(np.mean(list(ep_return.values())))
         print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
