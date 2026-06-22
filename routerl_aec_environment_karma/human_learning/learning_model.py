@@ -305,62 +305,69 @@ class GeneralBiddingModel(BaseLearningModel):
         """
         Update expected route-bid cost estimates.
 
-        Parameters
-        ----------
-        state : any
-            Environment state / observation.
-        action : np.ndarray or list
-            Bid vector submitted by the agent.
-        reward : float
-            Observed reward/cost signal.
-        chosen_route : int or None
-            Route actually assigned by the mechanism.
-            If None, we fall back to the route with the highest submitted bid.
+        If reward is scalar:
+            update only the chosen/assigned route.
+
+        If reward is a vector of length num_routes:
+            update the submitted bid for every route.
         """
         action = np.asarray(action, dtype=int)
+        reward_arr = np.asarray(reward, dtype=float)
 
-        if chosen_route is None:
-            chosen_route = int(np.argmax(action))
+        # Case 1: reward for all route options
+        if reward_arr.ndim > 0 and len(reward_arr) == self.num_routes:
+            routes_to_update = range(self.num_routes)
+            rewards_to_use = reward_arr
 
-        chosen_bid_value = int(action[chosen_route])
+        # Case 2: scalar reward, update only assigned route
+        else:
+            if chosen_route is None:
+                chosen_route = int(np.argmax(action))
 
-        if chosen_bid_value not in self.bid_value_to_col:
-            raise ValueError(
-                f"Bid value {chosen_bid_value} is not in bid_values: {self.bid_values}"
+            routes_to_update = [chosen_route]
+            rewards_to_use = [float(reward)]
+
+        for route, route_reward in zip(routes_to_update, rewards_to_use):
+            bid_value = int(action[route])
+
+            if bid_value not in self.bid_value_to_col:
+                raise ValueError(
+                    f"Bid value {bid_value} is not in bid_values: {self.bid_values}"
+                )
+
+            bid_col = self.bid_value_to_col[bid_value]
+
+            self.memory[route][bid_col].append(route_reward)
+
+            current_estimate = self.costs[route, bid_col]
+
+            relative_change = abs(
+                (current_estimate - route_reward)
+                / (abs(current_estimate) + 1e-8)
             )
 
-        chosen_bid_col = self.bid_value_to_col[chosen_bid_value]
+            if relative_change >= self.gamma_c:
+                relevant_memory = self.memory[route][bid_col]
 
-        self.memory[chosen_route][chosen_bid_col].append(reward)
+                weight_normalization_factor = 1 / (
+                    self.alpha_zero
+                    + sum(self.alphas[i] for i, _ in enumerate(relevant_memory))
+                )
 
-        current_estimate = self.costs[chosen_route, chosen_bid_col]
+                updated_cost = (
+                    weight_normalization_factor
+                    * self.alpha_zero
+                    * current_estimate
+                )
 
-        relative_change = abs(
-            (current_estimate - reward) / (abs(current_estimate) + 1e-8)
-        )
+                updated_cost += sum(
+                    weight_normalization_factor
+                    * self.alphas[i]
+                    * relevant_memory[i]
+                    for i, _ in enumerate(relevant_memory)
+                )
 
-        if relative_change >= self.gamma_c:
-            relevant_memory = self.memory[chosen_route][chosen_bid_col]
-
-            weight_normalization_factor = 1 / (
-                self.alpha_zero
-                + sum(self.alphas[i] for i, _ in enumerate(relevant_memory))
-            )
-
-            updated_cost = (
-                weight_normalization_factor
-                * self.alpha_zero
-                * current_estimate
-            )
-
-            updated_cost += sum(
-                weight_normalization_factor
-                * self.alphas[i]
-                * relevant_memory[i]
-                for i, _ in enumerate(relevant_memory)
-            )
-
-            self.costs[chosen_route, chosen_bid_col] = updated_cost
+                self.costs[route, bid_col] = updated_cost
 
     def act(self, state):
         """
