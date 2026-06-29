@@ -1,0 +1,1321 @@
+from __future__ import annotations
+
+import os
+import sys
+import random
+import argparse
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from tqdm import tqdm
+
+
+# ------------------------------------------------------------
+# Your imports
+# ------------------------------------------------------------
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
+from routerl_aec_environment import TrafficEnvironment
+
+
+# ------------------------------------------------------------
+# Config
+# ------------------------------------------------------------
+@dataclass
+class Args:
+    seed: int = 10
+    device: str = "cpu"
+
+    training_episodes: int = 34
+    testing_episodes: int = 10
+
+    gamma: float = 0.99
+    gae_lambda: float = 0.90
+    ppo_clip: float = 0.2
+    value_coef: float = 0.5
+
+    lr_actor: float = 3e-4
+    lr_critic: float = 3e-4
+    optimizer: str = "Adam"
+
+    epochs: int = 4
+    minibatch_size: int = 4096
+    max_grad_norm: float = 0.5
+    log_every_episodes: int = 10
+
+    actor_hidden: Tuple[int, ...] = (64, 64)
+    critic_hidden: Tuple[int, ...] = (256, 256)
+
+    action_dim: int = 3
+    masked_logits_neg_inf: float = -1e9
+
+    # Centralized critic features
+    num_routes: int = 3
+    route_action_index: int = 0
+    include_timestep_feature: bool = True
+
+    # Entropy scheduling
+    entropy_schedule: str = "linear"   # "linear" | "exp" | "constant"
+    entropy_coef: float = 0.001
+    entropy_start: float = 0.01
+    entropy_end: float = 0.0
+
+    test_greedy: bool = True
+
+    save_policy_checkpoints: bool = True
+    checkpoint_interval: int = 2
+    checkpoint_dir: str = ""
+
+
+def parse_args() -> Args:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--seed", type=int, default=Args.seed)
+    parser.add_argument("--device", type=str, default=Args.device)
+    parser.add_argument("--training_episodes", type=int, default=Args.training_episodes)
+    parser.add_argument("--testing_episodes", type=int, default=Args.testing_episodes)
+    parser.add_argument("--action_dim", type=int, default=Args.action_dim)
+    parser.add_argument("--checkpoint_dir", type=str, default="")
+    parser.add_argument("--no_policy_checkpoints", action="store_true")
+    parser.add_argument("--sample_in_test", action="store_true")
+
+    parsed = parser.parse_args()
+
+    args = Args()
+    args.seed = parsed.seed
+    args.device = parsed.device
+    args.training_episodes = parsed.training_episodes
+    args.testing_episodes = parsed.testing_episodes
+    args.action_dim = parsed.action_dim
+    args.save_policy_checkpoints = not parsed.no_policy_checkpoints
+    args.test_greedy = not parsed.sample_in_test
+
+    if parsed.checkpoint_dir:
+        args.checkpoint_dir = parsed.checkpoint_dir
+    else:
+        args.checkpoint_dir = (
+            f"checkpoints_mappo_seed_{args.seed}"
+            f"_monetary_pricing_route0_1_5_route1_0_8_urg"
+        )
+
+    return args
+
+
+# ------------------------------------------------------------
+# Networks
+# ------------------------------------------------------------
+class MLPActor(nn.Module):
+    """
+    Shared decentralized actor:
+      local_obs -> logits
+    """
+
+    def __init__(self, obs_dim: int, action_dim: int, hidden: Tuple[int, ...] = (64, 64)):
+        super().__init__()
+
+        layers: List[nn.Module] = []
+        last = obs_dim
+
+        for h in hidden:
+            layers += [nn.Linear(last, h), nn.Tanh()]
+            last = h
+
+        layers += [nn.Linear(last, action_dim)]
+
+        self.net = nn.Sequential(*layers)
+        self._init_params()
+
+    def _init_params(self):
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.orthogonal_(m.weight, gain=np.sqrt(2))
+                nn.init.zeros_(m.bias)
+
+        last = self.net[-1]
+        if isinstance(last, nn.Linear):
+            nn.init.orthogonal_(last.weight, gain=0.01)
+            nn.init.zeros_(last.bias)
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        return self.net(obs)
+
+
+class MLPCriticCentral(nn.Module):
+    """
+    Centralized critic:
+      concat(local_obs, global_features) -> V
+    """
+
+    def __init__(self, central_obs_dim: int, hidden: Tuple[int, ...] = (256, 256)):
+        super().__init__()
+
+        layers: List[nn.Module] = []
+        last = central_obs_dim
+
+        for h in hidden:
+            layers += [nn.Linear(last, h), nn.Tanh()]
+            last = h
+
+        layers += [nn.Linear(last, 1)]
+
+        self.net = nn.Sequential(*layers)
+        self._init_params()
+
+    def _init_params(self):
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.orthogonal_(m.weight, gain=np.sqrt(2))
+                nn.init.zeros_(m.bias)
+
+        last = self.net[-1]
+        if isinstance(last, nn.Linear):
+            nn.init.orthogonal_(last.weight, gain=1.0)
+            nn.init.zeros_(last.bias)
+
+    def forward(self, central_obs: torch.Tensor) -> torch.Tensor:
+        return self.net(central_obs).squeeze(-1)
+
+
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
+def set_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+
+def entropy_coef_at_episode(ep: int, total_eps: int, args: Args) -> float:
+    if args.entropy_schedule == "constant":
+        return args.entropy_coef
+
+    frac = min(max(ep / max(total_eps - 1, 1), 0.0), 1.0)
+
+    if args.entropy_schedule == "linear":
+        return args.entropy_start + frac * (args.entropy_end - args.entropy_start)
+
+    if args.entropy_schedule == "exp":
+        end = max(args.entropy_end, 1e-6)
+        start = max(args.entropy_start, 1e-8)
+        r = (end / start) ** (1.0 / max(total_eps - 1, 1))
+        return start * (r ** ep)
+
+    raise ValueError(f"Unknown entropy_schedule: {args.entropy_schedule}")
+
+
+def extract_obs_and_mask(obs: Any) -> Tuple[np.ndarray, Optional[np.ndarray]]:
+    """
+    Supports:
+      1. raw obs arrays
+      2. dict obs:
+           {
+             "observation": ...,
+             "action_mask": ...
+           }
+    """
+
+    if isinstance(obs, dict):
+        obs_vec = np.asarray(obs.get("observation", []), dtype=np.float32).reshape(-1)
+        mask = obs.get("action_mask", None)
+
+        if mask is None:
+            return obs_vec, None
+
+        mask_arr = np.asarray(mask).reshape(-1)
+        return obs_vec, mask_arr
+
+    return np.asarray(obs, dtype=np.float32).reshape(-1), None
+
+
+def compute_action_strides(nvec: np.ndarray) -> np.ndarray:
+    nvec = np.asarray(nvec, dtype=np.int64)
+
+    strides = np.ones_like(nvec)
+
+    for i in range(len(nvec) - 2, -1, -1):
+        strides[i] = strides[i + 1] * nvec[i + 1]
+
+    return strides
+
+
+def joint_index_to_multidiscrete(index: int, nvec: np.ndarray, strides: np.ndarray) -> List[int]:
+    idx = int(index)
+    out: List[int] = []
+
+    for i in range(len(nvec)):
+        val = idx // int(strides[i])
+        idx = idx % int(strides[i])
+        out.append(int(val))
+
+    return out
+
+
+def infer_action_info(env: TrafficEnvironment, agent_name: str, fallback_action_dim: int):
+    """
+    Returns:
+      action_dim: flattened categorical action dimension
+      nvec: None for Discrete, np.ndarray for MultiDiscrete
+      strides: None for Discrete, np.ndarray for MultiDiscrete
+    """
+
+    act_space = env._action_spaces[agent_name]
+
+    if hasattr(act_space, "nvec"):
+        nvec = np.asarray(act_space.nvec, dtype=np.int64)
+        strides = compute_action_strides(nvec)
+        action_dim = int(np.prod(nvec))
+        return action_dim, nvec, strides
+
+    if hasattr(act_space, "n"):
+        return int(act_space.n), None, None
+
+    return int(fallback_action_dim), None, None
+
+
+def action_index_to_env_action(
+    action_index: int,
+    nvec: Optional[np.ndarray],
+    strides: Optional[np.ndarray],
+):
+    if nvec is None:
+        return int(action_index)
+
+    assert strides is not None
+    return joint_index_to_multidiscrete(action_index, nvec, strides)
+
+
+def route_from_env_action(env_action: Any, args: Args) -> int:
+    if isinstance(env_action, (list, tuple, np.ndarray)):
+        return int(env_action[args.route_action_index])
+
+    return int(env_action)
+
+
+def build_global_features(
+    *,
+    args: Args,
+    step_in_episode: int,
+    max_steps_hint: int,
+    route_counts: np.ndarray,
+) -> np.ndarray:
+    """
+    Global features for the centralized critic only.
+
+    Features:
+      - normalized route counts
+      - optional normalized timestep
+    """
+
+    counts = route_counts.astype(np.float32)
+    counts_norm = counts / (counts.sum() + 1e-6)
+
+    feats = [counts_norm]
+
+    if args.include_timestep_feature:
+        if max_steps_hint > 0:
+            t_norm = np.float32(step_in_episode / float(max_steps_hint))
+        else:
+            t_norm = np.float32(0.0)
+
+        feats.append(np.array([t_norm], dtype=np.float32))
+
+    return np.concatenate(feats, axis=0).astype(np.float32)
+
+
+def make_central_obs(local_obs: np.ndarray, global_feats: np.ndarray) -> np.ndarray:
+    return np.concatenate(
+        [
+            local_obs.astype(np.float32),
+            global_feats.astype(np.float32),
+        ],
+        axis=0,
+    ).astype(np.float32)
+
+
+def apply_action_mask_to_logits(
+    logits: torch.Tensor,
+    mask: Optional[torch.Tensor],
+    neg_inf: float,
+) -> torch.Tensor:
+    if mask is None:
+        return logits
+
+    if mask.dim() == 1:
+        mask = mask.unsqueeze(0)
+
+    valid = mask != 0
+    row_has_any_valid = valid.any(dim=1)
+
+    if row_has_any_valid.all():
+        return logits.masked_fill(~valid, neg_inf)
+
+    safe_logits = logits.clone()
+    rows = row_has_any_valid
+
+    safe_logits[rows] = safe_logits[rows].masked_fill(
+        ~valid[rows],
+        neg_inf,
+    )
+
+    return safe_logits
+
+
+@torch.no_grad()
+def select_action_mappo(
+    actor: nn.Module,
+    critic: nn.Module,
+    obs_vec: np.ndarray,
+    central_obs_vec: np.ndarray,
+    action_mask: Optional[np.ndarray],
+    device: torch.device,
+    args: Args,
+) -> Tuple[int, float, float]:
+    obs_t = torch.from_numpy(obs_vec).to(device=device, dtype=torch.float32).unsqueeze(0)
+    cobs_t = torch.from_numpy(central_obs_vec).to(device=device, dtype=torch.float32).unsqueeze(0)
+
+    logits = actor(obs_t)
+
+    if action_mask is not None:
+        mask_t = torch.from_numpy(action_mask).to(device=device).unsqueeze(0)
+        logits = apply_action_mask_to_logits(
+            logits,
+            mask_t,
+            args.masked_logits_neg_inf,
+        )
+
+    dist = torch.distributions.Categorical(logits=logits)
+    act = dist.sample()
+    logp = dist.log_prob(act)
+
+    value = critic(cobs_t)
+
+    return int(act.item()), float(logp.item()), float(value.item())
+
+
+@torch.no_grad()
+def compute_policy_snapshot(
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+) -> np.ndarray:
+    """
+    Returns policy probabilities:
+      shape = (num_agents, num_eval_states, action_dim)
+    """
+
+    was_training = actor.training
+    actor.eval()
+
+    num_agents, num_eval_states, _obs_dim = eval_obs.shape
+    action_dim = eval_masks.shape[-1]
+
+    policy_probs = np.zeros(
+        (num_agents, num_eval_states, action_dim),
+        dtype=np.float32,
+    )
+
+    for agent_idx in range(num_agents):
+        obs_t = torch.tensor(
+            eval_obs[agent_idx],
+            device=device,
+            dtype=torch.float32,
+        )
+
+        mask_t = torch.tensor(
+            eval_masks[agent_idx],
+            device=device,
+        )
+
+        logits = actor(obs_t)
+        logits = apply_action_mask_to_logits(
+            logits,
+            mask_t,
+            args.masked_logits_neg_inf,
+        )
+
+        probs = torch.softmax(logits, dim=-1)
+        policy_probs[agent_idx] = probs.cpu().numpy()
+
+    if was_training:
+        actor.train()
+
+    return policy_probs
+
+
+def save_policy_checkpoint(
+    *,
+    actor: nn.Module,
+    eval_obs: np.ndarray,
+    eval_masks: np.ndarray,
+    device: torch.device,
+    args: Args,
+    checkpoint_dir: str | Path,
+    step: int,
+    phase: str,
+) -> None:
+    checkpoint_dir = Path(checkpoint_dir)
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    policy = compute_policy_snapshot(
+        actor=actor,
+        eval_obs=eval_obs,
+        eval_masks=eval_masks,
+        device=device,
+        args=args,
+    )
+
+    output_path = checkpoint_dir / f"step_{step:08d}.npz"
+
+    np.savez_compressed(
+        output_path,
+        step=np.array(step, dtype=np.int64),
+        policy=policy.astype(np.float32),
+        eval_action_masks=eval_masks.astype(bool),
+        phase=np.array(phase),
+    )
+
+    print(f"[checkpoint] Saved {phase} policy checkpoint: {output_path}")
+
+
+# ------------------------------------------------------------
+# GAE and PPO update
+# ------------------------------------------------------------
+def compute_gae_from_transitions(
+    rews: np.ndarray,
+    vals: np.ndarray,
+    next_vals: np.ndarray,
+    dones: np.ndarray,
+    gamma: float,
+    lam: float,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    AEC-safe GAE.
+
+    Each transition stores:
+      s_t, a_t, r_t, done_t, s_{t+1}
+
+    next_vals[t] should be V(s_{t+1}).
+    """
+
+    T = len(rews)
+
+    adv = np.zeros(T, dtype=np.float32)
+    last_gae = 0.0
+
+    for t in reversed(range(T)):
+        nonterminal = 1.0 - dones[t]
+        delta = rews[t] + gamma * next_vals[t] * nonterminal - vals[t]
+        last_gae = delta + gamma * lam * nonterminal * last_gae
+        adv[t] = last_gae
+
+    ret = adv + vals
+
+    return adv.astype(np.float32), ret.astype(np.float32)
+
+
+def ppo_update_mappo(
+    actor: nn.Module,
+    critic: nn.Module,
+    actor_opt: optim.Optimizer,
+    critic_opt: optim.Optimizer,
+    batch: Dict[str, torch.Tensor],
+    args: Args,
+    entropy_coef: float,
+) -> Dict[str, float]:
+    obs = batch["obs"]
+    central_obs = batch["central_obs"]
+    act = batch["act"]
+    logp_old = batch["logp_old"]
+    adv = batch["adv"]
+    ret = batch["ret"]
+    mask = batch["mask"]
+
+    adv = (adv - adv.mean()) / (adv.std() + 1e-8)
+
+    M = obs.shape[0]
+
+    metrics = {
+        "actor_loss": 0.0,
+        "critic_loss": 0.0,
+        "entropy": 0.0,
+    }
+
+    n_mb = 0
+
+    actor.train()
+    critic.train()
+
+    for _ in range(args.epochs):
+        perm = torch.randperm(M, device=obs.device)
+
+        for start in range(0, M, args.minibatch_size):
+            mb_idx = perm[start:start + args.minibatch_size]
+
+            mb_obs = obs[mb_idx]
+            mb_cobs = central_obs[mb_idx]
+            mb_act = act[mb_idx]
+            mb_logp_old = logp_old[mb_idx]
+            mb_adv = adv[mb_idx]
+            mb_ret = ret[mb_idx]
+            mb_mask = mask[mb_idx]
+
+            logits = actor(mb_obs)
+
+            logits = apply_action_mask_to_logits(
+                logits,
+                mb_mask,
+                args.masked_logits_neg_inf,
+            )
+
+            dist = torch.distributions.Categorical(logits=logits)
+
+            logp = dist.log_prob(mb_act)
+            entropy = dist.entropy().mean()
+
+            ratio = torch.exp(logp - mb_logp_old)
+
+            pg1 = ratio * mb_adv
+            pg2 = torch.clamp(
+                ratio,
+                1.0 - args.ppo_clip,
+                1.0 + args.ppo_clip,
+            ) * mb_adv
+
+            actor_loss = -(torch.min(pg1, pg2)).mean() - entropy_coef * entropy
+
+            value = critic(mb_cobs)
+            critic_loss = F.mse_loss(value, mb_ret) * args.value_coef
+
+            actor_opt.zero_grad(set_to_none=True)
+            actor_loss.backward()
+
+            if args.max_grad_norm and args.max_grad_norm > 0:
+                torch.nn.utils.clip_grad_norm_(
+                    actor.parameters(),
+                    args.max_grad_norm,
+                )
+
+            actor_opt.step()
+
+            critic_opt.zero_grad(set_to_none=True)
+            critic_loss.backward()
+
+            if args.max_grad_norm and args.max_grad_norm > 0:
+                torch.nn.utils.clip_grad_norm_(
+                    critic.parameters(),
+                    args.max_grad_norm,
+                )
+
+            critic_opt.step()
+
+            metrics["actor_loss"] += float(actor_loss.item())
+            metrics["critic_loss"] += float(critic_loss.item())
+            metrics["entropy"] += float(entropy.item())
+            n_mb += 1
+
+    for k in metrics:
+        metrics[k] /= max(n_mb, 1)
+
+    return metrics
+
+
+# ------------------------------------------------------------
+# Main
+# ------------------------------------------------------------
+def main():
+    args = parse_args()
+    set_seed(args.seed)
+
+    device = torch.device(args.device)
+
+    os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+    # -------------------------
+    # Environment setup
+    # -------------------------
+    new_machines_after_mutation = 300
+    human_learning_episodes = 0
+    training_episodes = args.training_episodes
+    testing_episodes = args.testing_episodes
+
+    total_episodes = (
+        human_learning_episodes
+        + training_episodes
+        + testing_episodes
+    )
+
+    num_agents = 300
+    origins = ["E0"]
+    destinations = ["E17.600"]
+
+    seed = args.seed
+
+    records_folder = (
+        f"training_records_mappo_seed_{seed}"
+        f"_monetary_pricing_route0_1_5_route1_0_8urg"
+    )
+
+    plots_folder = (
+        f"plots_mappo_seed_{seed}"
+        f"_monetary_pricing_route0_1_5_route1_0_8urg"
+    )
+
+    phases = [1, int(total_episodes)]
+    phase_names = ["Training", "Testing"]
+
+    env_params = {
+        "agent_parameters": {
+            "new_machines_after_mutation": new_machines_after_mutation,
+            "num_agents": num_agents,
+            "machine_parameters": {
+                "behavior": "selfish",
+                "observation_type": "previous_agents_avg_tt_per_route",
+                "route_0_fee": 1.5,
+                "route_1_fee": 0.8,
+                "travel_time_normalization_value": 16.5,
+            },
+        },
+        "simulator_parameters": {
+            "network_name": "network",
+            "custom_network_folder": "../../network_analysis/network_new",
+            "sumo_type": "sumo",
+            "simulation_timesteps": 100,
+        },
+        "environment_parameters": {
+            "observations_time_window": 10,
+            "save_every": 1,
+            "number_of_days": 3,
+        },
+        "plotter_parameters": {
+            "phases": phases,
+            "smooth_by": 50,
+            "phase_names": phase_names,
+            "records_folder": records_folder,
+            "plots_folder": plots_folder,
+            "plot_choices": "basic",
+        },
+        "path_generation_parameters": {
+            "origins": origins,
+            "destinations": destinations,
+            "number_of_paths": args.num_routes,
+            "beta": -1,
+            "visualize_paths": True,
+            "all_origins_to_all_destinations": False,
+        },
+    }
+
+    env = TrafficEnvironment(
+        seed=seed,
+        create_agents=True,
+        create_paths=True,
+        monetary_pricing=True,
+        **env_params,
+    )
+
+    print("Number of total agents is:", len(env.all_agents), "\n")
+    print("Number of human agents is:", len(env.human_agents), "\n")
+    print("Number of machine agents, autonomous vehicles, is:", len(env.machine_agents), "\n")
+
+    env.start()
+    env.reset()
+
+    # -------------------------
+    # Mutation
+    # -------------------------
+    pre_mutation_agents = env.all_agents.copy()
+
+    env.mutation(mutation_start_percentile=0)
+
+    machines = env.machine_agents.copy()
+
+    mutated_humans = {}
+
+    for machine in machines:
+        for human in pre_mutation_agents:
+            if human.id == machine.id:
+                mutated_humans[str(machine.id)] = human
+                break
+
+    learning_agents = list(mutated_humans.keys())
+    agent_to_idx = {name: i for i, name in enumerate(learning_agents)}
+
+    print("Controlled mutated agents:", len(learning_agents))
+
+    # -------------------------
+    # Infer observation/action sizes
+    # -------------------------
+    obs_spaces = env._observation_spaces
+
+    some_agent = learning_agents[0]
+    obs_space = obs_spaces[some_agent]
+
+    try:
+        obs_shape = obs_space["observation"].shape
+    except Exception:
+        obs_shape = obs_space.shape
+
+    obs_dim = int(np.prod(obs_shape))
+
+    action_dim, nvec, strides = infer_action_info(
+        env=env,
+        agent_name=some_agent,
+        fallback_action_dim=args.action_dim,
+    )
+
+    print("Observation dim:", obs_dim)
+    print("Action dim:", action_dim)
+
+    if nvec is not None:
+        print("Detected MultiDiscrete action space with nvec:", nvec.tolist())
+
+    global_dim = args.num_routes + int(args.include_timestep_feature)
+    central_obs_dim = obs_dim + global_dim
+
+    print("Central observation dim:", central_obs_dim)
+
+    # -------------------------
+    # Build actor and critic
+    # -------------------------
+    actor = MLPActor(
+        obs_dim=obs_dim,
+        action_dim=action_dim,
+        hidden=args.actor_hidden,
+    ).to(device)
+
+    critic = MLPCriticCentral(
+        central_obs_dim=central_obs_dim,
+        hidden=args.critic_hidden,
+    ).to(device)
+
+    Optimizer = getattr(optim, args.optimizer)
+
+    actor_opt = Optimizer(actor.parameters(), lr=args.lr_actor)
+    critic_opt = Optimizer(critic.parameters(), lr=args.lr_critic)
+
+    actor_scheduler = torch.optim.lr_scheduler.LinearLR(
+        actor_opt,
+        start_factor=1.0,
+        end_factor=0.01,
+        total_iters=max(training_episodes, 1),
+    )
+
+    critic_scheduler = torch.optim.lr_scheduler.LinearLR(
+        critic_opt,
+        start_factor=1.0,
+        end_factor=0.01,
+        total_iters=max(training_episodes, 1),
+    )
+
+    max_steps_hint = max(
+        1,
+        int(num_agents * env_params["environment_parameters"]["number_of_days"]),
+    )
+
+    # -------------------------
+    # Policy checkpoint setup
+    # -------------------------
+    eval_obs_by_agent: Dict[str, np.ndarray] = {}
+    eval_masks_by_agent: Dict[str, np.ndarray] = {}
+
+    eval_obs: Optional[np.ndarray] = None
+    eval_masks: Optional[np.ndarray] = None
+
+    saved_initial_policy = False
+
+    # -------------------------
+    # Training
+    # -------------------------
+    pbar = tqdm(
+        total=training_episodes + testing_episodes,
+        desc="MAPPO no-hypernet AEC training",
+    )
+
+    running_returns: List[float] = []
+    running_turns: List[int] = []
+
+    for ep in range(training_episodes):
+        print("training episode is:", ep, "\n")
+
+        env.reset()
+
+        route_counts = np.zeros(args.num_routes, dtype=np.int32)
+        step_in_episode = 0
+
+        pending: Dict[str, Optional[Dict[str, Any]]] = {
+            a: None for a in learning_agents
+        }
+
+        traj: Dict[str, Dict[str, List[Any]]] = {
+            a: {
+                "obs": [],
+                "central_obs": [],
+                "next_central_obs": [],
+                "mask": [],
+                "act": [],
+                "logp": [],
+                "val": [],
+                "rew": [],
+                "done": [],
+            }
+            for a in learning_agents
+        }
+
+        ep_return = {a: 0.0 for a in learning_agents}
+        turn_count = 0
+
+        for agent in env.agent_iter():
+            obs, reward, termination, truncation, info = env.last()
+
+            done = bool(termination or truncation)
+
+            if agent not in agent_to_idx:
+                env.step(None)
+                turn_count += 1
+                continue
+
+            obs_vec: Optional[np.ndarray] = None
+            mask_arr: Optional[np.ndarray] = None
+
+            if not done and obs is not None:
+                obs_vec, mask_arr = extract_obs_and_mask(obs)
+
+                if mask_arr is None:
+                    mask_arr = np.ones(action_dim, dtype=np.int8)
+                else:
+                    mask_arr = mask_arr.reshape(-1).astype(np.int8)
+
+                    if mask_arr.shape[0] != action_dim:
+                        raise ValueError(
+                            f"action_mask length {mask_arr.shape[0]} != action_dim {action_dim}. "
+                            f"For MultiDiscrete, the mask must be flattened over prod(nvec)."
+                        )
+
+            # -------------------------
+            # Close previous pending transition for this agent
+            # -------------------------
+            if pending[agent] is not None:
+                prev = pending[agent]
+
+                done_for_transition = float(done)
+
+                if obs_vec is not None and not done:
+                    gfeats_next = build_global_features(
+                        args=args,
+                        step_in_episode=step_in_episode,
+                        max_steps_hint=max_steps_hint,
+                        route_counts=route_counts,
+                    )
+
+                    next_central_obs = make_central_obs(
+                        obs_vec,
+                        gfeats_next,
+                    )
+                else:
+                    next_central_obs = np.zeros(
+                        central_obs_dim,
+                        dtype=np.float32,
+                    )
+                    done_for_transition = 1.0
+
+                traj[agent]["obs"].append(prev["obs"])
+                traj[agent]["central_obs"].append(prev["central_obs"])
+                traj[agent]["next_central_obs"].append(next_central_obs)
+                traj[agent]["mask"].append(prev["mask"])
+                traj[agent]["act"].append(prev["act"])
+                traj[agent]["logp"].append(prev["logp"])
+                traj[agent]["val"].append(prev["val"])
+                traj[agent]["rew"].append(float(reward))
+                traj[agent]["done"].append(done_for_transition)
+
+                ep_return[agent] += float(reward)
+
+                pending[agent] = None
+
+            # -------------------------
+            # Select new action
+            # -------------------------
+            if done or obs_vec is None:
+                action = None
+            else:
+                if agent not in eval_obs_by_agent:
+                    eval_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
+                    eval_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
+
+                gfeats = build_global_features(
+                    args=args,
+                    step_in_episode=step_in_episode,
+                    max_steps_hint=max_steps_hint,
+                    route_counts=route_counts,
+                )
+
+                central_obs_vec = make_central_obs(
+                    obs_vec,
+                    gfeats,
+                )
+
+                act_idx, logp, val = select_action_mappo(
+                    actor=actor,
+                    critic=critic,
+                    obs_vec=obs_vec,
+                    central_obs_vec=central_obs_vec,
+                    action_mask=mask_arr,
+                    device=device,
+                    args=args,
+                )
+
+                action = action_index_to_env_action(
+                    action_index=act_idx,
+                    nvec=nvec,
+                    strides=strides,
+                )
+
+                route = route_from_env_action(action, args)
+
+                if 0 <= route < args.num_routes:
+                    route_counts[route] += 1
+
+                pending[agent] = {
+                    "obs": obs_vec,
+                    "central_obs": central_obs_vec,
+                    "mask": mask_arr.astype(np.int8),
+                    "act": act_idx,
+                    "logp": logp,
+                    "val": val,
+                }
+
+                step_in_episode += 1
+
+            env.step(action)
+            turn_count += 1
+
+        # -------------------------
+        # Close leftover pending transitions
+        # -------------------------
+        for agent in learning_agents:
+            if pending[agent] is not None:
+                prev = pending[agent]
+
+                traj[agent]["obs"].append(prev["obs"])
+                traj[agent]["central_obs"].append(prev["central_obs"])
+                traj[agent]["next_central_obs"].append(
+                    np.zeros(central_obs_dim, dtype=np.float32)
+                )
+                traj[agent]["mask"].append(prev["mask"])
+                traj[agent]["act"].append(prev["act"])
+                traj[agent]["logp"].append(prev["logp"])
+                traj[agent]["val"].append(prev["val"])
+                traj[agent]["rew"].append(0.0)
+                traj[agent]["done"].append(1.0)
+
+                pending[agent] = None
+
+        # -------------------------
+        # Save initial policy checkpoint
+        # -------------------------
+        if args.save_policy_checkpoints and not saved_initial_policy:
+            missing_agents = [
+                a for a in learning_agents
+                if a not in eval_obs_by_agent
+            ]
+
+            if missing_agents:
+                print(
+                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
+                    f"Using zero observations and all-valid masks."
+                )
+
+            eval_obs_list = []
+            eval_masks_list = []
+
+            for agent in learning_agents:
+                if agent in eval_obs_by_agent:
+                    eval_obs_list.append(eval_obs_by_agent[agent])
+                    eval_masks_list.append(eval_masks_by_agent[agent])
+                else:
+                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
+                    eval_masks_list.append(np.ones(action_dim, dtype=np.int8))
+
+            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
+            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+
+            save_policy_checkpoint(
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                checkpoint_dir=args.checkpoint_dir,
+                step=0,
+                phase="training",
+            )
+
+            saved_initial_policy = True
+
+        # -------------------------
+        # Build PPO batch
+        # -------------------------
+        obs_list: List[np.ndarray] = []
+        central_obs_list: List[np.ndarray] = []
+        mask_list: List[np.ndarray] = []
+        act_list: List[np.ndarray] = []
+        logp_list: List[np.ndarray] = []
+        adv_list: List[np.ndarray] = []
+        ret_list: List[np.ndarray] = []
+
+        for agent in learning_agents:
+            if len(traj[agent]["obs"]) == 0:
+                continue
+
+            agent_next_cobs_np = np.asarray(
+                traj[agent]["next_central_obs"],
+                dtype=np.float32,
+            )
+
+            with torch.no_grad():
+                next_vals = critic(
+                    torch.from_numpy(agent_next_cobs_np).to(
+                        device=device,
+                        dtype=torch.float32,
+                    )
+                ).cpu().numpy().astype(np.float32)
+
+            rews = np.asarray(traj[agent]["rew"], dtype=np.float32)
+            vals = np.asarray(traj[agent]["val"], dtype=np.float32)
+            dones = np.asarray(traj[agent]["done"], dtype=np.float32)
+
+            adv, ret = compute_gae_from_transitions(
+                rews=rews,
+                vals=vals,
+                next_vals=next_vals,
+                dones=dones,
+                gamma=args.gamma,
+                lam=args.gae_lambda,
+            )
+
+            obs_list.append(np.asarray(traj[agent]["obs"], dtype=np.float32))
+            central_obs_list.append(np.asarray(traj[agent]["central_obs"], dtype=np.float32))
+            mask_list.append(np.asarray(traj[agent]["mask"], dtype=np.int8))
+            act_list.append(np.asarray(traj[agent]["act"], dtype=np.int64))
+            logp_list.append(np.asarray(traj[agent]["logp"], dtype=np.float32))
+            adv_list.append(adv)
+            ret_list.append(ret)
+
+        if len(obs_list) == 0:
+            pbar.update(1)
+            continue
+
+        batch = {
+            "obs": torch.from_numpy(
+                np.concatenate(obs_list, axis=0)
+            ).to(device=device, dtype=torch.float32),
+
+            "central_obs": torch.from_numpy(
+                np.concatenate(central_obs_list, axis=0)
+            ).to(device=device, dtype=torch.float32),
+
+            "mask": torch.from_numpy(
+                np.concatenate(mask_list, axis=0)
+            ).to(device=device),
+
+            "act": torch.from_numpy(
+                np.concatenate(act_list, axis=0)
+            ).to(device=device, dtype=torch.int64),
+
+            "logp_old": torch.from_numpy(
+                np.concatenate(logp_list, axis=0)
+            ).to(device=device, dtype=torch.float32),
+
+            "adv": torch.from_numpy(
+                np.concatenate(adv_list, axis=0)
+            ).to(device=device, dtype=torch.float32),
+
+            "ret": torch.from_numpy(
+                np.concatenate(ret_list, axis=0)
+            ).to(device=device, dtype=torch.float32),
+        }
+
+        ent_coef = entropy_coef_at_episode(
+            ep=ep,
+            total_eps=training_episodes,
+            args=args,
+        )
+
+        metrics = ppo_update_mappo(
+            actor=actor,
+            critic=critic,
+            actor_opt=actor_opt,
+            critic_opt=critic_opt,
+            batch=batch,
+            args=args,
+            entropy_coef=ent_coef,
+        )
+
+        actor_scheduler.step()
+        critic_scheduler.step()
+
+        if (
+            args.save_policy_checkpoints
+            and eval_obs is not None
+            and eval_masks is not None
+            and (
+                (ep + 1) % args.checkpoint_interval == 0
+                or (ep + 1) == training_episodes
+            )
+        ):
+            save_policy_checkpoint(
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                checkpoint_dir=args.checkpoint_dir,
+                step=ep + 1,
+                phase="training",
+            )
+
+        mean_return = float(np.mean(list(ep_return.values())))
+
+        running_returns.append(mean_return)
+        running_turns.append(turn_count)
+
+        if (ep + 1) % args.log_every_episodes == 0:
+            print(
+                f"[EP {ep + 1}] "
+                f"mean_return_over_agents={np.mean(running_returns):.4f} "
+                f"mean_turns={np.mean(running_turns):.1f} "
+                f"actor_loss={metrics.get('actor_loss', 0.0):.4f} "
+                f"critic_loss={metrics.get('critic_loss', 0.0):.4f} "
+                f"entropy={metrics.get('entropy', 0.0):.4f} "
+                f"entropy_coef={ent_coef:.6f} "
+                f"action_dim={action_dim} "
+                f"central_obs_dim={central_obs_dim}"
+            )
+
+            running_returns.clear()
+            running_turns.clear()
+
+        pbar.update(1)
+
+    # -------------------------
+    # Testing
+    # -------------------------
+    actor.eval()
+    critic.eval()
+
+    pbar.set_description("MAPPO no-hypernet AEC testing")
+
+    for ep in range(testing_episodes):
+        env.reset()
+
+        route_counts = np.zeros(args.num_routes, dtype=np.int32)
+        step_in_episode = 0
+
+        pending: Dict[str, Optional[Dict[str, Any]]] = {
+            a: None for a in learning_agents
+        }
+
+        ep_return = {a: 0.0 for a in learning_agents}
+
+        for agent in env.agent_iter():
+            obs, reward, termination, truncation, info = env.last()
+
+            done = bool(termination or truncation)
+
+            if agent not in agent_to_idx:
+                env.step(None)
+                continue
+
+            if pending[agent] is not None:
+                ep_return[agent] += float(reward)
+                pending[agent] = None
+
+            if done or obs is None:
+                env.step(None)
+                continue
+
+            obs_vec, mask_arr = extract_obs_and_mask(obs)
+
+            if mask_arr is None:
+                mask_arr = np.ones(action_dim, dtype=np.int8)
+            else:
+                mask_arr = mask_arr.reshape(-1).astype(np.int8)
+
+            with torch.no_grad():
+                obs_t = torch.from_numpy(obs_vec).to(
+                    device=device,
+                    dtype=torch.float32,
+                ).unsqueeze(0)
+
+                logits = actor(obs_t)
+
+                mask_t = torch.from_numpy(mask_arr).to(device=device).unsqueeze(0)
+
+                logits = apply_action_mask_to_logits(
+                    logits,
+                    mask_t,
+                    args.masked_logits_neg_inf,
+                )
+
+                if args.test_greedy:
+                    act_idx = int(torch.argmax(logits, dim=-1).item())
+                else:
+                    dist = torch.distributions.Categorical(logits=logits)
+                    act_idx = int(dist.sample().item())
+
+            action = action_index_to_env_action(
+                action_index=act_idx,
+                nvec=nvec,
+                strides=strides,
+            )
+
+            route = route_from_env_action(action, args)
+
+            if 0 <= route < args.num_routes:
+                route_counts[route] += 1
+
+            pending[agent] = {"dummy": True}
+
+            step_in_episode += 1
+
+            env.step(action)
+
+        global_step = training_episodes + ep + 1
+
+        if (
+            args.save_policy_checkpoints
+            and eval_obs is not None
+            and eval_masks is not None
+        ):
+            save_policy_checkpoint(
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                checkpoint_dir=args.checkpoint_dir,
+                step=global_step,
+                phase="testing",
+            )
+
+        mean_return = float(np.mean(list(ep_return.values())))
+
+        print(f"[TEST EP {ep + 1}] mean_return_over_agents={mean_return:.4f}")
+
+        pbar.update(1)
+
+    pbar.close()
+
+    env.plot_results()
+    env.stop_simulation()
+
+
+if __name__ == "__main__":
+    main()
