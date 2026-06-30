@@ -6,7 +6,7 @@ import sys
 import random
 from dataclasses import dataclass
 from typing import Dict, List, Any, Tuple, Optional
-
+import argparse
 import numpy as np
 import torch
 import torch.nn as nn
@@ -21,7 +21,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"
 
 # Use the environment that has action masking / karma pricing
 from routerl_aec_environment_karma import TrafficEnvironment
-
 
 # ------------------------------------------------------------
 # Config
@@ -55,7 +54,39 @@ class Args:
 
     # Masking
     masked_logits_neg_inf: float = -1e9  # what to set invalid logits to
+    checkpoint_dir: str = f"/scratch/tmp/psarou_karma_part_c/checkpoints_ippo_seed_{seed}"
 
+
+def parse_args() -> Args:
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=Args.seed,
+        help="Random seed for the experiment.",
+    )
+
+    parser.add_argument(
+        "--device",
+        type=str,
+        default=Args.device,
+        help="Device to use, e.g. cpu or cuda.",
+    )
+
+    parsed = parser.parse_args()
+
+    args = Args()
+    args.seed = parsed.seed
+    args.device = parsed.device
+
+    # Important: update checkpoint_dir after changing the seed.
+    args.checkpoint_dir = (
+        f"/scratch/tmp/psarou_karma_part_c/checkpoints_ippo_masked_joint_300_agents_seed_{args.seed}"
+        f"_route_0_4_route_1_3_max_bid_5"
+    )
+
+    return args
 
 # ------------------------------------------------------------
 # Networks
@@ -410,8 +441,9 @@ def ppo_update_masked_joint(
 # Main
 # ------------------------------------------------------------
 def main():
-    args = Args()
+    args = parse_args()
     set_seed(args.seed)
+
     device = torch.device(args.device)
 
     os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -842,10 +874,34 @@ def main():
 
             env.step(action)
 
-        if ep == 1:
-            return
+        """if ep == 1:
+            return"""
         mean_return = float(np.mean(list(ep_return.values())))
         print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
+
+         # Save policy checkpoint during testing
+        if (
+            eval_obs is not None
+            and eval_masks is not None
+            and ((ep + 1) % testing_checkpoint_interval == 0 or (ep + 1) == testing_episodes)
+        ):
+            testing_step = training_episodes + ep + 1
+
+            save_ippo_policy_checkpoint(
+                checkpoint_path=os.path.join(
+                    checkpoint_dir,
+                    f"testing_step_{testing_step:08d}.npz"
+                ),
+                step=testing_step,
+                actor=actor,
+                eval_obs=eval_obs,
+                eval_masks=eval_masks,
+                device=device,
+                args=args,
+                nvec=nvec,
+                strides=strides,
+            )
+
         pbar.update(1)
 
     pbar.close()
