@@ -382,6 +382,19 @@ class TrafficEnvironment(AECEnv):
         self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
         self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
         self.all_agents_high_urgency = False
+        self.urgency_min = 0.1
+        self.urgency_max = 1.0
+        self.urgency_step = 0.1
+
+        self.urgency_values = np.round(
+            np.arange(
+                self.urgency_min,
+                self.urgency_max + self.urgency_step,
+                self.urgency_step
+            ),
+            1
+        )
+        self._prepare_urgency_for_day()
 
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag() # Initialize monetary pricing flag
@@ -967,6 +980,9 @@ class TrafficEnvironment(AECEnv):
         for machine in self.machine_agents:
             self._assign_start_time_to_an_agent(machine)
 
+        print("prepare urgency for day\n\n")
+        self._prepare_urgency_for_day()
+
         machine_by_id = {str(machine.id): machine for machine in self.machine_agents}
 
         self.possible_agents = sorted(
@@ -1007,9 +1023,106 @@ class TrafficEnvironment(AECEnv):
             elif self.human_learning:
                 agent.learn(agent.last_action, self.travel_times_list)
 
+    """def _assign_urgency_level_to_an_agent(self, machine) -> None:
+        machine.urgency = np.random.choice(self.urgency_distribution)"""
+
+    def _prepare_urgency_for_day(self) -> None:
+        """
+        Sample the urgency-generation process for the current day.
+        Call this once at the beginning of every simulated day.
+        """
+
+        max_structured_probability = 1
+
+        # Random proportion of commuters with correlated urgency
+        self._p_correlated = np.random.uniform(
+            0.0,
+            max_structured_probability
+        )
+
+        # Random proportion with temporal dependence
+        # Ensures p_correlated + p_temporal <= 0.6
+        self._p_temporal = np.random.uniform(
+            0.0,
+            max_structured_probability - self._p_correlated
+        )
+
+        # Remaining commuters have independently sampled urgency
+        self._p_independent = (
+            1.0
+            - self._p_correlated
+            - self._p_temporal
+        )
+
+        # Common urgency for commuters belonging to the
+        # correlated group on this day
+        self._common_daily_urgency = np.random.choice(
+            self.urgency_distribution
+        )
+
+        # Temporal relationship also changes between days
+        self._temporal_rule = np.random.choice(
+            ["same", "increase", "decrease"]
+        )
+
     def _assign_urgency_level_to_an_agent(self, machine) -> None:
 
-        machine.urgency = np.random.choice(self.urgency_distribution)
+        previous_urgency = getattr(machine, "urgency", None)
+
+        print("previous urgency is: ", previous_urgency, "\n\n")
+
+        mechanism = np.random.choice(
+            ["independent", "correlated", "temporal"],
+            p=[
+                self._p_independent,
+                self._p_correlated,
+                self._p_temporal,
+            ],
+        )
+
+        print("mechanism is: ", mechanism, self._p_independent, self._p_correlated, self._p_temporal, "\n\n")
+
+        # 1. Independent urgency
+        if mechanism == "independent":
+            machine.urgency = np.random.choice(
+                self.urgency_distribution
+            )
+
+        # 2. Correlated with other commuters
+        elif mechanism == "correlated":
+            machine.urgency = self._common_daily_urgency
+
+        # 3. Depends on previous-day urgency
+        elif mechanism == "temporal":
+
+            # No previous observation available
+            if previous_urgency is None:
+                machine.urgency = np.random.choice(
+                    self.urgency_distribution
+                )
+                return
+
+            levels = np.sort(
+                np.unique(np.asarray(self.urgency_distribution))
+            )
+
+            # Find the current urgency level
+            idx = np.argmin(
+                np.abs(levels - previous_urgency)
+            )
+
+            if self._temporal_rule == "same":
+                machine.urgency = previous_urgency
+
+            elif self._temporal_rule == "increase":
+                machine.urgency = levels[
+                    min(idx + 1, len(levels) - 1)
+                ]
+
+            elif self._temporal_rule == "decrease":
+                machine.urgency = levels[
+                    max(idx - 1, 0)
+                ]
 
         
     def _assign_start_time_to_an_agent(self, machine) -> None:
