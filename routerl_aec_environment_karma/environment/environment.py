@@ -980,7 +980,6 @@ class TrafficEnvironment(AECEnv):
         for machine in self.machine_agents:
             self._assign_start_time_to_an_agent(machine)
 
-        print("prepare urgency for day\n\n")
         self._prepare_urgency_for_day()
 
         machine_by_id = {str(machine.id): machine for machine in self.machine_agents}
@@ -1069,8 +1068,6 @@ class TrafficEnvironment(AECEnv):
 
         previous_urgency = getattr(machine, "urgency", None)
 
-        print("previous urgency is: ", previous_urgency, "\n\n")
-
         mechanism = np.random.choice(
             ["independent", "correlated", "temporal"],
             p=[
@@ -1079,8 +1076,6 @@ class TrafficEnvironment(AECEnv):
                 self._p_temporal,
             ],
         )
-
-        print("mechanism is: ", mechanism, self._p_independent, self._p_correlated, self._p_temporal, "\n\n")
 
         # 1. Independent urgency
         if mechanism == "independent":
