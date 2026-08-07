@@ -54,6 +54,7 @@ class Args:
     # --- MAPPO centralized critic config ---
     num_routes: int = 3                 # number_of_paths
     route_action_index: int = 0         # which component of act_vec corresponds to route choice
+    bid_action_index: int = 1
     include_timestep_feature: bool = True
     checkpoint_dir: str = f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_seed_{seed}"
 
@@ -168,6 +169,53 @@ def joint_index_to_multidiscrete(index: int, nvec: np.ndarray, strides: np.ndarr
         idx = idx % int(strides[i])
         out.append(int(val))
     return out
+
+
+
+def marginalize_policy_to_component(
+    policy_probs: np.ndarray,
+    nvec: np.ndarray,
+    component_index: int,
+) -> np.ndarray:
+    """
+    Convert joint-action probabilities into probabilities for one
+    MultiDiscrete action component.
+
+    Example:
+        nvec = [3, 6]
+        component_index = 1  # bid
+
+    Input:
+        policy_probs:
+            (num_agents, num_states, prod(nvec))
+
+    Output:
+        component_probs:
+            (num_agents, num_states, nvec[component_index])
+    """
+
+    nvec = np.asarray(nvec, dtype=np.int64)
+
+    new_shape = (
+        policy_probs.shape[0],
+        policy_probs.shape[1],
+        *nvec.tolist(),
+    )
+
+    probs_nd = policy_probs.reshape(new_shape)
+
+    # MultiDiscrete dimensions begin at axis 2.
+    component_axis = 2 + component_index
+
+    axes_to_sum = tuple(
+        axis
+        for axis in range(2, 2 + len(nvec))
+        if axis != component_axis
+    )
+
+    component_probs = probs_nd.sum(axis=axes_to_sum)
+
+    return component_probs.astype(np.float32)
 
 
 # -------------------------
@@ -304,32 +352,67 @@ def compute_mappo_policy_snapshot(
 
     return policy_probs
 
+def build_episode_policy_states(
+    agent_names: List[str],
+    obs_by_agent: Dict[str, np.ndarray],
+    masks_by_agent: Dict[str, np.ndarray],
+) -> Tuple[List[str], np.ndarray, np.ndarray]:
+    """
+    Build checkpoint arrays using only agents that actually
+    produced a valid state during this episode.
+
+    Returns:
+        agent_ids
+        eval_obs:   (agents, 1, obs_dim)
+        eval_masks: (agents, 1, action_dim)
+    """
+
+    valid_agents = [
+        agent
+        for agent in agent_names
+        if agent in obs_by_agent
+        and agent in masks_by_agent
+    ]
+
+    if not valid_agents:
+        raise RuntimeError(
+            "No valid agent observations collected this episode."
+        )
+
+    obs = np.stack(
+        [obs_by_agent[a] for a in valid_agents],
+        axis=0,
+    )
+
+    masks = np.stack(
+        [masks_by_agent[a] for a in valid_agents],
+        axis=0,
+    )
+
+    # One evaluation state per agent
+    obs = obs[:, None, :]
+    masks = masks[:, None, :]
+
+    return valid_agents, obs, masks
 
 def save_mappo_policy_checkpoint(
     *,
     actor: nn.Module,
     eval_obs: np.ndarray,
     eval_masks: np.ndarray,
+    agent_ids: List[str],
+    nvec: np.ndarray,
     device: torch.device,
     args: Args,
     checkpoint_dir: str | Path,
     step: int,
     phase: str,
 ) -> None:
-    """
-    Saves a MAPPO policy-probability checkpoint.
 
-    The saved .npz has the same structure expected by your diagnostics script:
-        step
-        policy
-        eval_action_masks
-
-    policy shape:
-        agents x eval_states x joint_actions
-    """
     checkpoint_dir = Path(checkpoint_dir)
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
+    # Full joint-action probabilities
     policy = compute_mappo_policy_snapshot(
         actor=actor,
         eval_obs=eval_obs,
@@ -338,19 +421,51 @@ def save_mappo_policy_checkpoint(
         args=args,
     )
 
+    # Bid probabilities only
+    bid_policy = marginalize_policy_to_component(
+        policy_probs=policy,
+        nvec=nvec,
+        component_index=args.bid_action_index,
+    )
+
     output_path = checkpoint_dir / f"step_{step:08d}.npz"
 
     np.savez_compressed(
         output_path,
+
+        # Episode/checkpoint information
         step=np.array(step, dtype=np.int64),
-        policy=policy.astype(np.float32),
-        eval_action_masks=eval_masks.astype(bool),
         phase=np.array(phase),
+
+        # IMPORTANT: agent ordering
+        agent_ids=np.asarray(agent_ids, dtype=str),
+
+        # State actually used to calculate these probabilities
+        eval_obs=eval_obs.astype(np.float32),
+        eval_action_masks=eval_masks.astype(bool),
+
+        # Full joint policy
+        policy=policy.astype(np.float32),
+
+        # Direct bid probabilities
+        bid_policy=bid_policy.astype(np.float32),
+
+        # Action-space metadata
+        nvec=np.asarray(nvec, dtype=np.int64),
+        route_action_index=np.array(
+            args.route_action_index,
+            dtype=np.int64,
+        ),
+        bid_action_index=np.array(
+            args.bid_action_index,
+            dtype=np.int64,
+        ),
     )
 
-    print(f"[checkpoint] Saved {phase} policy checkpoint: {output_path}")
-
-
+    print(
+        f"[checkpoint] Saved {phase} policy checkpoint: "
+        f"{output_path}"
+    )
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
     adv = np.zeros(T, dtype=np.float32)
@@ -600,14 +715,6 @@ def main():
 
     checkpoint_interval = 2  # save every 2 training episodes
 
-    eval_obs_by_agent: Dict[str, np.ndarray] = {}
-    eval_masks_by_agent: Dict[str, np.ndarray] = {}
-
-    eval_obs: Optional[np.ndarray] = None
-    eval_masks: Optional[np.ndarray] = None
-
-    saved_initial_policy = False
-
     # -------------------------
     # Training loop
     # -------------------------
@@ -617,6 +724,9 @@ def main():
     running_ep_lens = []
 
     for ep in range(training_episodes):
+        episode_obs_by_agent: Dict[str, np.ndarray] = {}
+        episode_masks_by_agent: Dict[str, np.ndarray] = {}
+
         env.reset()
 
         route_counts = np.zeros(args.num_routes, dtype=np.int32)
@@ -666,11 +776,10 @@ def main():
                                 f"Expected prod(nvec)={action_dim}, nvec={nvec.tolist()}"
                             )
 
-                    # Collect the first valid observation/mask for each learning agent.
-                    # These fixed states are used for policy-change diagnostics.
-                    if agent not in eval_obs_by_agent:
-                        eval_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
-                        eval_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
+                    # Save CURRENT episode state only after mask is valid
+                    episode_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
+                    episode_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
+                                        
 
                     gfeats = build_global_features(
                         args=args,
@@ -704,6 +813,7 @@ def main():
                 action = None
 
             env.step(action)
+
             turn_count += 1
 
         # Close any remaining pending
@@ -723,44 +833,31 @@ def main():
         # -------------------------
         # Build fixed eval set and save initial policy once
         # -------------------------
-        if not saved_initial_policy:
-            missing_agents = [
-                agent for agent in mutated_agent_names
-                if agent not in eval_obs_by_agent
-            ]
-
-            if missing_agents:
-                print(
-                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
-                    f"Using zero observations and all-valid masks for them."
+        # Save policy checkpoint after PPO update
+        if (
+            (ep + 1) % checkpoint_interval == 0
+            or (ep + 1) == training_episodes
+        ):
+            checkpoint_agents, checkpoint_obs, checkpoint_masks = (
+                build_episode_policy_states(
+                    mutated_agent_names,
+                    episode_obs_by_agent,
+                    episode_masks_by_agent,
                 )
-
-            eval_obs_list = []
-            eval_masks_list = []
-
-            for agent in mutated_agent_names:
-                if agent in eval_obs_by_agent:
-                    eval_obs_list.append(eval_obs_by_agent[agent])
-                    eval_masks_list.append(eval_masks_by_agent[agent])
-                else:
-                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
-                    eval_masks_list.append(np.ones(action_dim, dtype=np.int8))
-
-            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
-            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+            )
 
             save_mappo_policy_checkpoint(
                 actor=actor,
-                eval_obs=eval_obs,
-                eval_masks=eval_masks,
+                eval_obs=checkpoint_obs,
+                eval_masks=checkpoint_masks,
+                agent_ids=checkpoint_agents,
+                nvec=nvec,
                 device=device,
                 args=args,
                 checkpoint_dir=args.checkpoint_dir,
-                step=0,
+                step=ep + 1,
                 phase="training",
             )
-
-            saved_initial_policy = True
 
 
 
@@ -819,19 +916,29 @@ def main():
             metrics = ppo_update_masked_joint_mappo(actor, critic, actor_opt, critic_opt, batch, args)
 
         # Save policy checkpoint after PPO update
+        # Save policy checkpoint AFTER PPO update
         if (
-            eval_obs is not None
-            and eval_masks is not None
-            and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
+            (ep + 1) % checkpoint_interval == 0
+            or (ep + 1) == training_episodes
         ):
+            checkpoint_agents, checkpoint_obs, checkpoint_masks = (
+                build_episode_policy_states(
+                    mutated_agent_names,
+                    episode_obs_by_agent,
+                    episode_masks_by_agent,
+                )
+            )
+
             save_mappo_policy_checkpoint(
                 actor=actor,
-                eval_obs=eval_obs,
-                eval_masks=eval_masks,
+                eval_obs=checkpoint_obs,
+                eval_masks=checkpoint_masks,
+                agent_ids=checkpoint_agents,
+                nvec=nvec,
                 device=device,
                 args=args,
                 checkpoint_dir=args.checkpoint_dir,
-                step=ep+1,
+                step=ep + 1,
                 phase="training",
             )
 
@@ -863,6 +970,10 @@ def main():
     pbar.set_description("MAPPO AEC testing (masked joint)")
 
     for ep in range(testing_episodes):
+
+        episode_obs_by_agent: Dict[str, np.ndarray] = {}
+        episode_masks_by_agent: Dict[str, np.ndarray] = {}
+
         env.reset()
 
         route_counts = np.zeros(args.num_routes, dtype=np.int32)
@@ -884,10 +995,20 @@ def main():
                     action = None
                 else:
                     obs_vec, mask_arr = extract_obs_and_mask(obs)
+
                     if mask_arr is None:
                         mask_arr = np.ones(action_dim, dtype=np.int8)
                     else:
                         mask_arr = mask_arr.reshape(-1)
+                        if mask_arr.shape[0] != action_dim:
+                            raise ValueError(
+                                f"action_mask length {mask_arr.shape[0]} != action_dim {action_dim}. "
+                                f"Expected prod(nvec)={action_dim}, nvec={nvec.tolist()}"
+                            )
+
+                    # Save CURRENT episode state only after mask is valid
+                    episode_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
+                    episode_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
 
                     # Greedy action from actor (critic not needed here)
                     obs_t = torch.from_numpy(obs_vec).to(device=device, dtype=torch.float32)
@@ -918,10 +1039,20 @@ def main():
 
         global_step = args.training_episodes + ep + 1
 
+        checkpoint_agents, checkpoint_obs, checkpoint_masks = (
+            build_episode_policy_states(
+                mutated_agent_names,
+                episode_obs_by_agent,
+                episode_masks_by_agent,
+            )
+        )
+
         save_mappo_policy_checkpoint(
             actor=actor,
-            eval_obs=eval_obs,
-            eval_masks=eval_masks,
+            eval_obs=checkpoint_obs,
+            eval_masks=checkpoint_masks,
+            agent_ids=checkpoint_agents,
+            nvec=nvec,
             device=device,
             args=args,
             checkpoint_dir=args.checkpoint_dir,
