@@ -385,7 +385,7 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 4 + self.simulation_params[kc.NUMBER_OF_PATHS] #+ 300# including urgency & start time
+        total_size = 4 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] #+ 300# including urgency & start time
 
         return {
             str(agent.id): spaces.Dict(
@@ -405,11 +405,21 @@ class PreviousAvgTTperRoute(Observations):
     
     def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict) -> np.ndarray:
         """Retrieve the observation for a specific agent.
+            Observation:
+            [
+                mean_tt_route_0,
+                mean_tt_route_1,
+                mean_tt_route_2,
 
-        Args:
-            agent_id (str): The ID of the agent.
-        Returns:
-            np.ndarray: The observation array for the specified agent.
+                previous_agents_route_0,
+                previous_agents_route_1,
+                previous_agents_route_2,
+
+                urgency,
+                normalized_start_time,
+                normalized_income,
+                karma_balance,
+            ]
         """
         for machine in self.machine_agents_list:
             if machine.id == int(agent_id):
@@ -432,19 +442,78 @@ class PreviousAvgTTperRoute(Observations):
         ## If there are nan values -> transform them to zero
         mean_tt_before = np.nan_to_num(mean_tt_before, nan=0.0)
 
+        # ---------------------------------------------------------
+        # Count previous agents by their last action / route
+        # ---------------------------------------------------------
+        previous_action_counts = np.zeros(
+            3,
+            dtype=np.float32,
+        )
+
+        for agent in all_agents:
+
+            if (
+                machine.id != agent.id
+                and machine.origin == agent.origin
+                and machine.destination == agent.destination
+                and machine.start_time >= agent.start_time
+            ):
+
+                last_action = agent.last_action
+
+                # Skip agents without a previous action
+                if last_action is None:
+                    continue
+
+                if isinstance(
+                    last_action,
+                    (list, tuple, np.ndarray),
+                ):
+                    route = int(last_action[0])
+                else:
+                    route = int(last_action)
+
+                if 0 <= route < 3:
+                    previous_action_counts[route] += 1.0
+
         #Normalize incomes over the highest agent's income        
         richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
+
+        if richest_agent.income != 0:
+            normalized_income = (
+                machine.income / richest_agent.income
+            )
+        else:
+            normalized_income = 0.0
 
         one_hot_vec = np.zeros(len(self.machine_agents_list), dtype=np.float32)
         one_hot_vec[machine.id] = 1.0
 
-        observation = np.concatenate((mean_tt_before, [machine.urgency], [machine.start_time/self.simulation_params[kc.SIMULATION_TIMESTEPS]], [machine.income/richest_agent.income], [machine.karma_balance]))
-        #observation = np.concatenate(([machine.start_time], observation, [machine.urgency]))
+        # ---------------------------------------------------------
+        # Construct final observation
+        # ---------------------------------------------------------
+        observation = np.concatenate(
+            (
+                mean_tt_before,
+                previous_action_counts,
+                [machine.urgency],
+                [
+                    machine.start_time
+                    / self.simulation_params[
+                        kc.SIMULATION_TIMESTEPS
+                    ]
+                ],
+                [normalized_income],
+                [machine.karma_balance],
+            )
+        ).astype(np.float32)
 
-        self.observations[str(machine.id)]["observation"] = observation
-        
+        self.observations[str(machine.id)][
+            "observation"
+        ] = observation
+
         return observation
-
+    
     def historic_means_before_for_agent_all_episodes(
         self,
         agent_id: int,
