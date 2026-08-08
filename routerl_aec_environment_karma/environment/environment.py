@@ -876,7 +876,7 @@ class TrafficEnvironment(AECEnv):
     def all_high_urgency(self):
         self.all_agents_high_urgency = True
 
-    def testing_urgency(self):
+    def testing_urgency_function(self):
         self.testing_urgency = True
     
 

@@ -861,7 +861,7 @@ def main():
 
 
     pbar.set_description("MAPPO AEC testing (masked joint)")
-    env.testing_urgency()
+    env.testing_urgency_function()
 
     for ep in range(testing_episodes):
         env.reset()
