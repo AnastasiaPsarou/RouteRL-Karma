@@ -382,6 +382,7 @@ class TrafficEnvironment(AECEnv):
         self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
         self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
         self.all_agents_high_urgency = False
+        self.testing_urgency=False
         self.urgency_min = 0.1
         self.urgency_max = 1.0
         self.urgency_step = 0.1
@@ -631,6 +632,8 @@ class TrafficEnvironment(AECEnv):
 
         if self.all_agents_high_urgency:
             machine.urgency = np.max(self.urgency_distribution)
+        elif self.testing_urgency:
+            machine.urgency = np.random.choice(self.urgency_distribution)
         else:
             self._assign_urgency_level_to_an_agent(machine)
 
@@ -872,6 +875,9 @@ class TrafficEnvironment(AECEnv):
     
     def all_high_urgency(self):
         self.all_agents_high_urgency = True
+
+    def testing_urgency(self):
+        self.testing_urgency = True
     
 
     def _help_step(self, actions: list[tuple]) -> dict:
