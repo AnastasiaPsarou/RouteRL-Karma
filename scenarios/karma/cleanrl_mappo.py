@@ -83,7 +83,7 @@ def parse_args() -> Args:
     # Important: update checkpoint_dir after changing the seed.
     args.checkpoint_dir = (
         f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{args.seed}"
-        f"_route_0_4_route_1_3_max_bid_5"
+        f"_route_0_4_route_1_3_max_bid_5_dr"
     )
 
     return args
@@ -483,8 +483,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5"
-    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5"
+    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
+    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -594,7 +594,7 @@ def main():
     # -------------------------
     checkpoint_dir = (
         f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{seed}"
-        f"_route_0_4_route_1_3_max_bid_5"
+        f"_route_0_4_route_1_3_max_bid_5_dr"
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -861,6 +861,7 @@ def main():
 
 
     pbar.set_description("MAPPO AEC testing (masked joint)")
+    env.testing_urgency()
 
     for ep in range(testing_episodes):
         env.reset()
