@@ -402,6 +402,25 @@ class PreviousAvgTTperRoute(Observations):
             )    
             for agent in self.machine_agents_list
         }
+
+    def _get_agent_assigned_route(self, agent):
+        """
+        Returns the route the agent actually got assigned to.
+        - Human agents: last_action IS the chosen route.
+        - Machine agents under karma pricing: last_action is the bid vector;
+        the assigned route lives in agent.route (set by stackelberg_auction).
+        - Machine agents without karma pricing: last_action IS the chosen route.
+        """
+        
+        # Prefer the post-auction assigned route if it exists and has been set
+        route = getattr(agent, "route", None)
+
+        if route is None:
+            return None
+        if isinstance(route, (list, tuple, np.ndarray)):
+            # Shouldn't normally happen once agent.route is used, but guard anyway
+            return None
+        return int(route)
     
     def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict) -> np.ndarray:
         """Retrieve the observation for a specific agent.
@@ -445,33 +464,19 @@ class PreviousAvgTTperRoute(Observations):
         # ---------------------------------------------------------
         # Count previous agents by their last action / route
         # ---------------------------------------------------------
-        previous_action_counts = np.zeros(
-            3,
-            dtype=np.float32,
-        )
+        previous_action_counts = np.zeros(3, dtype=np.float32)
 
         for agent in all_agents:
-
             if (
                 machine.id != agent.id
                 and machine.origin == agent.origin
                 and machine.destination == agent.destination
                 and machine.start_time >= agent.start_time
             ):
+                route = self._get_agent_assigned_route(agent)
 
-                last_action = agent.last_action
-
-                # Skip agents without a previous action
-                if last_action is None:
-                    continue
-
-                if isinstance(
-                    last_action,
-                    (list, tuple, np.ndarray),
-                ):
-                    route = int(last_action[0])
-                else:
-                    route = int(last_action)
+                if route is None:
+                    continue  # agent hasn't been assigned a route yet this day
 
                 if 0 <= route < 3:
                     previous_action_counts[route] += 1.0
