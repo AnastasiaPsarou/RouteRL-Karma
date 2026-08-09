@@ -379,12 +379,12 @@ class TrafficEnvironment(AECEnv):
         self.possible_agents = list()
         
         # Urgency distribution
-        self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
+        self.urgency_distribution = np.random.geometric(0.6, size=len(self.all_agents))
         self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
         self.all_agents_high_urgency = False
         self.testing_urgency=False
         self.urgency_min = 0.1
-        self.urgency_max = 1.0
+        self.urgency_max = 0.7
         self.urgency_step = 0.1
 
         self.urgency_values = np.round(
@@ -633,8 +633,11 @@ class TrafficEnvironment(AECEnv):
         if self.all_agents_high_urgency:
             machine.urgency = np.max(self.urgency_distribution)
         elif self.testing_urgency:
+            print("inside testing urgency\n\n")
             machine.urgency = np.random.choice(self.urgency_distribution)
+            print("urgency is: ", machine.urgency, "\n\n")
         else:
+            print("inside assign urgency level to an agent\n\n")
             self._assign_urgency_level_to_an_agent(machine)
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
