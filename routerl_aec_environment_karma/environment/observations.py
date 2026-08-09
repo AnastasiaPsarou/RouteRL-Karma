@@ -481,6 +481,7 @@ class PreviousAvgTTperRoute(Observations):
                 if 0 <= route < 3:
                     previous_action_counts[route] += 1.0
 
+        previous_action_counts = previous_action_counts / 300
         #Normalize incomes over the highest agent's income        
         richest_agent = max(self.machine_agents_list, key=lambda a: a.income)
 
