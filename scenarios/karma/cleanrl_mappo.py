@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from tqdm import tqdm
 import os
+import itertools
 import sys
 import random
 from dataclasses import dataclass
@@ -14,6 +15,8 @@ import torch.optim as optim
 import torch.nn.functional as F
 from pathlib import Path
 import argparse
+from collections import defaultdict
+
 
 # ------------------------------------------------------------
 # Your imports
@@ -235,98 +238,73 @@ def select_action_masked_joint_mappo(
 
 @torch.no_grad()
 def compute_mappo_policy_snapshot(
-    actor: nn.Module,
-    eval_obs: np.ndarray,
-    eval_masks: np.ndarray,
-    device: torch.device,
-    args: Args,
-) -> np.ndarray:
+    actor,
+    eval_obs,
+    eval_masks,
+    device,
+    args,
+):
     """
-    Computes masked-softmax policy probabilities for a fixed evaluation set.
+    eval_obs:
+        (num_samples, obs_dim)
 
-    The MAPPO actor is decentralized, so the policy snapshot only needs
-    the local observations and action masks. The centralized critic is not
-    used for these policy-probability checkpoints.
-
-    eval_obs shape:
-        (num_agents, num_eval_states, obs_dim)
-
-    eval_masks shape:
-        (num_agents, num_eval_states, action_dim)
+    eval_masks:
+        (num_samples, action_dim)
 
     returns:
-        policy_probs shape:
-            (num_agents, num_eval_states, action_dim)
+        (num_samples, action_dim)
     """
+
     was_training = actor.training
     actor.eval()
 
-    num_agents, num_eval_states, _obs_dim = eval_obs.shape
-    action_dim = eval_masks.shape[-1]
-
-    policy_probs = np.zeros(
-        (num_agents, num_eval_states, action_dim),
-        dtype=np.float32,
+    obs_t = torch.as_tensor(
+        eval_obs,
+        dtype=torch.float32,
+        device=device,
     )
 
-    for agent_idx in range(num_agents):
-        obs_t = torch.tensor(
-            eval_obs[agent_idx],
-            device=device,
-            dtype=torch.float32,
-        )
+    mask_t = torch.as_tensor(
+        eval_masks,
+        device=device,
+    )
 
-        mask_t = torch.tensor(
-            eval_masks[agent_idx],
-            device=device,
-        )
+    logits = actor(obs_t)
 
-        logits = actor(obs_t)
+    valid = mask_t != 0
+    row_has_any_valid = valid.any(dim=1)
 
-        valid = mask_t != 0
-        row_has_any_valid = valid.any(dim=1)
+    safe_logits = logits.clone()
 
-        if row_has_any_valid.all():
-            logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
-        else:
-            safe_logits = logits.clone()
-            safe_logits[row_has_any_valid] = safe_logits[row_has_any_valid].masked_fill(
-                ~valid[row_has_any_valid],
-                args.masked_logits_neg_inf,
-            )
-            logits = safe_logits
+    safe_logits[row_has_any_valid] = safe_logits[
+        row_has_any_valid
+    ].masked_fill(
+        ~valid[row_has_any_valid],
+        args.masked_logits_neg_inf,
+    )
 
-        probs = torch.softmax(logits, dim=-1)
-        policy_probs[agent_idx] = probs.cpu().numpy()
+    probs = torch.softmax(safe_logits, dim=-1)
 
     if was_training:
         actor.train()
 
-    return policy_probs
-
+    return probs.cpu().numpy().astype(np.float32)
 
 def save_mappo_policy_checkpoint(
     *,
-    actor: nn.Module,
-    eval_obs: np.ndarray,
-    eval_masks: np.ndarray,
-    device: torch.device,
-    args: Args,
-    checkpoint_dir: str | Path,
-    step: int,
-    phase: str,
-) -> None:
-    """
-    Saves a MAPPO policy-probability checkpoint.
-
-    The saved .npz has the same structure expected by your diagnostics script:
-        step
-        policy
-        eval_action_masks
-
-    policy shape:
-        agents x eval_states x joint_actions
-    """
+    actor,
+    eval_obs,
+    eval_masks,
+    eval_karma,
+    eval_urgency,
+    eval_agent_ids,
+    nvec,
+    device,
+    args,
+    checkpoint_dir,
+    step,
+    phase,
+):
     checkpoint_dir = Path(checkpoint_dir)
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
@@ -338,18 +316,43 @@ def save_mappo_policy_checkpoint(
         args=args,
     )
 
+    # Explicitly store what each flattened joint-action index means.
+    joint_actions = np.asarray(
+        list(
+            itertools.product(
+                *[range(int(n)) for n in nvec]
+            )
+        ),
+        dtype=np.int16,
+    )
+
     output_path = checkpoint_dir / f"step_{step:08d}.npz"
 
     np.savez_compressed(
         output_path,
-        step=np.array(step, dtype=np.int64),
-        policy=policy.astype(np.float32),
-        eval_action_masks=eval_masks.astype(bool),
-        phase=np.array(phase),
+
+        step=np.asarray(step, dtype=np.int64),
+        phase=np.asarray(phase),
+
+        # Exact observation -> probabilities
+        eval_obs=np.asarray(eval_obs, dtype=np.float32),
+        policy=np.asarray(policy, dtype=np.float32),
+        eval_action_masks=np.asarray(eval_masks, dtype=bool),
+
+        # Explicit state metadata
+        karma_balance=np.asarray(eval_karma, dtype=np.float32),
+        urgency=np.asarray(eval_urgency, dtype=np.float32),
+        agent_ids=np.asarray(eval_agent_ids),
+
+        # Explicit action encoding
+        nvec=np.asarray(nvec, dtype=np.int64),
+        joint_actions=joint_actions,
     )
 
-    print(f"[checkpoint] Saved {phase} policy checkpoint: {output_path}")
-
+    print(
+        f"[checkpoint] Saved {phase} policy checkpoint: "
+        f"{output_path}"
+    )
 
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
@@ -606,6 +609,17 @@ def main():
     eval_obs: Optional[np.ndarray] = None
     eval_masks: Optional[np.ndarray] = None
 
+
+    eval_records = []
+    eval_counts = defaultdict(int)
+
+    SAMPLES_PER_KARMA_URGENCY = 5
+
+    machine_by_name = {
+        str(machine.id): machine
+        for machine in env.machine_agents
+    }
+
     saved_initial_policy = False
 
     # -------------------------
@@ -613,8 +627,19 @@ def main():
     # -------------------------
     pbar = tqdm(total=training_episodes + testing_episodes, desc="MAPPO AEC training (masked joint)")
 
+    # ============================================================
+    # TRAINING
+    # ============================================================
+
     running_ep_returns = []
     running_ep_lens = []
+
+    # These become the FIXED evaluation bank used for every checkpoint.
+    eval_obs = None
+    eval_masks = None
+    eval_karma = None
+    eval_urgency = None
+    eval_agent_ids = None
 
     for ep in range(training_episodes):
         env.reset()
@@ -622,151 +647,337 @@ def main():
         route_counts = np.zeros(args.num_routes, dtype=np.int32)
         step_in_episode = 0
 
-        pending: Dict[str, Dict[str, Any] | None] = {a: None for a in mutated_agent_names}
+        pending: Dict[str, Dict[str, Any] | None] = {
+            a: None for a in mutated_agent_names
+        }
+
         traj: Dict[str, Dict[str, List[Any]]] = {
-            a: {"obs": [], "central_obs": [], "mask": [], "act": [], "logp": [], "val": [], "rew": [], "done": []}
+            a: {
+                "obs": [],
+                "central_obs": [],
+                "mask": [],
+                "act": [],
+                "logp": [],
+                "val": [],
+                "rew": [],
+                "done": [],
+            }
             for a in mutated_agent_names
         }
 
         ep_return = {a: 0.0 for a in mutated_agent_names}
         turn_count = 0
 
+        # ========================================================
+        # AEC EPISODE
+        # ========================================================
         for agent in env.agent_iter():
+
             obs, reward, termination, truncation, info = env.last()
             done = termination or truncation
 
+            # Used after env.step() to update route_counts from the
+            # ACTUALLY assigned route.
+            acted_agent = False
+
             if agent in agent_name_to_idx:
-                # 1) Close previous pending step
+
+                # ------------------------------------------------
+                # 1. Close this agent's previous pending transition
+                # ------------------------------------------------
                 if pending[agent] is not None:
                     prev = pending[agent]
+
                     traj[agent]["obs"].append(prev["obs"])
                     traj[agent]["central_obs"].append(prev["central_obs"])
                     traj[agent]["mask"].append(prev["mask"])
                     traj[agent]["act"].append(prev["act"])
                     traj[agent]["logp"].append(prev["logp"])
                     traj[agent]["val"].append(prev["val"])
+
                     traj[agent]["rew"].append(float(reward))
                     traj[agent]["done"].append(float(done))
+
                     ep_return[agent] += float(reward)
+
                     pending[agent] = None
 
-                # 2) Choose next action unless done
+                # ------------------------------------------------
+                # 2. Choose next action
+                # ------------------------------------------------
                 if done:
                     action = None
+
                 else:
                     obs_vec, mask_arr = extract_obs_and_mask(obs)
 
+                    # --------------------------------------------
+                    # Normalize/validate mask FIRST
+                    # --------------------------------------------
                     if mask_arr is None:
-                        mask_arr = np.ones(action_dim, dtype=np.int8)
+                        mask_arr = np.ones(
+                            action_dim,
+                            dtype=np.int8,
+                        )
                     else:
-                        mask_arr = mask_arr.reshape(-1)
+                        mask_arr = np.asarray(
+                            mask_arr
+                        ).reshape(-1).astype(np.int8)
+
                         if mask_arr.shape[0] != action_dim:
                             raise ValueError(
-                                f"action_mask length {mask_arr.shape[0]} != action_dim {action_dim}. "
-                                f"Expected prod(nvec)={action_dim}, nvec={nvec.tolist()}"
+                                f"action_mask length "
+                                f"{mask_arr.shape[0]} != "
+                                f"action_dim {action_dim}. "
+                                f"Expected prod(nvec)="
+                                f"{action_dim}, "
+                                f"nvec={nvec.tolist()}"
                             )
 
-                    # Collect the first valid observation/mask for each learning agent.
-                    # These fixed states are used for policy-change diagnostics.
-                    if agent not in eval_obs_by_agent:
-                        eval_obs_by_agent[agent] = obs_vec.copy().astype(np.float32)
-                        eval_masks_by_agent[agent] = mask_arr.copy().astype(np.int8)
+                    # --------------------------------------------
+                    # Current PRE-ACTION state
+                    # --------------------------------------------
+                    machine = machine_by_name[agent]
 
+                    karma = float(machine.karma_balance)
+                    urgency = round(
+                        float(machine.urgency),
+                        1,
+                    )
+
+                    # --------------------------------------------
+                    # Build the FIXED policy-evaluation bank
+                    #
+                    # We collect only during the first episode.
+                    # After that, saved_initial_policy=True and
+                    # these states never change.
+                    # --------------------------------------------
+                    if not saved_initial_policy:
+
+                        key = (karma, urgency)
+
+                        if (
+                            eval_counts[key]
+                            < SAMPLES_PER_KARMA_URGENCY
+                        ):
+                            eval_records.append(
+                                {
+                                    "obs": (
+                                        obs_vec.copy()
+                                        .astype(np.float32)
+                                    ),
+                                    "mask": (
+                                        mask_arr.copy()
+                                        .astype(np.int8)
+                                    ),
+                                    "karma": karma,
+                                    "urgency": urgency,
+                                    "agent_id": agent,
+                                }
+                            )
+
+                            eval_counts[key] += 1
+
+                    # --------------------------------------------
+                    # Centralized critic features
+                    #
+                    # route_counts contains routes assigned to
+                    # agents who have already acted.
+                    # --------------------------------------------
                     gfeats = build_global_features(
                         args=args,
                         step_in_episode=step_in_episode,
                         max_steps_hint=max_steps_hint,
                         route_counts=route_counts,
                     )
-                    central_obs_vec = make_central_obs(obs_vec, gfeats)
 
-                    act_idx, logp, val = select_action_masked_joint_mappo(
-                        actor, critic, obs_vec, central_obs_vec, mask_arr, device, args
+                    central_obs_vec = make_central_obs(
+                        obs_vec,
+                        gfeats,
                     )
-                    act_vec = joint_index_to_multidiscrete(act_idx, nvec, strides)
+
+                    # --------------------------------------------
+                    # MAPPO action
+                    # --------------------------------------------
+                    act_idx, logp, val = (
+                        select_action_masked_joint_mappo(
+                            actor=actor,
+                            critic=critic,
+                            obs_vec=obs_vec,
+                            central_obs_vec=central_obs_vec,
+                            action_mask=mask_arr,
+                            device=device,
+                            args=args,
+                        )
+                    )
+
+                    act_vec = joint_index_to_multidiscrete(
+                        act_idx,
+                        nvec,
+                        strides,
+                    )
+
+                    # act_vec is the BID VECTOR:
+                    #
+                    # [bid_route_0,
+                    #  bid_route_1,
+                    #  bid_route_2]
+                    #
+                    # It is NOT the assigned route.
                     action = act_vec
 
-                    # Update global aggregate with chosen route
-                    route = int(act_vec[args.route_action_index])
-                    if 0 <= route < args.num_routes:
-                        route_counts[route] += 1
-
                     pending[agent] = {
-                        "obs": obs_vec,
-                        "central_obs": central_obs_vec,
-                        "mask": mask_arr.astype(np.int8),
+                        "obs": obs_vec.copy(),
+                        "central_obs": central_obs_vec.copy(),
+                        "mask": mask_arr.copy(),
                         "act": act_idx,
                         "logp": logp,
                         "val": val,
                     }
+
+                    acted_agent = True
                     step_in_episode += 1
+
             else:
                 action = None
 
+            # ----------------------------------------------------
+            # Environment decides the actual route here through
+            # stackelberg_auction(...)
+            # ----------------------------------------------------
             env.step(action)
+
+            # ----------------------------------------------------
+            # Now we can read the ACTUALLY assigned route.
+            # Do NOT use act_vec[0] as the route.
+            # ----------------------------------------------------
+            if acted_agent:
+
+                assigned_route = int(
+                    machine_by_name[agent].route
+                )
+
+                if 0 <= assigned_route < args.num_routes:
+                    route_counts[assigned_route] += 1
+                else:
+                    raise ValueError(
+                        f"Invalid assigned route "
+                        f"{assigned_route} for agent {agent}"
+                    )
+
             turn_count += 1
 
-        # Close any remaining pending
+        # ========================================================
+        # CLOSE REMAINING PENDING TRANSITIONS
+        # ========================================================
         for a in mutated_agent_names:
+
             if pending[a] is not None:
                 prev = pending[a]
+
                 traj[a]["obs"].append(prev["obs"])
-                traj[a]["central_obs"].append(prev["central_obs"])
+                traj[a]["central_obs"].append(
+                    prev["central_obs"]
+                )
                 traj[a]["mask"].append(prev["mask"])
                 traj[a]["act"].append(prev["act"])
                 traj[a]["logp"].append(prev["logp"])
                 traj[a]["val"].append(prev["val"])
+
+                # No later reward observation exists.
                 traj[a]["rew"].append(0.0)
                 traj[a]["done"].append(1.0)
+
                 pending[a] = None
 
-        # -------------------------
-        # Build fixed eval set and save initial policy once
-        # -------------------------
+        # ========================================================
+        # AFTER EPISODE 1:
+        # FREEZE THE EVALUATION BANK
+        # ========================================================
         if not saved_initial_policy:
-            missing_agents = [
-                agent for agent in mutated_agent_names
-                if agent not in eval_obs_by_agent
-            ]
 
-            if missing_agents:
-                print(
-                    f"[WARNING] Missing eval observations for {len(missing_agents)} agents. "
-                    f"Using zero observations and all-valid masks for them."
+            if len(eval_records) == 0:
+                raise RuntimeError(
+                    "No evaluation observations were collected "
+                    "during the first training episode."
                 )
 
-            eval_obs_list = []
-            eval_masks_list = []
+            eval_obs = np.stack(
+                [r["obs"] for r in eval_records],
+                axis=0,
+            ).astype(np.float32)
 
-            for agent in mutated_agent_names:
-                if agent in eval_obs_by_agent:
-                    eval_obs_list.append(eval_obs_by_agent[agent])
-                    eval_masks_list.append(eval_masks_by_agent[agent])
-                else:
-                    eval_obs_list.append(np.zeros(obs_dim, dtype=np.float32))
-                    eval_masks_list.append(np.ones(action_dim, dtype=np.int8))
+            eval_masks = np.stack(
+                [r["mask"] for r in eval_records],
+                axis=0,
+            ).astype(np.int8)
 
-            eval_obs = np.stack(eval_obs_list, axis=0)[:, None, :]
-            eval_masks = np.stack(eval_masks_list, axis=0)[:, None, :]
+            eval_karma = np.asarray(
+                [r["karma"] for r in eval_records],
+                dtype=np.float32,
+            )
 
+            eval_urgency = np.asarray(
+                [r["urgency"] for r in eval_records],
+                dtype=np.float32,
+            )
+
+            eval_agent_ids = np.asarray(
+                [r["agent_id"] for r in eval_records]
+            )
+
+            print("\n" + "=" * 70)
+            print("FIXED POLICY EVALUATION BANK")
+            print("=" * 70)
+            print("Number of evaluation states:", len(eval_obs))
+            print("eval_obs shape:", eval_obs.shape)
+            print("eval_masks shape:", eval_masks.shape)
+            print(
+                "karma values:",
+                sorted(np.unique(eval_karma).tolist()),
+            )
+            print(
+                "urgency values:",
+                sorted(np.unique(eval_urgency).tolist()),
+            )
+            print("nvec:", nvec.tolist())
+            print("action_dim:", action_dim)
+
+            print("\nSamples per (karma, urgency):")
+            for key in sorted(eval_counts):
+                print(
+                    f"  karma={key[0]:g}, "
+                    f"urgency={key[1]:.1f}: "
+                    f"{eval_counts[key]}"
+                )
+
+            print("=" * 70 + "\n")
+
+            # ----------------------------------------------------
+            # This is still the INITIAL actor because PPO has not
+            # yet been updated after episode 1.
+            # ----------------------------------------------------
             save_mappo_policy_checkpoint(
                 actor=actor,
                 eval_obs=eval_obs,
                 eval_masks=eval_masks,
+                eval_karma=eval_karma,
+                eval_urgency=eval_urgency,
+                eval_agent_ids=eval_agent_ids,
+                nvec=nvec,
                 device=device,
                 args=args,
                 checkpoint_dir=args.checkpoint_dir,
                 step=0,
-                phase="training",
+                phase="initial",
             )
 
+            # From now on, eval_records are frozen.
             saved_initial_policy = True
 
-
-
-        # -------------------------
-        # Build PPO batch from all agents
-        # -------------------------
+        # ========================================================
+        # BUILD PPO BATCH
+        # ========================================================
         obs_list = []
         central_obs_list = []
         mask_list = []
@@ -776,28 +987,85 @@ def main():
         ret_list = []
 
         for a in mutated_agent_names:
+
             if len(traj[a]["obs"]) == 0:
                 continue
 
-            rews = np.asarray(traj[a]["rew"], dtype=np.float32)
-            vals = np.asarray(traj[a]["val"], dtype=np.float32)
-            dones = np.asarray(traj[a]["done"], dtype=np.float32)
-            adv, ret = compute_gae(rews, vals, dones, args.gamma, args.gae_lambda)
+            rews = np.asarray(
+                traj[a]["rew"],
+                dtype=np.float32,
+            )
 
-            obs_list.append(np.asarray(traj[a]["obs"], dtype=np.float32))
-            central_obs_list.append(np.asarray(traj[a]["central_obs"], dtype=np.float32))
-            mask_list.append(np.asarray(traj[a]["mask"], dtype=np.int8))
-            act_list.append(np.asarray(traj[a]["act"], dtype=np.int64))
-            logp_list.append(np.asarray(traj[a]["logp"], dtype=np.float32))
+            vals = np.asarray(
+                traj[a]["val"],
+                dtype=np.float32,
+            )
+
+            dones = np.asarray(
+                traj[a]["done"],
+                dtype=np.float32,
+            )
+
+            adv, ret = compute_gae(
+                rews,
+                vals,
+                dones,
+                args.gamma,
+                args.gae_lambda,
+            )
+
+            obs_list.append(
+                np.asarray(
+                    traj[a]["obs"],
+                    dtype=np.float32,
+                )
+            )
+
+            central_obs_list.append(
+                np.asarray(
+                    traj[a]["central_obs"],
+                    dtype=np.float32,
+                )
+            )
+
+            mask_list.append(
+                np.asarray(
+                    traj[a]["mask"],
+                    dtype=np.int8,
+                )
+            )
+
+            act_list.append(
+                np.asarray(
+                    traj[a]["act"],
+                    dtype=np.int64,
+                )
+            )
+
+            logp_list.append(
+                np.asarray(
+                    traj[a]["logp"],
+                    dtype=np.float32,
+                )
+            )
+
             adv_list.append(adv)
             ret_list.append(ret)
 
         if len(obs_list) == 0:
+            print(
+                f"[WARNING] No training transitions "
+                f"in episode {ep + 1}"
+            )
+
             pbar.update(1)
             continue
 
         obs_np = np.concatenate(obs_list, axis=0)
-        central_obs_np = np.concatenate(central_obs_list, axis=0)
+        central_obs_np = np.concatenate(
+            central_obs_list,
+            axis=0,
+        )
         mask_np = np.concatenate(mask_list, axis=0)
         act_np = np.concatenate(act_list, axis=0)
         logp_np = np.concatenate(logp_list, axis=0)
@@ -805,124 +1073,315 @@ def main():
         ret_np = np.concatenate(ret_list, axis=0)
 
         batch = {
-            "obs": torch.from_numpy(obs_np).to(device=device, dtype=torch.float32),
-            "central_obs": torch.from_numpy(central_obs_np).to(device=device, dtype=torch.float32),
-            "mask": torch.from_numpy(mask_np).to(device=device),
-            "act": torch.from_numpy(act_np).to(device=device, dtype=torch.int64),
-            "logp_old": torch.from_numpy(logp_np).to(device=device, dtype=torch.float32),
-            "adv": torch.from_numpy(adv_np).to(device=device, dtype=torch.float32),
-            "ret": torch.from_numpy(ret_np).to(device=device, dtype=torch.float32),
+            "obs": torch.from_numpy(
+                obs_np
+            ).to(
+                device=device,
+                dtype=torch.float32,
+            ),
+
+            "central_obs": torch.from_numpy(
+                central_obs_np
+            ).to(
+                device=device,
+                dtype=torch.float32,
+            ),
+
+            "mask": torch.from_numpy(
+                mask_np
+            ).to(device=device),
+
+            "act": torch.from_numpy(
+                act_np
+            ).to(
+                device=device,
+                dtype=torch.int64,
+            ),
+
+            "logp_old": torch.from_numpy(
+                logp_np
+            ).to(
+                device=device,
+                dtype=torch.float32,
+            ),
+
+            "adv": torch.from_numpy(
+                adv_np
+            ).to(
+                device=device,
+                dtype=torch.float32,
+            ),
+
+            "ret": torch.from_numpy(
+                ret_np
+            ).to(
+                device=device,
+                dtype=torch.float32,
+            ),
         }
 
+        # ========================================================
+        # PPO UPDATE
+        # ========================================================
         metrics = {}
-        for _ in range(args.epochs):
-            metrics = ppo_update_masked_joint_mappo(actor, critic, actor_opt, critic_opt, batch, args)
 
-        # Save policy checkpoint after PPO update
+        for _ in range(args.epochs):
+            metrics = ppo_update_masked_joint_mappo(
+                actor=actor,
+                critic=critic,
+                actor_opt=actor_opt,
+                critic_opt=critic_opt,
+                batch=batch,
+                args=args,
+            )
+
+        # ========================================================
+        # SAVE TRAINING POLICY CHECKPOINT
+        #
+        # IMPORTANT:
+        # The SAME eval_obs/eval_masks are used every time.
+        # Only the actor changes.
+        # ========================================================
         if (
-            eval_obs is not None
-            and eval_masks is not None
-            and ((ep + 1) % checkpoint_interval == 0 or (ep + 1) == training_episodes)
+            (ep + 1) % checkpoint_interval == 0
+            or (ep + 1) == training_episodes
         ):
             save_mappo_policy_checkpoint(
                 actor=actor,
                 eval_obs=eval_obs,
                 eval_masks=eval_masks,
+                eval_karma=eval_karma,
+                eval_urgency=eval_urgency,
+                eval_agent_ids=eval_agent_ids,
+                nvec=nvec,
                 device=device,
                 args=args,
                 checkpoint_dir=args.checkpoint_dir,
-                step=ep+1,
+                step=ep + 1,
                 phase="training",
             )
 
-        mean_return = float(np.mean(list(ep_return.values())))
+        # ========================================================
+        # TRAINING LOGGING
+        # ========================================================
+        mean_return = float(
+            np.mean(list(ep_return.values()))
+        )
+
         running_ep_returns.append(mean_return)
         running_ep_lens.append(turn_count)
 
-        if (ep + 1) % args.log_every_episodes == 0:
+        if (
+            (ep + 1) % args.log_every_episodes == 0
+            or (ep + 1) == training_episodes
+        ):
             print(
-                f"[EP {ep+1}] mean_return_over_agents={np.mean(running_ep_returns):.4f} "
-                f"mean_turns={np.mean(running_ep_lens):.1f} "
-                f"actor_loss={metrics.get('actor_loss', 0):.4f} "
-                f"critic_loss={metrics.get('critic_loss', 0):.4f} "
-                f"entropy={metrics.get('entropy', 0):.4f} "
-                f"nvec={nvec.tolist()} action_dim={action_dim} central_obs_dim={central_obs_dim}"
+                f"[EP {ep + 1}] "
+                f"mean_return_over_agents="
+                f"{np.mean(running_ep_returns):.4f} "
+                f"mean_turns="
+                f"{np.mean(running_ep_lens):.1f} "
+                f"actor_loss="
+                f"{metrics.get('actor_loss', 0):.4f} "
+                f"critic_loss="
+                f"{metrics.get('critic_loss', 0):.4f} "
+                f"entropy="
+                f"{metrics.get('entropy', 0):.4f} "
+                f"nvec={nvec.tolist()} "
+                f"action_dim={action_dim} "
+                f"central_obs_dim={central_obs_dim}"
             )
+
             running_ep_returns.clear()
             running_ep_lens.clear()
 
         pbar.update(1)
 
-    # -------------------------
-    # Testing (greedy, masked)
-    # -------------------------
+
+    # ============================================================
+    # TESTING
+    # ============================================================
+
     actor.eval()
     critic.eval()
 
+    pbar.set_description(
+        "MAPPO AEC testing (masked joint)"
+    )
 
-    pbar.set_description("MAPPO AEC testing (masked joint)")
+    # IMPORTANT:
+    # Enable your special testing urgency behaviour ONLY now.
     env.testing_urgency_function()
 
     for ep in range(testing_episodes):
+
         env.reset()
 
-        route_counts = np.zeros(args.num_routes, dtype=np.int32)
+        route_counts = np.zeros(
+            args.num_routes,
+            dtype=np.int32,
+        )
+
         step_in_episode = 0
 
-        pending: Dict[str, Dict[str, Any] | None] = {a: None for a in mutated_agent_names}
-        ep_return = {a: 0.0 for a in mutated_agent_names}
+        pending: Dict[
+            str,
+            Dict[str, Any] | None
+        ] = {
+            a: None
+            for a in mutated_agent_names
+        }
 
+        ep_return = {
+            a: 0.0
+            for a in mutated_agent_names
+        }
+
+        # ========================================================
+        # TEST EPISODE
+        # ========================================================
         for agent in env.agent_iter():
-            obs, reward, termination, truncation, info = env.last()
+
+            obs, reward, termination, truncation, info = (
+                env.last()
+            )
+
             done = termination or truncation
+            acted_agent = False
 
             if agent in agent_name_to_idx:
+
+                # -----------------------------------------------
+                # Close previous test transition
+                # -----------------------------------------------
                 if pending[agent] is not None:
+
                     ep_return[agent] += float(reward)
+
                     pending[agent] = None
 
                 if done:
                     action = None
-                else:
-                    obs_vec, mask_arr = extract_obs_and_mask(obs)
-                    if mask_arr is None:
-                        mask_arr = np.ones(action_dim, dtype=np.int8)
-                    else:
-                        mask_arr = mask_arr.reshape(-1)
 
-                    # Greedy action from actor (critic not needed here)
-                    obs_t = torch.from_numpy(obs_vec).to(device=device, dtype=torch.float32)
+                else:
+                    obs_vec, mask_arr = (
+                        extract_obs_and_mask(obs)
+                    )
+
+                    if mask_arr is None:
+                        mask_arr = np.ones(
+                            action_dim,
+                            dtype=np.int8,
+                        )
+                    else:
+                        mask_arr = (
+                            np.asarray(mask_arr)
+                            .reshape(-1)
+                            .astype(np.int8)
+                        )
+
+                        if mask_arr.shape[0] != action_dim:
+                            raise ValueError(
+                                f"Testing action_mask "
+                                f"length "
+                                f"{mask_arr.shape[0]} "
+                                f"!= action_dim "
+                                f"{action_dim}"
+                            )
+
+                    obs_t = torch.from_numpy(
+                        obs_vec
+                    ).to(
+                        device=device,
+                        dtype=torch.float32,
+                    )
+
                     logits = actor(obs_t)
 
-                    mask_t = torch.from_numpy(mask_arr).to(device=device)
-                    valid = mask_t != 0
-                    if valid.any():
-                        logits = logits.masked_fill(~valid, args.masked_logits_neg_inf)
+                    mask_t = torch.from_numpy(
+                        mask_arr
+                    ).to(device=device)
 
-                    dist = torch.distributions.Categorical(logits=logits)
-                    act_idx = int(dist.sample().item())
-                    #act_idx = int(torch.argmax(logits).item())
-                    act_vec = joint_index_to_multidiscrete(act_idx, nvec, strides)
+                    valid = mask_t != 0
+
+                    if valid.any():
+                        logits = logits.masked_fill(
+                            ~valid,
+                            args.masked_logits_neg_inf,
+                        )
+
+                    # -------------------------------------------
+                    # Sample from the learned policy.
+                    #
+                    # If you actually want deterministic/greedy
+                    # testing, replace these two lines with:
+                    #
+                    # act_idx = int(
+                    #     torch.argmax(logits).item()
+                    # )
+                    # -------------------------------------------
+                    dist = torch.distributions.Categorical(
+                        logits=logits
+                    )
+
+                    act_idx = int(
+                        dist.sample().item()
+                    )
+
+                    act_vec = joint_index_to_multidiscrete(
+                        act_idx,
+                        nvec,
+                        strides,
+                    )
+
                     action = act_vec
 
-                    # update global aggregates
-                    route = int(act_vec[args.route_action_index])
-                    if 0 <= route < args.num_routes:
-                        route_counts[route] += 1
+                    pending[agent] = {
+                        "dummy": True
+                    }
 
-                    pending[agent] = {"dummy": True}
+                    acted_agent = True
                     step_in_episode += 1
+
             else:
                 action = None
 
+            # Environment chooses actual route.
             env.step(action)
 
-        global_step = args.training_episodes + ep + 1
+            if acted_agent:
+
+                assigned_route = int(
+                    machine_by_name[agent].route
+                )
+
+                if (
+                    0
+                    <= assigned_route
+                    < args.num_routes
+                ):
+                    route_counts[assigned_route] += 1
+
+        # ========================================================
+        # TEST CHECKPOINT
+        # ========================================================
+
+        # 35, 36, ..., 44 when:
+        # training_episodes = 34
+        global_step = (
+            args.training_episodes
+            + ep
+            + 1
+        )
 
         save_mappo_policy_checkpoint(
             actor=actor,
             eval_obs=eval_obs,
             eval_masks=eval_masks,
+            eval_karma=eval_karma,
+            eval_urgency=eval_urgency,
+            eval_agent_ids=eval_agent_ids,
+            nvec=nvec,
             device=device,
             args=args,
             checkpoint_dir=args.checkpoint_dir,
@@ -930,15 +1389,27 @@ def main():
             phase="testing",
         )
 
-        mean_return = float(np.mean(list(ep_return.values())))
-        print(f"[TEST EP {ep+1}] mean_return_over_agents={mean_return:.4f}")
+        mean_return = float(
+            np.mean(list(ep_return.values()))
+        )
+
+        print(
+            f"[TEST EP {ep + 1}] "
+            f"mean_return_over_agents="
+            f"{mean_return:.4f}"
+        )
+
         pbar.update(1)
+
+
+    # ============================================================
+    # FINISH
+    # ============================================================
 
     pbar.close()
 
     env.plot_results()
     env.stop_simulation()
-
 
 if __name__ == "__main__":
     main()
