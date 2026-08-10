@@ -445,7 +445,7 @@ class TrafficEnvironment(AECEnv):
 
         if self.karma_pricing == True:
             self._action_spaces = {
-                agent: MultiDiscrete(np.full(self.simulation_params[kc.NUMBER_OF_PATHS], self.environment_params[kc.MAXIMUM_ALLOWED_BID])) for agent in self.possible_agents
+                agent: MultiDiscrete(np.full(self.simulation_params[kc.NUMBER_OF_PATHS], 30)) for agent in self.possible_agents
             }
 
             self.action_spaces = self._action_spaces            
@@ -633,11 +633,8 @@ class TrafficEnvironment(AECEnv):
         if self.all_agents_high_urgency:
             machine.urgency = np.max(self.urgency_distribution)
         elif self.testing_urgency:
-            print("inside testing urgency\n\n")
             machine.urgency = np.random.choice(self.urgency_distribution)
-            print("urgency is: ", machine.urgency, "\n\n")
         else:
-            print("inside assign urgency level to an agent\n\n")
             self._assign_urgency_level_to_an_agent(machine)
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
