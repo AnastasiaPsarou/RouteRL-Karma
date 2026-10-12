@@ -51,8 +51,16 @@
 
     <!-- ===== Flows using the distribution ===== -->
      <!-- ADJUST PROB!!! ===== -->
-    <flow id="flow_am_peak" route="0_0_0" type="distDrivers"
+    <!--<flow id="flow_am_peak" route="0_0_0" type="distDrivers"
           begin="0" end="100" probability="2.7"  
-          departLane="free" departSpeed="max"/>
+          departLane="free" departSpeed="max"/>-->
+    <flow id="flow_am_peak"
+      route="0_0_0"
+      type="distDrivers"
+      begin="0"
+      end="100"
+      number="300"
+      departLane="free"
+      departSpeed="max"/>
 
 </routes>

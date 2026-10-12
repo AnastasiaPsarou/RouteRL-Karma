@@ -23,10 +23,5 @@
         <time-to-teleport value="-1"/>
     </processing>
 
-    <time>
-        <begin value="0"/> 
-        <end value="1500"/> 
-        
-    </time>
 
 </configuration>
