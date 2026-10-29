@@ -1062,7 +1062,7 @@ class TrafficEnvironment(AECEnv):
         # Common urgency for commuters belonging to the
         # correlated group on this day
         self._common_daily_urgency = np.random.choice(
-            self.urgency_distribution
+            np.arange(1, 11) / 10
         )
 
         # Temporal relationship also changes between days
