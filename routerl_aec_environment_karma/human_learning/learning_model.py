@@ -1,6 +1,6 @@
 import numpy as np
 from collections import deque
-
+from itertools import product
 from abc import ABC, abstractmethod
 
 from routerl_aec_environment.keychain import Keychain as kc
@@ -152,146 +152,180 @@ class GeneralModel(BaseLearningModel):
     
 
 
+
+
+
 class GeneralBiddingModel(BaseLearningModel):
     """
-    General model for route bidding with MultiDiscrete actions.
+    Utility-based bidding model with a joint discrete choice set.
 
-    Instead of returning one chosen route, the model returns a bid vector:
-        [bid_route_0, bid_route_1, ..., bid_route_K]
+    One alternative is a complete bid vector:
+        option_m = [bid_route_0, bid_route_1, ..., bid_route_K-1]
 
-    where each entry is a discrete bid level.
+    With K routes and J bid levels, the model has J**K alternatives. For
+    example, three routes and ten bid levels produce 1,000 alternatives.
+
+    The model selects one feasible joint alternative according to
+
+        U_i,m^d = V_i,m^d + epsilon_i,m^d,
+
+    where V is the learned systematic utility and epsilon is different for
+    every joint alternative. The selected alternative is returned as a bid
+    vector so that the external environment interface does not need to change.
     """
 
     def __init__(self, params, initial_knowledge):
         super().__init__()
 
         # ------------------------------------------------------------------
-        # Bidding-specific parameters
+        # Bid levels and joint alternatives
         # ------------------------------------------------------------------
-        self.num_bid_levels = params.get("num_bid_levels", 10)
-
-        self.bid_values = np.array(
+        self.num_bid_levels = int(params.get("num_bid_levels", 10))
+        self.bid_values = np.asarray(
             params.get("bid_values", list(range(self.num_bid_levels))),
-            dtype=int
+            dtype=int,
         )
 
-        assert len(self.bid_values) == self.num_bid_levels, (
-            "bid_values must have length num_bid_levels"
-        )
+        if len(self.bid_values) != self.num_bid_levels:
+            raise ValueError("bid_values must have length num_bid_levels")
+        if len(np.unique(self.bid_values)) != len(self.bid_values):
+            raise ValueError("bid_values must contain unique values")
 
-        # Map actual bid values to column indices in the route-bid cost table
-        self.bid_value_to_col = {
-            int(bid): idx for idx, bid in enumerate(self.bid_values)
-        }
-
-        self.bid_exploration = params.get("bid_exploration", 0.1)
-
-        # If True, enforce monotone ranking:
-        # better utility => bid no smaller than worse utility
-        self.enforce_rank_consistency = params.get(
-            "enforce_rank_consistency",
-            True
-        )
-
-        # ------------------------------------------------------------------
-        # Route information and initial route-bid cost table
-        # ------------------------------------------------------------------
-        base_costs = -np.array(initial_knowledge, dtype=float)
+        base_costs = -np.asarray(initial_knowledge, dtype=float)
+        if base_costs.ndim != 1 or len(base_costs) == 0:
+            raise ValueError("initial_knowledge must be a non-empty 1-D sequence")
 
         self.num_routes = len(base_costs)
-        self.mean_time = abs(np.mean(base_costs))
+        self.mean_time = max(abs(float(np.mean(base_costs))), 1e-8)
 
-        # self.costs[k, j] = expected cost/value of submitting bid_values[j]
-        # for route k
-        self.costs = np.repeat(
-            base_costs[:, None],
-            self.num_bid_levels,
-            axis=1
+        # Every row is one complete bid-vector alternative.
+        self.options = np.asarray(
+            list(product(self.bid_values.tolist(), repeat=self.num_routes)),
+            dtype=int,
+        )
+        self.num_options = len(self.options)
+        self.option_to_index = {
+            tuple(option.tolist()): idx for idx, option in enumerate(self.options)
+        }
+
+        expected_num_options = self.num_bid_levels ** self.num_routes
+        if self.num_options != expected_num_options:
+            raise RuntimeError("Failed to construct the complete joint action space")
+
+        self.bid_exploration = float(params.get("bid_exploration", 0.1))
+        if not 0.0 <= self.bid_exploration <= 1.0:
+            raise ValueError("bid_exploration must be in [0, 1]")
+
+        # If False, affordability is checked independently for each route,
+        # which is appropriate when only the price of the allocated route is
+        # paid. If True, the sum of all submitted bids must fit the balance.
+        self.enforce_joint_budget = bool(
+            params.get("enforce_joint_budget", False)
         )
 
         # ------------------------------------------------------------------
-        # Noise weights
+        # Systematic utility V for every joint option
         # ------------------------------------------------------------------
-        self.noise_weight_agent = params[kc.NOISE_WEIGHT_AGENT]
-        self.noise_weight_path = params[kc.NOISE_WEIGHT_PATH]
-        self.noise_weight_day = params[kc.NOISE_WEIGHT_DAY]
-
-        assert abs(
-            self.noise_weight_agent
-            + self.noise_weight_path
-            + self.noise_weight_day
-            - 1
-        ) < 1e-8, "Relative weights in error terms do not sum to 1."
-
-        # ------------------------------------------------------------------
-        # Utility parameters
-        # ------------------------------------------------------------------
-        self.beta_k_i = params[kc.BETA] * np.random.normal(
-            1,
-            params[kc.BETA_K_I_VARIABILITY],
-            size=self.num_routes
+        # initial_knowledge supplies route-level values, not values for complete
+        # vectors. The default therefore gives every vector the same neutral
+        # prior. It will become option-specific through learning.
+        initial_option_value = float(
+            params.get("initial_option_value", np.mean(base_costs))
+        )
+        self.option_values = np.full(
+            self.num_options,
+            initial_option_value,
+            dtype=float,
         )
 
-        self.random_term_agent = np.random.normal(
-            0,
-            params[kc.EPSILON_I_VARIABILITY]
-        )
+        # Optional deterministic prior over vectors. A callable receives
+        # (option_vector, base_costs) and returns a scalar value.
+        option_prior_fn = params.get("option_prior_fn")
+        if option_prior_fn is not None:
+            self.option_values = np.asarray(
+                [option_prior_fn(option.copy(), base_costs.copy())
+                 for option in self.options],
+                dtype=float,
+            )
+            if self.option_values.shape != (self.num_options,):
+                raise ValueError(
+                    "option_prior_fn must return one scalar per joint option"
+                )
 
-        self.random_term_path = np.random.normal(
-            0,
-            params[kc.EPSILON_K_I_VARIABILITY],
-            size=self.num_routes
-        )
 
-        self.random_term_day = params[kc.EPSILON_K_I_T_VARIABILITY]
+        # Persistent option-specific error epsilon_i,m.
+        self.random_term_option = np.random.normal(
+            loc=0.0,
+            scale=float(params[kc.EPSILON_K_I_VARIABILITY]),
+            size=self.num_options,
+        )
 
         # ------------------------------------------------------------------
         # Learning parameters
         # ------------------------------------------------------------------
         self.greedy = params[kc.GREEDY]
-        self.gamma_c = params[kc.GAMMA_C]
-        self.gamma_u = params[kc.GAMMA_U]
-        self.remember = int(params[kc.REMEMBER])
-        self.alpha_zero = params[kc.ALPHA_ZERO]
+        self.gamma_c = float(params[kc.GAMMA_C])
+        self.gamma_u = float(params[kc.GAMMA_U])
 
-        self.alphas = list(params[kc.ALPHAS])
-
-        assert len(self.alphas) == self.remember, (
-            "weights of history in 'alphas' and 'remember' do not match"
+        # Agent-specific learning rate alpha_i.
+        #
+        # Each GeneralBiddingModel instance is assumed to represent one commuter.
+        # Therefore alpha_i is sampled once when the model is created and remains
+        # fixed for that commuter throughout the simulation.
+        #
+        # Example:
+        #   "learning_rate_mean": 0.20,
+        #   "learning_rate_std":  0.05
+        #
+        # Setting learning_rate_std = 0 gives the same learning rate to all agents.
+        self.learning_rate_mean = float(
+            params.get("learning_rate_mean", 0.20)
+        )
+        self.learning_rate_std = float(
+            params.get("learning_rate_std", 0.05)
         )
 
-        assert abs(self.alpha_zero + sum(self.alphas) - 1) < 0.01, (
-            "weights for weighted average do not sum up to 1"
+        if not 0.0 <= self.learning_rate_mean <= 1.0:
+            raise ValueError("learning_rate_mean must be in [0, 1]")
+        if self.learning_rate_std < 0.0:
+            raise ValueError("learning_rate_std must be non-negative")
+
+        # Gaussian heterogeneity, clipped to the admissible interval [0, 1].
+        self.alpha_i = float(
+            np.clip(
+                np.random.normal(
+                    loc=self.learning_rate_mean,
+                    scale=self.learning_rate_std,
+                ),
+                0.0,
+                1.0,
+            )
+        )
+
+        # If learn() receives one reward per route, this determines how the
+        # vector is converted to the scalar outcome of the selected joint
+        # alternative. A callable can also be supplied.
+        self.reward_aggregation = params.get(
+            "joint_reward_aggregation", "mean"
         )
 
         # ------------------------------------------------------------------
-        # Route-bid memory
-        # ------------------------------------------------------------------
-        self.memory = [
-            [
-                deque([self.costs[k, j]], maxlen=self.remember)
-                for j in range(self.num_bid_levels)
-            ]
-            for k in range(self.num_routes)
-        ]
-
-        # ------------------------------------------------------------------
-        # Karma feasibility parameters
+        # Karma feasibility
         # ------------------------------------------------------------------
         self.karma_balance_key = params.get(
-            "karma_balance_key",
-            "karma_balance"
+            "karma_balance_key", "karma_balance"
         )
-
-        self.route_fixed_karma_costs = np.array(
+        self.route_fixed_karma_costs = np.asarray(
             params.get(
                 "route_fixed_karma_costs",
-                [0.0] * self.num_routes
+                [0.0] * self.num_routes,
             ),
-            dtype=float
+            dtype=float,
         )
-
-        assert len(self.route_fixed_karma_costs) == self.num_routes
+        if len(self.route_fixed_karma_costs) != self.num_routes:
+            raise ValueError(
+                "route_fixed_karma_costs must have one entry per route"
+            )
 
         # ------------------------------------------------------------------
         # Last-action storage
@@ -299,249 +333,186 @@ class GeneralBiddingModel(BaseLearningModel):
         self.first_day = True
         self.last_action = None
 
-
-
     def learn(self, state, action, reward, chosen_route=None):
         """
-        Update expected route-bid cost estimates.
+        Update the learned systematic utility V of the selected joint option.
 
-        If reward is scalar:
-            update only the chosen/assigned route.
-
-        If reward is a vector of length num_routes:
-            update the submitted bid for every route.
+        Parameters
+        ----------
+        action : array-like, shape (num_routes,)
+            Complete bid vector returned by act().
+        reward : scalar or array-like
+            A scalar directly updates the selected option. If a route-level
+            reward vector is supplied, it is converted to a scalar according
+            to joint_reward_aggregation. When chosen_route is given, the
+            default behavior uses the reward of that route.
+        chosen_route : int, optional
+            Route actually allocated by the external mechanism.
         """
-        action = np.asarray(action, dtype=int)
-        reward_arr = np.asarray(reward, dtype=float)
+        del state  # retained for interface compatibility
 
-        # Case 1: reward for all route options
-        if reward_arr.ndim > 0 and len(reward_arr) == self.num_routes:
-            routes_to_update = range(self.num_routes)
-            rewards_to_use = reward_arr
+        option_idx = self.action_to_option_index(action)
+        scalar_reward = self._scalarize_reward(reward, chosen_route)
+        current_estimate = self.option_values[option_idx]
 
-        # Case 2: scalar reward, update only assigned route
-        else:
-            if chosen_route is None:
-                chosen_route = int(np.argmax(action))
-
-            routes_to_update = [chosen_route]
-            rewards_to_use = [float(reward)]
-
-        for route, route_reward in zip(routes_to_update, rewards_to_use):
-            bid_value = int(action[route])
-
-            if bid_value not in self.bid_value_to_col:
-                raise ValueError(
-                    f"Bid value {bid_value} is not in bid_values: {self.bid_values}"
-                )
-
-            bid_col = self.bid_value_to_col[bid_value]
-
-            self.memory[route][bid_col].append(route_reward)
-
-            current_estimate = self.costs[route, bid_col]
-
-            relative_change = abs(
-                (current_estimate - route_reward)
-                / (abs(current_estimate) + 1e-8)
-            )
-
-            if relative_change >= self.gamma_c:
-                relevant_memory = self.memory[route][bid_col]
-
-                weight_normalization_factor = 1 / (
-                    self.alpha_zero
-                    + sum(self.alphas[i] for i, _ in enumerate(relevant_memory))
-                )
-
-                updated_cost = (
-                    weight_normalization_factor
-                    * self.alpha_zero
-                    * current_estimate
-                )
-
-                updated_cost += sum(
-                    weight_normalization_factor
-                    * self.alphas[i]
-                    * relevant_memory[i]
-                    for i, _ in enumerate(relevant_memory)
-                )
-
-                self.costs[route, bid_col] = updated_cost
-
-    def act(self, state):
-        """
-        Return a karma-feasible bid vector, one bid per route.
-        The current karma balance is read from the last entry of the observation.
-        """
-        karma_balance = self.get_karma_balance_from_state(state)
-
-        utilities = self.compute_route_bid_utilities()
-
-        # exploration: random feasible bids for all routes
-        if np.random.random() < self.bid_exploration:
-            bids = self.random_feasible_bids(karma_balance)
-        else:
-            bids = self.utilities_to_bids(
-                utilities,
-                karma_balance=karma_balance
-            )
-
-        # bounded rationality on bid updates
-        if not self.first_day and self.last_action is not None:
-            last_utilities = self.last_action["utilities"]
-            utility_change = np.max(
-                np.abs((utilities - last_utilities) / (np.abs(last_utilities) + 1e-8))
-            )
-
-            if utility_change < self.gamma_u:
-                bids = self.project_bids_to_karma_feasible(
-                    self.last_action["bids"].copy(),
-                    karma_balance
-                )
-
-        self.first_day = False
-        self.last_action = {
-            "bids": np.array(bids, dtype=int),
-            "utilities": utilities.copy(),
-            "karma_balance": karma_balance,
-        }
-        
-        return np.array(bids, dtype=int)
-    
-
-    def compute_route_bid_utilities(self):
-        """
-        Compute utility estimates for every route-bid pair.
-
-        Returns
-        -------
-        utilities : np.ndarray
-            Array of shape (num_routes, num_bid_levels).
-        """
-
-        noises = np.array(self.get_noises(), dtype=float)
-
-        utilities = np.zeros(
-            (self.num_routes, self.num_bid_levels),
-            dtype=float
+        relative_change = abs(
+            (current_estimate - scalar_reward)
+            / (abs(current_estimate) + 1e-8)
         )
 
-        for k in range(self.num_routes):
-            for j in range(self.num_bid_levels):
-                utilities[k, j] = self.beta_k_i[k] * (
-                    self.costs[k, j] + self.mean_time * noises[k]
-                )
+        if relative_change < self.gamma_c:
+            return
 
-        return utilities
+        # Experience-based update of the systematic value V:
+        #
+        # V_i^{d+1}(a_i^d)
+        #   = (1 - alpha_i) V_i^d(a_i^d) + alpha_i r_i^d(x_i^d)
+        #
+        # Only the selected joint bid vector is updated.
+        self.option_values[option_idx] = (
+            (1.0 - self.alpha_i) * current_estimate
+            + self.alpha_i * scalar_reward
+        )
+
+    def act(self, state):
+        karma_balance = self.get_karma_balance_from_state(state)
+        feasible_mask = self.feasible_option_mask(karma_balance)
+
+        if not np.any(feasible_mask):
+            raise RuntimeError(
+                "No feasible joint bid option exists for the current balance"
+            )
+
+        utilities = self.compute_option_utilities()
+
+        if np.random.random() < self.bid_exploration:
+            option_idx = self.random_feasible_option_index(feasible_mask)
+        else:
+            option_idx = self.select_best_option(utilities, feasible_mask)
+
+
+        bids = self.options[option_idx].copy()
+
+
+        return bids
+
+    def compute_option_utilities(self):
+        """
+        Compute random utility for every complete bid-vector alternative.
+
+        U_m = V_m + epsilon_m
+
+        The option-specific and option-day-specific components differ across
+        all alternatives, so the random term can change their ranking.
+        """
+        epsilon = self.get_option_epsilons()
+        systematic_utility = self.option_values
+        return systematic_utility + epsilon
+
+    def get_option_epsilons(self):
+        """Return the fixed epsilon_i(a) for every joint bid alternative."""
+        return self.random_term_option
+
+    def feasible_option_mask(self, karma_balance):
+        """Return a Boolean mask over feasible complete bid vectors."""
+        balance = float(karma_balance)
+
+        # Each bid must be affordable if its corresponding route is allocated.
+        per_route_limits = balance - self.route_fixed_karma_costs
+        mask = np.all(self.options <= per_route_limits[None, :], axis=1)
+
+        if self.enforce_joint_budget:
+            total_commitment = (
+                np.sum(self.options, axis=1)
+                + float(np.sum(self.route_fixed_karma_costs))
+            )
+            mask &= total_commitment <= balance
+
+        return mask
+
+    def select_best_option(self, utilities, feasible_mask):
+        """Choose the feasible joint option with maximal random utility."""
+        utilities = np.asarray(utilities, dtype=float)
+        if utilities.shape != (self.num_options,):
+            raise ValueError(
+                f"utilities must have shape ({self.num_options},)"
+            )
+
+        masked_utilities = np.where(feasible_mask, utilities, -np.inf)
+        return int(np.argmax(masked_utilities))
+
+    def random_feasible_option_index(self, feasible_mask):
+        feasible_indices = np.flatnonzero(feasible_mask)
+        if len(feasible_indices) == 0:
+            raise RuntimeError("No feasible joint bidding option")
+        return int(np.random.choice(feasible_indices))
+
+    def action_to_option_index(self, action):
+        """Map a complete bid vector to its joint-option index."""
+        action = np.asarray(action, dtype=int)
+        if action.shape != (self.num_routes,):
+            raise ValueError(
+                f"action must have shape ({self.num_routes},), got {action.shape}"
+            )
+
+        key = tuple(action.tolist())
+        if key not in self.option_to_index:
+            raise ValueError(
+                f"Action {key} is not in the joint bidding choice set"
+            )
+        return self.option_to_index[key]
+
+    def _scalarize_reward(self, reward, chosen_route=None):
+        reward_arr = np.asarray(reward, dtype=float)
+
+        if reward_arr.ndim == 0:
+            return float(reward_arr)
+
+        flat_reward = reward_arr.reshape(-1)
+        if len(flat_reward) != self.num_routes:
+            raise ValueError(
+                "A non-scalar reward must have one entry per route"
+            )
+
+        if chosen_route is not None:
+            chosen_route = int(chosen_route)
+            if not 0 <= chosen_route < self.num_routes:
+                raise ValueError("chosen_route is outside the route index range")
+            return float(flat_reward[chosen_route])
+
+        if callable(self.reward_aggregation):
+            return float(self.reward_aggregation(flat_reward.copy()))
+        if self.reward_aggregation == "mean":
+            return float(np.mean(flat_reward))
+        if self.reward_aggregation == "sum":
+            return float(np.sum(flat_reward))
+        if self.reward_aggregation == "min":
+            return float(np.min(flat_reward))
+        if self.reward_aggregation == "max":
+            return float(np.max(flat_reward))
+
+        raise ValueError(
+            "joint_reward_aggregation must be 'mean', 'sum', 'min', 'max', "
+            "or a callable"
+        )
 
     def get_karma_balance_from_state(self, state):
-        """
-        Reads the current karma balance from the observation.
-
-        In your current observation structure, karma balance is the last entry:
-            state["observation"][-1]
-        """
+        """Read the current Karma balance from the observation."""
         if isinstance(state, dict):
+            if self.karma_balance_key in state:
+                return float(state[self.karma_balance_key])
             if "observation" in state:
                 obs = np.asarray(state["observation"], dtype=float)
                 return float(obs[-1])
-
             if "observations" in state:
                 obs = np.asarray(state["observations"], dtype=float)
                 return float(obs[-1])
 
-        # fallback if state is directly an array
         obs = np.asarray(state, dtype=float)
+        if obs.size == 0:
+            raise ValueError("Cannot read Karma balance from an empty state")
         return float(obs[-1])
 
-    def utilities_to_bids(self, utilities, karma_balance=None):
-        """
-        Choose one feasible bid per route using route-bid utilities.
-
-        utilities[k, j] is the utility of submitting bid_values[j]
-        for route k.
-        """
-
-        bids = np.zeros(self.num_routes, dtype=int)
-
-        for k in range(self.num_routes):
-            feasible_bid_values = self.feasible_bid_values_for_route(
-                karma_balance,
-                k
-            )
-
-            feasible_cols = [
-                self.bid_value_to_col[int(bid)]
-                for bid in feasible_bid_values
-            ]
-
-            route_utilities = utilities[k, feasible_cols]
-
-            best_local_idx = int(np.argmax(route_utilities))
-            best_col = feasible_cols[best_local_idx]
-
-            bids[k] = self.bid_values[best_col]
-
-        return bids
-    
-    def get_noises(self):
-        daily_noise = np.random.normal(0, self.random_term_day, size=self.num_routes)
-        return [
-            self.noise_weight_agent * self.random_term_agent
-            + self.noise_weight_path * self.random_term_path[k]
-            + self.noise_weight_day * daily_noise[k]
-            for k, _ in enumerate(self.costs)
-        ]
-    
-    def feasible_bid_values_for_route(self, karma_balance, route_idx):
-        """
-        Return bid values that do not make the karma balance negative.
-        """
-
-        max_affordable_bid = (
-            karma_balance - self.route_fixed_karma_costs[route_idx]
-        )
-
-        feasible = self.bid_values[self.bid_values <= max_affordable_bid]
-
-        if len(feasible) == 0:
-            if 0 in self.bid_values:
-                return np.array([0], dtype=int)
-            return np.array([self.bid_values[0]], dtype=int)
-
-        return feasible.astype(int)
-
-    def random_feasible_bids(self, karma_balance):
-        bids = np.zeros(self.num_routes, dtype=int)
-
-        for k in range(self.num_routes):
-            feasible = self.feasible_bid_values_for_route(karma_balance, k)
-            bids[k] = np.random.choice(feasible)
-
-        return bids
-
-
-    def project_bids_to_karma_feasible(self, bids, karma_balance):
-        """
-        If reusing previous bids, clip them to the current karma balance.
-        """
-        bids = np.asarray(bids, dtype=int).copy()
-
-        for k in range(self.num_routes):
-            feasible = self.feasible_bid_values_for_route(karma_balance, k)
-            affordable = feasible[feasible <= bids[k]]
-
-            if len(affordable) > 0:
-                bids[k] = affordable[-1]
-            else:
-                bids[k] = feasible[0]
-
-        return bids
-
-"""
-Library of specific models implementations
-"""
 
 class GawronModel(GeneralModel):
     """
