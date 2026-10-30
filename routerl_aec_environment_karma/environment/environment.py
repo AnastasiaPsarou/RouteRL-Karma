@@ -453,8 +453,28 @@ class TrafficEnvironment(AECEnv):
             self.centrally_defined_price_route_1 = self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_1]
             self.total_karma_points_used = 0
 
-            for machine in self.machine_agents:
-                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]
+            """for machine in self.machine_agents:
+                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]"""
+            total_karma = self.environment_params[kc.TOTAL_KARMA_SUPPLY]
+            num_agents = len(self.machine_agents)
+
+            base_karma, remainder = divmod(total_karma, num_agents)
+
+            # Allocate Karma as uniformly as possible
+            balances = (
+            [base_karma + 1] * remainder
+            + [base_karma] * (num_agents - remainder)
+            )
+
+            # Randomize which agents receive the additional point
+            random.shuffle(balances)
+
+            # Initialize each agent's Karma balance
+            for machine, balance in zip(self.machine_agents, balances):
+                machine.karma_balance = balance
+
+            # Verify total supply
+            assert sum(m.karma_balance for m in self.machine_agents) == total_karma
 
 
         logging.info("\nMachine's observation space is: %s ", self._observation_spaces)
@@ -1150,8 +1170,28 @@ class TrafficEnvironment(AECEnv):
 
     def _reinitialize_karma_balance(self) -> None:
 
-        for machine in self.machine_agents:
-                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]
+        """for machine in self.machine_agents:
+                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]"""
+        total_karma = self.environment_params[kc.TOTAL_KARMA_SUPPLY]
+        num_agents = len(self.machine_agents)
+
+        base_karma, remainder = divmod(total_karma, num_agents)
+
+        # Allocate Karma as uniformly as possible
+        balances = (
+        [base_karma + 1] * remainder
+        + [base_karma] * (num_agents - remainder)
+        )
+
+        # Randomize which agents receive the additional point
+        random.shuffle(balances)
+
+        # Initialize each agent's Karma balance
+        for machine, balance in zip(self.machine_agents, balances):
+            machine.karma_balance = balance
+
+        # Verify total supply
+        assert sum(m.karma_balance for m in self.machine_agents) == total_karma
 
     def make_multidiscrete_mask(self, karma_balance: int, action_space: MultiDiscrete)  ->np.ndarray:
         """
