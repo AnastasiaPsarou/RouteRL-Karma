@@ -19,7 +19,6 @@
             "route_0_fee": 0.1,
             "max_allowed_bid": 10,
 
-
             "reward_w1": -1,
             "reward_w2": -1,
             "reward_w3": -1
@@ -64,7 +63,8 @@
         "observations_time_window": 80,
         "max_allowed_bid": "${agent_parameters.machine_parameters.max_allowed_bid}",
         "centrally_defined_price_route_0": 4,
-        "centrally_defined_price_route_1": 3
+        "centrally_defined_price_route_1": 3,
+        "total_karma_supply": 1500
     },
 
     "simulator_parameters":
