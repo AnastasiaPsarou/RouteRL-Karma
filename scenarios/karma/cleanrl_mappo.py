@@ -34,7 +34,7 @@ class Args:
     seed: int = 10
     device: str = "cpu"
 
-    training_episodes: int = 34
+    training_episodes: int = 200
     testing_episodes: int = 10
 
     gamma: float = 0.99
@@ -86,7 +86,7 @@ def parse_args() -> Args:
     # Important: update checkpoint_dir after changing the seed.
     args.checkpoint_dir = (
         f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{args.seed}"
-        f"_route_0_4_route_1_3_max_bid_5_dr"
+        f"_route_0_7_route_1_2_max_bid_5_l_indurg_hurg"
     )
 
     return args
@@ -354,6 +354,35 @@ def save_mappo_policy_checkpoint(
         f"{output_path}"
     )
 
+def save_mappo_actor_checkpoint(
+    actor,
+    checkpoint_dir,
+    step,
+    obs_dim,
+    nvec,
+    phase="training",
+):
+    checkpoint_dir = Path(checkpoint_dir)
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    output_path = checkpoint_dir / f"step_{step:08d}.pt"
+
+    torch.save(
+        {
+            "actor_state_dict": actor.state_dict(),
+            "step": step,
+            "phase": phase,
+            "obs_dim": int(obs_dim),
+            "action_dim": int(np.prod(nvec)),
+            "nvec": np.asarray(nvec, dtype=np.int64).tolist(),
+            "hidden_sizes": [64, 64],
+        },
+        output_path,
+    )
+
+    print(f"[checkpoint] Saved actor weights: {output_path}")
+
+
 def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
     T = len(rews)
     adv = np.zeros(T, dtype=np.float32)
@@ -475,19 +504,19 @@ def main():
 
     os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-    new_machines_after_mutation = 300
+    new_machines_after_mutation = 250
     human_learning_episodes = 0
     training_episodes = args.training_episodes
     testing_episodes = args.testing_episodes
     total_episodes = human_learning_episodes + training_episodes + testing_episodes
 
-    num_agents = 300
+    num_agents = 250
     origins = ["E0"]
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
-    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
+    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_6_route_1_2_max_bid_5_250"
+    plots_folder = f"/scratch/tmp/psarou_karma_part_c/plots_mappo_{seed}_route_0_6_route_1_2_max_bid_5_250"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -512,10 +541,11 @@ def main():
         },
         "environment_parameters": {
             "observations_time_window": 10,
-            "save_every": 5,
+            "save_every": 10,
             "number_of_days": 30,
-            "centrally_defined_price_route_0": 4,
-            "centrally_defined_price_route_1": 3,
+            "centrally_defined_price_route_0": 6,
+            "centrally_defined_price_route_1": 2,
+            "total_karma_supply": 1250,
         },
         "plotter_parameters": {
             "phases": phases,
@@ -536,13 +566,13 @@ def main():
     }
 
     env = TrafficEnvironment(seed=seed, create_agents=True, create_paths=True, karma_pricing=True, **env_params)
-
+    env.testing_urgency_function()
     print("Number of total agents is: ", len(env.all_agents), "\n")
     print("Number of human agents is: ", len(env.human_agents), "\n")
     print("Number of machine agents (autonomous vehicles) is: ", len(env.machine_agents), "\n")
 
     env.start()
-    env.reset()
+    #env.reset()
 
     pre_mutation_agents = env.all_agents.copy()
     env.mutation(mutation_start_percentile=0)
@@ -601,7 +631,7 @@ def main():
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
 
-    checkpoint_interval = 2  # save every 2 training episodes
+    checkpoint_interval = 1  # save every 2 training episodes
 
     eval_obs_by_agent: Dict[str, np.ndarray] = {}
     eval_masks_by_agent: Dict[str, np.ndarray] = {}
@@ -1161,6 +1191,15 @@ def main():
                 phase="training",
             )
 
+            save_mappo_actor_checkpoint(
+                actor=actor,
+                checkpoint_dir=args.checkpoint_dir,
+                step=ep + 1,
+                obs_dim=obs_dim,
+                nvec=nvec,
+                phase="training",
+            )
+
         # ========================================================
         # TRAINING LOGGING
         # ========================================================
@@ -1211,8 +1250,8 @@ def main():
 
     # IMPORTANT:
     # Enable your special testing urgency behaviour ONLY now.
-    env.testing_urgency_function()
-
+    #env.testing_urgency_function()
+    #env.all_agents_high_urgency=True
     for ep in range(testing_episodes):
 
         env.reset()
