@@ -36,6 +36,16 @@ logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
 
 
+DEMAND_CONFIG = {
+    200: {"price_route_0": 6.0, "price_route_1": 2.0},
+    250: {"price_route_0": 6.0, "price_route_1": 2.0},
+    300: {"price_route_0": 7.0, "price_route_1": 2.0},
+    350: {"price_route_0": 6.0, "price_route_1": 3.0},
+    400: {"price_route_0": 6.0, "price_route_1": 3.0},
+}
+
+
+
 class TrafficEnvironment(AECEnv):
     """
     A PettingZoo AECEnv interface for optimal route choice using SUMO simulator. 
@@ -352,6 +362,7 @@ class TrafficEnvironment(AECEnv):
 
         self.travel_times_list = []
         self.day = 0
+        self._pending_episode_cleanup = False
         self.human_learning = True
         self.machine_same_start_time = []
         self.actions_timestep = []
@@ -369,6 +380,10 @@ class TrafficEnvironment(AECEnv):
         self.recorder = None
         self.historic_data = []
 
+        # Completed-day reward snapshot for MAPPO
+        self.completed_day_rewards = {}
+        self.completed_day_index = -1
+
         if second_sumo == False:
             self.recorder = Recorder(self.plotter_params)
         self.simulator = SumoSimulator(self.simulation_params, self.path_gen_params, seed, not create_agents, save_detectors_info, randomize_sumo_seed)
@@ -379,13 +394,53 @@ class TrafficEnvironment(AECEnv):
         self.possible_agents = list()
         
         # Urgency distribution
-        self.urgency_distribution = np.random.geometric(0.6, size=len(self.all_agents))
+        self.urgency_distribution = np.random.geometric(0.3, size=len(self.all_agents))
         self.urgency_distribution = np.clip(self.urgency_distribution, 1, 10) / 10 # restrict to 1–10
         self.all_agents_high_urgency = False
+        self.all_agents_low_urgency = False
+        self.all_agents_same_urgency = False
+        self.all_agents_temporal_urgency = False
         self.testing_urgency=False
         self.urgency_min = 0.1
         self.urgency_max = 0.7
         self.urgency_step = 0.1
+
+        self.agent_pool = list(self.all_agents)
+
+
+        # Demand configuration
+        self.demand_mode = self.environment_params.get(
+            "demand_mode", "fixed"
+        )
+
+        self.demand_levels = self.environment_params.get(
+            "demand_levels", [200, 250, 300, 350, 400]
+        )
+
+        self.fixed_demand = self.agent_params[kc.NUM_AGENTS]
+
+        if self.demand_mode not in ("fixed", "variable"):
+            raise ValueError("Invalid demand mode")
+
+        if self.demand_mode == "fixed":
+            required_agents = self.fixed_demand
+            if required_agents not in DEMAND_CONFIG:
+                raise ValueError("Fixed demand is not in DEMAND_CONFIG")
+        else:
+            if not self.demand_levels or any(
+                level not in DEMAND_CONFIG for level in self.demand_levels
+            ):
+                raise ValueError("Invalid variable demand levels")
+
+            required_agents = max(self.demand_levels)
+
+        if len(self.agent_pool) < required_agents:
+            raise ValueError(
+                f"Agent pool must contain at least {required_agents} agents"
+            )
+
+        # Initialize prices and active population for Day 0
+        self._update_daily_demand()
 
         self.urgency_values = np.round(
             np.arange(
@@ -505,8 +560,22 @@ class TrafficEnvironment(AECEnv):
             infos (dict): dictionary of information for the agents.
         """
 
+        
         self.episode_actions = dict()
-        _, self.sumo_seed = self.simulator.reset()
+
+        if getattr(self, "_pending_episode_cleanup", False):
+
+            # Final rewards have already been exposed.
+            # Archive the completed day and prepare a new
+            # demand level, agent population, and spaces.
+            self._reset_episode()
+
+            self._pending_episode_cleanup = False
+
+        else:
+
+            _, self.sumo_seed = self.simulator.reset()
+
         self.agents = copy(self.possible_agents)
         self.terminations = {agent: False for agent in self.possible_agents}
         self.truncations = {agent: False for agent in self.possible_agents}
@@ -565,6 +634,19 @@ class TrafficEnvironment(AECEnv):
             # The cumulative reward of the last agent must be 0
             self._cumulative_rewards[agent] = 0
 
+            """if machine_action is None:
+                print("DEBUG: Received None action")
+                print("Day:", self.day)
+                print("Agent:", self.agent_selection)
+                print("Termination:", self.terminations.get(self.agent_selection))
+                print("Truncation:", self.truncations.get(self.agent_selection))
+                print("Active agents:", len(self.agents))
+                print("Possible agents:", len(self.possible_agents))
+
+                raise RuntimeError(
+                    "Active agent received None action"
+                )"""
+
             if self.karma_pricing == True:
                 machine.bid = machine_action
                 assigned_route = self.stackelberg_auction(machine, machine_action)
@@ -583,16 +665,65 @@ class TrafficEnvironment(AECEnv):
                 # Calculate the rewards
                 self._assign_rewards()
 
+                # Snapshot rewards for the population that JUST finished.
+                # Do this before _reset_episode() changes the active agents.
+                completed_agents = list(self.agents)
+
+                self.completed_day_rewards = {
+                    agent_id: float(self.rewards[agent_id])
+                    for agent_id in completed_agents
+                }
+
+                self.completed_day_index = self.day
+
+                self.completed_day_demand = self.current_demand_level
+
                 self._redistribute_karma_points()
 
-                # The episode ends when we complete episode_length days
-                self.truncations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
-                self.terminations = {agent: not (self.day % self.number_of_days) for agent in self.agents}
-                self.infos = {agent: {} for agent in self.agents}
+                
+                # Check whether the 30-day episode has finished
+                end_of_episode = (
+                    self.day % self.number_of_days == 0
+                )
+
+                # A time-limit ending is a truncation
+                self.truncations = {
+                    agent: end_of_episode
+                    for agent in self.agents
+                }
+
+                self.terminations = {
+                    agent: False
+                    for agent in self.agents
+                }
+
+                self.infos = {
+                    agent: {}
+                    for agent in self.agents
+                }
 
                 self.observations = self.observation_obj(self.all_agents)
 
-                self._reset_episode()
+                if end_of_episode:
+
+                    # Do NOT select the next day's population yet.
+                    # Preserve the current agents and their final rewards.
+                    self._pending_episode_cleanup = True
+
+                    # Revisit the completed agents so PettingZoo can
+                    # return final rewards and truncation flags.
+                    self._agent_selector = agent_selector(self.agents)
+                    self.agent_selection = self._agent_selector.next()
+
+                    """print(
+                        f"Episode finished on Day {self.day}. "
+                        f"Waiting for terminal agents to be processed."
+                    )"""
+
+                else:
+                    # Continue to the next commuting day
+                    self._reset_episode()
+
             else:
                 # no rewards are allocated until all players give an action
                 self._clear_rewards()
@@ -652,6 +783,12 @@ class TrafficEnvironment(AECEnv):
 
         if self.all_agents_high_urgency:
             machine.urgency = np.max(self.urgency_distribution)
+        elif self.all_agents_low_urgency:
+            machine.urgency = np.min(self.urgency_distribution)
+        elif self.all_agents_same_urgency:
+            machine.urgency = self.same_urgency_value
+        elif self.all_agents_temporal_urgency:
+            machine.urgency = self.temporal_urgencies[str(machine.id)]
         elif self.testing_urgency:
             machine.urgency = np.random.choice(self.urgency_distribution)
         else:
@@ -659,12 +796,18 @@ class TrafficEnvironment(AECEnv):
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
 
-        if observation_type == kc.PREVIOUS_AGENTS_PLUS_START_TIME_MARGINAL_COST or observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
-            obs = self.observation_obj.agent_observations(agent, self.all_agents, self.historic_data)
-        else:
-            obs = self.observation_obj.agent_observations(agent, self.all_agents)
+        if observation_type == kc.PREVIOUS_AVERAGE_TT_PER_ROUTE:
 
-        self.observations[str(machine.id)]["observations"] = obs
+            obs = self.observation_obj.agent_observations(
+                agent,
+                self.all_agents,
+                self.historic_data,
+                price_route_0=self.current_price_route_0,
+                price_route_1=self.current_price_route_1,
+                demand_level=self.current_demand_level,
+            )
+
+        self.observations[str(machine.id)]["observation"] = obs
         self.observations[str(machine.id)]["action_mask"] = action_mask
 
         return self.observations[str(machine.id)]
@@ -689,14 +832,23 @@ class TrafficEnvironment(AECEnv):
             ValueError: If there are insufficient human agents available for mutation.
         """
 
+        active_ids = {
+            agent.id for agent in self.all_agents
+        }
+
         logging.info("Mutation is about to happen!\n")
         logging.info("There were %s human agents.\n", len(self.human_agents))
 
+        pool_humans = [
+            agent for agent in self.agent_pool
+            if agent.kind == kc.TYPE_HUMAN
+        ]
+
         # Mutate to a human that starts after the 25% of the rest of the vehicles
-        start_times = [human.start_time for human in self.human_agents]
+        start_times = [human.start_time for human in pool_humans]
         percentile = np.percentile(start_times, mutation_start_percentile)
 
-        filtered_human_agents = [human for human in self.human_agents if human.start_time >= percentile]
+        filtered_human_agents = [human for human in pool_humans if human.start_time >= percentile]
         #filtered_human_agents = [human for human in self.human_agents]
 
         number_of_machines_to_be_added = self.agent_params[kc.NEW_MACHINES_AFTER_MUTATION]
@@ -709,24 +861,44 @@ class TrafficEnvironment(AECEnv):
                 f"Decrease the number of machines to be added after the mutation.\n"
             )
 
-        for _ in range(0, number_of_machines_to_be_added):
-            random_human = random.choice(filtered_human_agents)
+        for _ in range(number_of_machines_to_be_added):
 
-            self.human_agents.remove(random_human)
+            random_human = random.choice(filtered_human_agents)
             filtered_human_agents.remove(random_human)
 
-            random_humans_deleted.append(random_human)
-            self.machine_agents.append(MachineAgent(random_human.id,
-                                                    random_human.start_time,
-                                                    random_human.origin,
-                                                    random_human.destination,
-                                                    random_human.income,
-                                                    self.agent_params[kc.MACHINE_PARAMETERS],
-                                                    self.action_space_size))
-            self.possible_agents.append(str(random_human.id))
+            new_machine = MachineAgent(
+                random_human.id,
+                random_human.start_time,
+                random_human.origin,
+                random_human.destination,
+                random_human.income,
+                self.agent_params[kc.MACHINE_PARAMETERS],
+                self.action_space_size
+            )
 
-        self.n_agents = len(self.possible_agents)
-        self.all_agents = self.machine_agents + self.human_agents
+            # Replace human with machine in the permanent population
+            self.agent_pool = [
+                new_machine if agent.id == random_human.id else agent
+                for agent in self.agent_pool
+            ]
+
+        # Rebuild active population using updated agent objects
+        self.all_agents = [
+            agent for agent in self.agent_pool
+            if agent.id in active_ids
+        ]
+
+        self.machine_agents = [
+            agent for agent in self.all_agents
+            if agent.kind == kc.TYPE_MACHINE
+        ]
+
+        self.human_agents = [
+            agent for agent in self.all_agents
+            if agent.kind == kc.TYPE_HUMAN
+        ]
+
+        self.n_agents = len(self.machine_agents)
         self.marginal_cost_machine_agents_flag() # Initialize marginal cost flag
         self.monetary_pricing_flag()
 
@@ -818,8 +990,11 @@ class TrafficEnvironment(AECEnv):
         return assigned_route"""
     
     def stackelberg_auction(self, machine, machine_action) -> int:
-        price_route_0 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_0])
-        price_route_1 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_1])
+        #price_route_0 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_0])
+        #price_route_1 = float(self.environment_params[kc.CENTRALLY_DEFINED_PRICE_ROUTE_1])
+
+        price_route_0 = float(self.current_price_route_0)
+        price_route_1 = float(self.current_price_route_1)
 
         floor_price_route_0 = math.floor(price_route_0)
         decimal_part_route_0 = price_route_0 - floor_price_route_0  # e.g. 0.3 if price=4.3
@@ -896,9 +1071,40 @@ class TrafficEnvironment(AECEnv):
     def all_high_urgency(self):
         self.all_agents_high_urgency = True
 
+    def all_low_urgency(self):
+        self.all_agents_low_urgency = True
+            
+    def all_same_urgency(self) -> None:
+        self.all_agents_same_urgency = True
+
     def testing_urgency_function(self):
         self.testing_urgency = True
-    
+
+    def all_temporal_urgency(self) -> None:
+        """
+        Give every agent its own temporally correlated urgency.
+
+        On the first day, urgency is sampled from 0.1 to 1.0.
+        On following days, each agent changes by +/- 0.1.
+        """
+
+        self.all_agents_temporal_urgency = True
+
+        # Disable other urgency regimes
+        self.all_agents_same_urgency = False
+        self.all_agents_high_urgency = False
+        self.all_agents_low_urgency = False
+        self.testing_urgency = False
+
+        # Initialize urgency separately for each agent
+        self.temporal_urgencies = {
+            str(agent.id): float(np.random.randint(1, 11) / 10)
+            for agent in self.agent_pool
+        }
+
+        for agent in self.agent_pool:
+            agent.urgency = self.temporal_urgencies[str(agent.id)]
+
 
     def _help_step(self, actions: list[tuple]) -> dict:
 
@@ -1002,6 +1208,9 @@ class TrafficEnvironment(AECEnv):
             if agent.id in travel_time_by_id:
                 agent.reward = -travel_time_by_id[agent.id]
 
+        # Update demand and prices for the new day
+        self._update_daily_demand()
+
         """Change the start times of the vehicles"""
         for machine in self.machine_agents:
             self._assign_start_time_to_an_agent(machine)
@@ -1010,14 +1219,88 @@ class TrafficEnvironment(AECEnv):
 
         machine_by_id = {str(machine.id): machine for machine in self.machine_agents}
 
-        self.possible_agents = sorted(
-            self.possible_agents,
-            key=lambda agent_id: machine_by_id[agent_id].start_time
+        
+        # Rebuild the active machine-agent list
+        sorted_machines = sorted(
+            self.machine_agents,
+            key=lambda machine: machine.start_time
         )
 
+        self.possible_agents = [
+            str(machine.id) for machine in sorted_machines
+        ]
+
+        self.n_agents = len(self.possible_agents)
+
+        # Update agent-name mapping
+        self.agent_name_mapping = {
+            agent_id: i
+            for i, agent_id in enumerate(self.possible_agents)
+        }
+
+        # Rebuild action spaces
+        if self.karma_pricing:
+            self._action_spaces = {
+                agent_id: MultiDiscrete(
+                    np.full(
+                        self.simulation_params[kc.NUMBER_OF_PATHS], 30
+                    )
+                )
+                for agent_id in self.possible_agents
+            }
+        else:
+            self._action_spaces = {
+                agent_id: Discrete(
+                    self.simulation_params[kc.NUMBER_OF_PATHS]
+                )
+                for agent_id in self.possible_agents
+            }
+
+        self.action_spaces = self._action_spaces
+
+        # Rebuild observation function and spaces
+        if self.possible_agents:
+            self.observation_obj = self.get_observation_function()
+            self._observation_spaces = (
+                self.observation_obj.observation_space()
+            )
+
+            self.observations = (
+                self.observation_obj.reset_observation()
+            )
+        else:
+            self._observation_spaces = {}
+            self.observations = {}
+
+        # Prepare next-day scheduling
         if self.possible_agents:
             self._agent_selector = agent_selector(self.possible_agents)
             self.agent_selection = self._agent_selector.next()
+
+        # Synchronize PettingZoo state on continuing days
+        if self.day % self.number_of_days != 0:
+            self.agents = copy(self.possible_agents)
+
+            self.terminations = {
+                a: False for a in self.possible_agents
+            }
+            self.truncations = {
+                a: False for a in self.possible_agents
+            }
+
+            for a in self.possible_agents:
+                self.rewards.setdefault(a, 0.0)
+                self._cumulative_rewards.setdefault(a, 0.0)
+                self.infos.setdefault(a, {})
+
+        """print(
+            f"Day {self.day}: "
+            f"machines={len(self.machine_agents)}, "
+            f"possible_agents={len(self.possible_agents)}, "
+            f"action_spaces={len(self._action_spaces)}, "
+            f"observation_spaces={len(self._observation_spaces)}"
+        )"""
+
 
         self.agents = copy(self.possible_agents)
 
@@ -1056,6 +1339,36 @@ class TrafficEnvironment(AECEnv):
         Sample the urgency-generation process for the current day.
         Call this once at the beginning of every simulated day.
         """
+        
+        if self.all_agents_temporal_urgency:
+
+            for agent in self.agent_pool:
+
+                agent_id = str(agent.id)
+
+                previous = self.temporal_urgencies.get(agent_id)
+
+                if previous is None:
+                    # New agent: random initial urgency
+                    new_urgency = np.random.randint(1, 11) / 10
+
+                else:
+                    # Independent increase or decrease for each agent
+                    change = np.random.choice([-1, 1])
+
+                    # Work with integer levels 1-10
+                    previous_level = int(round(previous * 10))
+                    new_level = np.clip(previous_level + change, 1, 10)
+
+                    new_urgency = new_level / 10
+
+                self.temporal_urgencies[agent_id] = float(new_urgency)
+                agent.urgency = float(new_urgency)
+
+            return
+
+        # One random urgency shared by all agents on this day
+        self.same_urgency_value = float(np.random.randint(1, 11) / 10)
 
         max_structured_probability = 1
 
@@ -1145,11 +1458,86 @@ class TrafficEnvironment(AECEnv):
                     max(idx - 1, 0)
                 ]
 
+
+    def _update_daily_demand(self):
+
+        # 1. Select the number of agents depending on demand mode
+        if self.demand_mode == "fixed":
+            num_agents = self.fixed_demand
+
+        elif self.demand_mode == "variable":
+            num_agents = random.choice(self.demand_levels)
+
+        else:
+            raise ValueError(
+                f"Unknown demand mode: {self.demand_mode}"
+            )
+
+        # 2. Store current demand level
+        self.current_demand_level = num_agents
+
+        # 3. Set centrally defined prices
+        if self.demand_mode == "fixed":
+
+            # Use prices specified in env_params
+            self.current_price_route_0 = float(
+                self.environment_params[
+                    kc.CENTRALLY_DEFINED_PRICE_ROUTE_0
+                ]
+            )
+
+            self.current_price_route_1 = float(
+                self.environment_params[
+                    kc.CENTRALLY_DEFINED_PRICE_ROUTE_1
+                ]
+            )
+
+        else:
+
+            # Use prices corresponding to current demand level
+            config = DEMAND_CONFIG[num_agents]
+
+            self.current_price_route_0 = config["price_route_0"]
+            self.current_price_route_1 = config["price_route_1"]
+
+        # 4. Select the active population for the day
+        if self.demand_mode == "fixed":
+
+            # Keep the same agents every day
+            self.all_agents = list(self.agent_pool)
+
+        else:
+
+            # Randomly select agents from the full population
+            self.all_agents = random.sample(
+                self.agent_pool,
+                num_agents
+            )
+
+        # 5. Update machine and human agent lists
+        self.machine_agents = [
+            agent for agent in self.all_agents
+            if agent.kind == kc.TYPE_MACHINE
+        ]
+
+        self.human_agents = [
+            agent for agent in self.all_agents
+            if agent.kind == kc.TYPE_HUMAN
+        ]
+
+        # 6. Print daily configuration
+        """print(
+            f"Day {self.day}: "
+            f"Mode={self.demand_mode}, "
+            f"Demand={num_agents}, "
+            f"Price route 0={self.current_price_route_0}, "
+            f"Price route 1={self.current_price_route_1}"
+        )"""
         
     def _assign_start_time_to_an_agent(self, machine) -> None:
         machine.start_time = random.randint(0, self.simulation_params[kc.SIMULATION_TIMESTEPS])
 
-    def _redistribute_karma_points(self) -> None:
+    """def _redistribute_karma_points(self) -> None:
         ## Distributed karma points
         new_distributed_karma_points = self.total_karma_points_used // len(self.machine_agents)
 
@@ -1166,32 +1554,108 @@ class TrafficEnvironment(AECEnv):
             for machine in lucky_agents:
                 machine.karma_balance += 1
 
+        self.total_karma_points_used = 0"""
+
+    
+    def _redistribute_karma_points(self) -> None:
+        """
+        Redistribute the Karma spent during the current day
+        among ALL machine agents in the permanent population,
+        including agents who were inactive today.
+        """
+
+        # Entire permanent machine-agent population
+        pool_machines = [
+            agent
+            for agent in self.agent_pool
+            if agent.kind == kc.TYPE_MACHINE
+        ]
+
+        num_agents = len(pool_machines)
+
+        if num_agents == 0:
+            raise ValueError(
+                "Cannot redistribute Karma: no machine agents in pool."
+            )
+
+        total_spent = int(self.total_karma_points_used)
+
+        # Equal distribution, with any remainder assigned randomly
+        base_karma, remainder = divmod(total_spent, num_agents)
+
+        # Every machine receives the base amount
+        for machine in pool_machines:
+            machine.karma_balance += base_karma
+
+        # Distribute remaining Karma points randomly
+        if remainder > 0:
+            lucky_agents = random.sample(pool_machines, remainder)
+
+            for machine in lucky_agents:
+                machine.karma_balance += 1
+
+        # Reset spent Karma for the next day
         self.total_karma_points_used = 0
 
-    def _reinitialize_karma_balance(self) -> None:
-
-        """for machine in self.machine_agents:
-                machine.karma_balance = self.environment_params[kc.MAXIMUM_ALLOWED_BID]"""
-        total_karma = self.environment_params[kc.TOTAL_KARMA_SUPPLY]
-        num_agents = len(self.machine_agents)
-
-        base_karma, remainder = divmod(total_karma, num_agents)
-
-        # Allocate Karma as uniformly as possible
-        balances = (
-        [base_karma + 1] * remainder
-        + [base_karma] * (num_agents - remainder)
+        # Verify conservation across the whole population
+        total_karma = sum(
+            machine.karma_balance
+            for machine in pool_machines
         )
 
-        # Randomize which agents receive the additional point
+        expected_supply = self.environment_params[
+            kc.TOTAL_KARMA_SUPPLY
+        ]
+
+        assert total_karma == expected_supply, (
+            f"Karma conservation violated: "
+            f"actual={total_karma}, "
+            f"expected={expected_supply}"
+        )
+
+
+    def _reinitialize_karma_balance(self) -> None:
+        """
+        Initialize karma balances for all machine agents
+        in the permanent population, including inactive agents.
+        """
+
+        # Get all machine agents from the permanent pool
+        pool_machines = [
+            agent for agent in self.agent_pool
+            if agent.kind == kc.TYPE_MACHINE
+        ]
+
+        total_karma = self.environment_params[kc.TOTAL_KARMA_SUPPLY]
+        num_agents = len(pool_machines)
+
+        if num_agents == 0:
+            raise ValueError(
+                "Cannot initialize karma: no machine agents in the pool."
+            )
+
+        # Divide the total karma supply equally
+        base_karma, remainder = divmod(total_karma, num_agents)
+
+        balances = (
+            [base_karma + 1] * remainder
+            + [base_karma] * (num_agents - remainder)
+        )
+
+        # Randomly select which agents receive the extra karma
         random.shuffle(balances)
 
-        # Initialize each agent's Karma balance
-        for machine, balance in zip(self.machine_agents, balances):
+        # Initialize karma balances for the entire population
+        for machine, balance in zip(pool_machines, balances):
             machine.karma_balance = balance
 
-        # Verify total supply
-        assert sum(m.karma_balance for m in self.machine_agents) == total_karma
+        # Reset the amount of karma spent
+        self.total_karma_points_used = 0
+
+        # Verify conservation of karma
+        assert sum(
+            machine.karma_balance for machine in pool_machines
+        ) == total_karma
 
     def make_multidiscrete_mask(self, karma_balance: int, action_space: MultiDiscrete)  ->np.ndarray:
         """
@@ -1448,8 +1912,9 @@ class TrafficEnvironment(AECEnv):
                                                    self.human_agents,
                                                    self.simulation_params,
                                                    self.agent_params,
-                                                   self.environment_params[kc.OBSERVATIONS_TIME_WINDOW])
-
+                                                   self.environment_params[kc.OBSERVATIONS_TIME_WINDOW],
+                                                   price_route_0=self.current_price_route_0,
+                                                    price_route_1=self.current_price_route_1,)
         elif observation_type == kc.PREVIOUS_AGENTS:
             return PreviousAgentStart(self.machine_agents,
                                       self.human_agents,

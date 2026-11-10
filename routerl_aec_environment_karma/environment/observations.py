@@ -295,7 +295,9 @@ class PreviousAvgTTperRoute(Observations):
         human_agents_list: List[Any],
         simulation_params: Dict[str, Any],
         agent_params: Dict[str, Any],
-        observations_time_window: int
+        observations_time_window: int,
+        price_route_0: float,
+        price_route_1: float,
     ) -> None:
         """Initialize the observation function.
 
@@ -314,6 +316,10 @@ class PreviousAvgTTperRoute(Observations):
         self.observations = self.reset_observation()
         self.agent_vectors = {}
         self.time_window = observations_time_window
+
+        self.price_route_0 = float(price_route_0)
+        self.price_route_1 = float(price_route_1)
+
         self.historic_travel_times = []
 
     def __call__(self, all_agents: List[Any]) -> Dict[str, Any]:
@@ -345,30 +351,34 @@ class PreviousAvgTTperRoute(Observations):
 
         return self.observations
 
-    def reset_observation(self) -> Dict[str, np.ndarray]:
-        """Reset observations to the initial state.
+    def reset_observation(self) -> Dict[str, dict]:
+        """Initialize observations for all machine agents."""
 
-        Returns:
-            obs (Dict[str, np.ndarray]): A dictionary of initial observations for all machine agents.
-        """
-        # Initialize agent vectors as zero arrays
+        num_routes = self.simulation_params[kc.NUMBER_OF_PATHS]
+
+        # 3 routes -> 13 observation features
+        observation_size = 7 + 2 * num_routes
+
+        max_bid = self.agent_params[
+            kc.MACHINE_PARAMETERS
+        ][kc.MAXIMUM_ALLOWED_BID]
+
         self.agent_vectors = {
-            agent: np.zeros(self.simulation_params[kc.NUMBER_OF_PATHS], dtype=np.int32)
+            agent: np.zeros(num_routes, dtype=np.float32)
             for agent in self.machine_agents_list
         }
-        
-        # Gather observations in a consistent format
+
         obs = {
             str(agent.id): {
-                "observation": np.concatenate(  # Combine start_time and vector into a single array
-                [
-                    #np.array([agent.start_time], dtype=np.int32),  # Start time as scalar
-                    self.agent_vectors[agent],  # Vector as array
-                    np.array([0], dtype=np.int32),  # Start time as scalar
-                    #np.eye(300, dtype=np.float32)[agent.id]
-                ]
-            ),
-            "action_mask": np.ones(pow(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID], 3), "int8"),
+                "observation": np.zeros(
+                    observation_size,
+                    dtype=np.float32,
+                ),
+
+                "action_mask": np.ones(
+                    max_bid ** num_routes,
+                    dtype=np.int8,
+                ),
             }
             for agent in self.machine_agents_list
         }
@@ -385,7 +395,7 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 4 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] #+ 300# including urgency & start time
+        total_size = 7 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] #+ 300# including urgency & start time
 
         return {
             str(agent.id): spaces.Dict(
@@ -393,10 +403,10 @@ class PreviousAvgTTperRoute(Observations):
                     "observation": Box(low=0,
                                         high=np.inf,
                                         shape=(total_size,),  # Combined size for start_time and vector
-                                        dtype=np.int32
+                                        dtype=np.float32
                     ),
                     "action_mask": Box(
-                        low=0, high=1, shape=(self.agent_params[kc.MACHINE_PARAMETERS][kc.MAXIMUM_ALLOWED_BID],), dtype=np.int8
+                        low=0, high=1, shape=(27000,), dtype=np.int8
                     ),
                 }
             )    
@@ -422,7 +432,8 @@ class PreviousAvgTTperRoute(Observations):
             return None
         return int(route)
     
-    def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict) -> np.ndarray:
+    def agent_observations(self, agent_id: str, all_agents: List[Any], historic_data: Dict,
+                           price_route_0: float, price_route_1: float, demand_level: int,) -> np.ndarray:
         """Retrieve the observation for a specific agent.
             Observation:
             [
@@ -440,6 +451,14 @@ class PreviousAvgTTperRoute(Observations):
                 karma_balance,
             ]
         """
+
+        # Normalize current day's route prices
+        normalized_price_route_0 = float(self.price_route_0) / 7.0
+        normalized_price_route_1 = float(self.price_route_1) / 7.0
+
+        # Normalize current day's demand
+        normalized_demand = float(demand_level) / 400.0
+
         for machine in self.machine_agents_list:
             if machine.id == int(agent_id):
                 break
@@ -492,8 +511,6 @@ class PreviousAvgTTperRoute(Observations):
         else:
             normalized_income = 0.0
 
-        one_hot_vec = np.zeros(len(self.machine_agents_list), dtype=np.float32)
-        one_hot_vec[machine.id] = 1.0
 
         # ---------------------------------------------------------
         # Construct final observation
@@ -505,12 +522,17 @@ class PreviousAvgTTperRoute(Observations):
                 [machine.urgency],
                 [
                     machine.start_time
-                    / self.simulation_params[
-                        kc.SIMULATION_TIMESTEPS
-                    ]
+                    / self.simulation_params[kc.SIMULATION_TIMESTEPS]
                 ],
                 [normalized_income],
                 [machine.karma_balance],
+
+                # NEW: prices for the current demand level
+                [normalized_price_route_0],
+                [normalized_price_route_1],
+
+                # NEW: current demand level
+                [normalized_demand],
             )
         ).astype(np.float32)
 
@@ -639,7 +661,7 @@ class PreviousAvgTTperRoute(Observations):
             entry["overall_counts_before"] = overall_counts_before
             entry["overall_mean_tt_before"] = overall_mean_tt_before
 
-        return entry["overall_mean_tt_before"]
+        return overall_mean_tt_before
 
 
 class PreviousAgentStartPlusStartTimeDetectorData(Observations):

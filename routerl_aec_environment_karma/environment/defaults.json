@@ -58,6 +58,8 @@
     {
         "number_of_days" : 1,
         "save_every" : 1,
+        "demand_mode": "fixed",
+        "demand_levels": [200, 250, 300, 350, 400],
 
         "action_space_size" : "${path_generation_parameters.number_of_paths}",
         "observations_time_window": 80,

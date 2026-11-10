@@ -553,11 +553,11 @@ class MachineAgent(BaseAgent):
 
         #agent_reward = -1 * (route_fee + hourly_income * travel_times_hrs * self.urgency)
         #agent_reward = self.w1 * (route_fee / daily_income) + self.w2 * travel_times_norm + self.w3 * self.urgency
-        #agent_reward = self.w2 * travel_times_norm * (self.urgency)
-        if self.was_assigned_action_0(observation, self.id):
+        agent_reward = self.w2 * travel_times_norm * (self.urgency)
+        """if self.was_assigned_action_0(observation, self.id):
             agent_reward = 0
         else:
-            agent_reward = self.w2 * self.urgency
+            agent_reward = self.w2 * self.urgency"""
 
         if self.marginal_calculation:
             total_impact = self.include_impact_in_reward()
