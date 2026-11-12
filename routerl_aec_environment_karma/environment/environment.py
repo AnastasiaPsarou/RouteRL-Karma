@@ -1021,8 +1021,8 @@ class TrafficEnvironment(AECEnv):
 
                 # --- lottery draw ---
                 if random.random() < win_prob:
-                    machine.karma_balance -= bid
-                    self.total_karma_points_used += bid
+                    machine.karma_balance -= price_route_0
+                    self.total_karma_points_used += price_route_0
                     machine.route = route
                     return route
                 
@@ -1043,8 +1043,8 @@ class TrafficEnvironment(AECEnv):
 
                 # --- lottery draw ---
                 if random.random() < win_prob:
-                    machine.karma_balance -= bid
-                    self.total_karma_points_used += bid
+                    machine.karma_balance -= price_route_1
+                    self.total_karma_points_used += price_route_1
                     machine.route = route
                     return route
 
