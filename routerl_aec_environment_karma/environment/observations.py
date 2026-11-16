@@ -581,8 +581,6 @@ class PreviousAvgTTperRoute(Observations):
         self.observations[str(machine.id)][
             "observation"
         ] = observation
-        
-        print("observation is: ", observation, machine.urgency_type, "\n\n")
 
         return observation
 
