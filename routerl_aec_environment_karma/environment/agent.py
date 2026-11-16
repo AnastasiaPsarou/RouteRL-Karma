@@ -256,6 +256,7 @@ class MachineAgent(BaseAgent):
         self.monetary_pricing = None
         self.route_0_fee = params[kc.ROUTE_0_FEE]
         self.urgency = None
+        self.urgency_type = None
         self.karma_balance = params[kc.MAXIMUM_ALLOWED_BID]
         self.bid = None
         #self.marginal_cost_beta = marginal_cost_beta

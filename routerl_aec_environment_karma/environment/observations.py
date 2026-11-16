@@ -14,6 +14,13 @@ from routerl_aec_environment_karma.keychain import Keychain as kc
 from .simulator import SumoSimulator
 
 
+URGENCY_TYPE_TO_INDEX = {
+    "independent": 0,
+    "correlated": 1,
+    "temporal": 2,
+}
+
+
 class Observations(ABC):
     """Abstract base class for observation functions.
 
@@ -357,7 +364,7 @@ class PreviousAvgTTperRoute(Observations):
         num_routes = self.simulation_params[kc.NUMBER_OF_PATHS]
 
         # 3 routes -> 13 observation features
-        observation_size = 7 + 2 * num_routes
+        observation_size = 7 + 2 * num_routes +3
 
         max_bid = self.agent_params[
             kc.MACHINE_PARAMETERS
@@ -395,7 +402,7 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 7 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] #+ 300# including urgency & start time
+        total_size = 7 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] + 3#+ 300# including urgency & start time
 
         return {
             str(agent.id): spaces.Dict(
@@ -511,36 +518,74 @@ class PreviousAvgTTperRoute(Observations):
         else:
             normalized_income = 0.0
 
+        
+        # ---------------------------------------------------------
+        # Encode the current urgency-generating mechanism
+        # ---------------------------------------------------------
+        urgency_type = machine.urgency_type
 
+        if urgency_type not in URGENCY_TYPE_TO_INDEX:
+            raise ValueError(
+                f"Invalid urgency type for agent {machine.id}: "
+                f"{urgency_type!r}"
+            )
+
+        urgency_type_onehot = np.zeros(3, dtype=np.float32)
+
+        urgency_type_onehot[
+            URGENCY_TYPE_TO_INDEX[urgency_type]
+        ] = 1.0
+        
         # ---------------------------------------------------------
         # Construct final observation
         # ---------------------------------------------------------
         observation = np.concatenate(
             (
+                # Historical route travel times (3)
                 mean_tt_before,
+
+                # Previous agents per route (3)
                 previous_action_counts,
+
+                # Current urgency (1)
                 [machine.urgency],
+
+                # NEW: urgency type (3)
+                urgency_type_onehot,
+
+                # Normalized departure time (1)
                 [
                     machine.start_time
                     / self.simulation_params[kc.SIMULATION_TIMESTEPS]
                 ],
+
+                # Normalized income (1)
                 [normalized_income],
+
+                # Karma balance (1)
                 [machine.karma_balance],
 
-                # NEW: prices for the current demand level
+                # Route prices (2)
                 [normalized_price_route_0],
                 [normalized_price_route_1],
 
-                # NEW: current demand level
+                # Demand level (1)
                 [normalized_demand],
             )
         ).astype(np.float32)
 
+        assert observation.shape == (16,), (
+            f"Unexpected observation shape: {observation.shape}"
+        )
+
         self.observations[str(machine.id)][
             "observation"
         ] = observation
+        
+        print("observation is: ", observation, machine.urgency_type, "\n\n")
 
         return observation
+
     
     def historic_means_before_for_agent_all_episodes(
         self,

@@ -781,18 +781,30 @@ class TrafficEnvironment(AECEnv):
         params = self.agent_params[kc.MACHINE_PARAMETERS]
         observation_type = params[kc.OBSERVATION_TYPE]
 
+        
         if self.all_agents_high_urgency:
             machine.urgency = np.max(self.urgency_distribution)
+            machine.urgency_type = "correlated"
+
         elif self.all_agents_low_urgency:
             machine.urgency = np.min(self.urgency_distribution)
+            machine.urgency_type = "correlated"
+
         elif self.all_agents_same_urgency:
             machine.urgency = self.same_urgency_value
+            machine.urgency_type = "correlated"
+
         elif self.all_agents_temporal_urgency:
             machine.urgency = self.temporal_urgencies[str(machine.id)]
+            machine.urgency_type = "temporal"
+
         elif self.testing_urgency:
             machine.urgency = np.random.choice(self.urgency_distribution)
+            machine.urgency_type = "independent"
+
         else:
             self._assign_urgency_level_to_an_agent(machine)
+
 
         action_mask = self.make_multidiscrete_mask(machine.karma_balance, self._action_spaces[str(machine.id)])
 
@@ -1104,6 +1116,7 @@ class TrafficEnvironment(AECEnv):
 
         for agent in self.agent_pool:
             agent.urgency = self.temporal_urgencies[str(agent.id)]
+            agent.urgency_type = "temporal"
 
 
     def _help_step(self, actions: list[tuple]) -> dict:
@@ -1364,6 +1377,7 @@ class TrafficEnvironment(AECEnv):
 
                 self.temporal_urgencies[agent_id] = float(new_urgency)
                 agent.urgency = float(new_urgency)
+                agent.urgency_type = "temporal"
 
             return
 
@@ -1415,6 +1429,8 @@ class TrafficEnvironment(AECEnv):
                 self._p_temporal,
             ],
         )
+
+        machine.urgency_type = str(mechanism)
 
         # 1. Independent urgency
         if mechanism == "independent":
