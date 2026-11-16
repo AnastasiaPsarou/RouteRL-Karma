@@ -563,7 +563,7 @@ class PreviousAvgTTperRoute(Observations):
                 [normalized_income],
 
                 # Karma balance (1)
-                [machine.karma_balance],
+                [machine.karma_balance / 20.0],
 
                 # Route prices (2)
                 [normalized_price_route_0],
