@@ -34,7 +34,7 @@ class Args:
     seed: int = 10
     device: str = "cpu"
 
-    training_episodes: int = 104
+    training_episodes: int = 2000
     testing_episodes: int = 10
 
     gamma: float = 0.99
@@ -86,7 +86,7 @@ def parse_args() -> Args:
     # Important: update checkpoint_dir after changing the seed.
     args.checkpoint_dir = (
         f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{args.seed}"
-        f"_route_0_4_route_1_3_max_bid_5_dr"
+        f"_route_0_4_route_1_3_max_bid_5_dr_pay_as_bid_gae"
     )
 
     return args
@@ -354,19 +354,66 @@ def save_mappo_policy_checkpoint(
         f"{output_path}"
     )
 
-def compute_gae(rews: np.ndarray, vals: np.ndarray, dones: np.ndarray, gamma: float, lam: float):
+
+def compute_gae(
+    rews: np.ndarray,
+    vals: np.ndarray,
+    dones: np.ndarray,
+    days: np.ndarray,
+    gamma: float,
+    lam: float,
+):
+    """
+    Calendar-day-aware GAE.
+
+    gamma is discounted according to the number of days
+    between consecutive participations of the same agent.
+
+    lambda remains a per-decision trace parameter.
+    """
+
     T = len(rews)
+
+    if not (len(vals) == len(dones) == len(days) == T):
+        raise ValueError("GAE arrays have inconsistent lengths")
+
+    if T > 1 and np.any(np.diff(days) <= 0):
+        raise ValueError(
+            "Agent participation days must be increasing"
+        )
+
     adv = np.zeros(T, dtype=np.float32)
     last_gae = 0.0
-    next_value = 0.0
+
     for t in reversed(range(T)):
-        nonterminal = 1.0 - dones[t]
-        delta = rews[t] + gamma * next_value * nonterminal - vals[t]
-        last_gae = delta + gamma * lam * nonterminal * last_gae
+
+        if t == T - 1 or dones[t]:
+            discount = 0.0
+            next_value = 0.0
+
+        else:
+            elapsed_days = int(days[t + 1] - days[t])
+
+            discount = gamma ** elapsed_days
+            next_value = vals[t + 1]
+
+        delta = (
+            rews[t]
+            + discount * next_value
+            - vals[t]
+        )
+
+        last_gae = (
+            delta
+            + discount * lam * last_gae
+        )
+
         adv[t] = last_gae
-        next_value = vals[t]
-    ret = adv + vals
-    return adv, ret
+
+    returns = adv + vals
+
+    return adv, returns
+
 
 
 def ppo_update_masked_joint_mappo(
@@ -486,8 +533,8 @@ def main():
     destinations = ["E17.600"]
 
     seed = args.seed
-    records_folder = f"training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
-    plots_folder = f"plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr"
+    records_folder = f"/scratch/tmp/psarou_karma_part_c/training_records_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr_pay_as_bid_gae"
+    plots_folder = f"plots_mappo_{seed}_route_0_4_route_1_3_max_bid_5_dr_pay_as_bid_gae"
 
     phases = [1, int(total_episodes)]
     phase_names = ["Training", "Testing"]
@@ -645,7 +692,7 @@ def main():
     # -------------------------
     checkpoint_dir = (
         f"/scratch/tmp/psarou_karma_part_c/checkpoints_mappo_masked_joint_300_agents_seed_{seed}"
-        f"_route_0_4_route_1_3_max_bid_5_dr"
+        f"_route_0_4_route_1_3_max_bid_5_dr_pay_as_bid_gae"
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -700,7 +747,8 @@ def main():
         pending = {a: None for a in mutated_agent_names}
         traj = {
             a: {k: [] for k in (
-                "obs", "central_obs", "mask", "act", "logp", "val", "rew", "done"
+                "obs", "central_obs", "mask",
+                "act", "logp", "val", "rew", "done", "day"
             )}
             for a in mutated_agent_names
         }
@@ -811,8 +859,15 @@ def main():
                         )
                     for key in ("obs", "central_obs", "mask", "act", "logp", "val"):
                         traj[completed_agent][key].append(prev[key])
+
                     traj[completed_agent]["rew"].append(float(day_reward))
-                    # Daily independent transitions (no bootstrapping across days).
+
+                    # Record the actual day of participation
+                    traj[completed_agent]["day"].append(
+                        int(env.completed_day_index)
+                    )
+
+                    # Nonterminal until the end of the 30-day episode
                     traj[completed_agent]["done"].append(0.0)
                     ep_return[completed_agent] += float(day_reward)
                     pending[completed_agent] = None
@@ -887,8 +942,16 @@ def main():
             rewards = np.asarray(t["rew"], dtype=np.float32)
             values = np.asarray(t["val"], dtype=np.float32)
             dones = np.asarray(t["done"], dtype=np.float32)
+
+            days = np.asarray(t["day"], dtype=np.int64)
+
             adv, returns = compute_gae(
-                rewards, values, dones, args.gamma, args.gae_lambda
+                rewards,
+                values,
+                dones,
+                days,
+                args.gamma,
+                args.gae_lambda,
             )
             obs_list.append(np.asarray(t["obs"], dtype=np.float32))
             central_list.append(np.asarray(t["central_obs"], dtype=np.float32))
