@@ -460,8 +460,9 @@ class PreviousAvgTTperRoute(Observations):
         """
 
         # Normalize current day's route prices
-        normalized_price_route_0 = float(self.price_route_0) / 7.0
-        normalized_price_route_1 = float(self.price_route_1) / 7.0
+        # Min-max price normalization
+        normalized_price_route_0 = (price_route_0 - 6.0) / 1.0
+        normalized_price_route_1 = (price_route_1 - 2.0) / 1.0
 
         # Normalize current day's demand
         normalized_demand = float(demand_level) / 400.0
