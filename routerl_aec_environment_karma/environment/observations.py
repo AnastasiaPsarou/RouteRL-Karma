@@ -20,6 +20,7 @@ URGENCY_TYPE_TO_INDEX = {
     "temporal": 2,
 }
 
+DEMAND_LEVELS = (200, 250, 300, 350, 400)
 
 class Observations(ABC):
     """Abstract base class for observation functions.
@@ -291,6 +292,7 @@ class PreviousAgentStartPlusStartTime(Observations):
         
         return observation
     
+
 class PreviousAvgTTperRoute(Observations):
     """Observes the number of agents with the same origin-destination and start time within a threshold
     and includes the start of the specific agent as well.
@@ -363,8 +365,8 @@ class PreviousAvgTTperRoute(Observations):
 
         num_routes = self.simulation_params[kc.NUMBER_OF_PATHS]
 
-        # 3 routes -> 13 observation features
-        observation_size = 7 + 2 * num_routes +3
+        # Three routes: 16 original features, replacing scalar demand with 5 one-hot values -> 20.
+        observation_size = 15 + len(DEMAND_LEVELS)  # 15 unchanged features + 5 demand indicators
 
         max_bid = self.agent_params[
             kc.MACHINE_PARAMETERS
@@ -402,7 +404,7 @@ class PreviousAvgTTperRoute(Observations):
             Dict[str, Box]: A dictionary where keys are agent IDs and values are Gym spaces.
         """
 
-        total_size = 7 + 2*self.simulation_params[kc.NUMBER_OF_PATHS] + 3#+ 300# including urgency & start time
+        total_size = 15 + len(DEMAND_LEVELS)  # 20 features total
 
         return {
             str(agent.id): spaces.Dict(
@@ -464,8 +466,14 @@ class PreviousAvgTTperRoute(Observations):
         normalized_price_route_0 = (price_route_0 - 6.0) / 1.0
         normalized_price_route_1 = (price_route_1 - 2.0) / 1.0
 
-        # Normalize current day's demand
-        normalized_demand = float(demand_level) / 400.0
+        # Encode demand as a categorical one-hot vector.
+        # Do not silently assign unsupported demands to a nearby category.
+        if demand_level not in DEMAND_LEVELS:
+            raise ValueError(
+                f"Unsupported demand level {demand_level!r}; expected one of {DEMAND_LEVELS}"
+            )
+        demand_onehot = np.zeros(len(DEMAND_LEVELS), dtype=np.float32)
+        demand_onehot[DEMAND_LEVELS.index(demand_level)] = 1.0
 
         for machine in self.machine_agents_list:
             if machine.id == int(agent_id):
@@ -570,12 +578,12 @@ class PreviousAvgTTperRoute(Observations):
                 [normalized_price_route_0],
                 [normalized_price_route_1],
 
-                # Demand level (1)
-                [normalized_demand],
+                # Demand level: replace the original scalar with these 5 indicators
+                demand_onehot,
             )
         ).astype(np.float32)
 
-        assert observation.shape == (16,), (
+        assert observation.shape == (20,), (
             f"Unexpected observation shape: {observation.shape}"
         )
 
